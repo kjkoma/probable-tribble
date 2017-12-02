@@ -1,0 +1,54 @@
+@charset "UTF-8"; 
+
+html {
+    height: 100%;
+}
+body {
+    min-height: 100% !important;
+    height: auto !important;
+}
+
+body.smart-style-6 .ribbon-button-alignment {
+    display: inline-block;
+}
+
+body.smart-style-6 #logo-group>span#logo:before {
+    content: 'WNote' !important;
+}
+
+::-webkit-input-placeholder {
+    color: #c1c1d7 !important;
+}
+
+#api-loading {
+  display: table;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #fff;
+  opacity: 0.8;
+  z-index: 999999;
+}
+ 
+#api-loading .api-loading-message {
+  color: #000000;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+  padding-top: 140px;
+  background: url("/img/api-loading.gif") center center no-repeat;
+}
+
+.treeview li.list-group-item {
+    background-color: rgba(255,255,255,0);
+}
+.treeview.narrow li.list-group-item {
+    padding-top   : 2px !important;
+    padding-bottom: 2px !important;
+}
+
+.treeview.borderless li.list-group-item {
+    border : none;
+}

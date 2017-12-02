@@ -1,0 +1,46 @@
+
+#extr-page {
+  background-color: #3a92da !important;
+  letter-spacing: 0.3em;
+}
+#extr-page #header {
+  background: #3a92da !important;
+  border-bottom: 0px !important;
+}
+#extr-page #main {
+  background: #3a92da;
+}
+#extr-page .hero {
+  background-image: url('/img/login_background.png') !important;
+  background-position: left bottom !important;
+}
+#extr-page .login-desc-box-l {
+  width: 80% !important;
+}
+#extr-page h4.paragraph-header {
+  color: white;
+  width: 100% !important;
+}
+@media (max-width: 992px) {
+  #extr-page .login-header-big {
+    font-size: 24px !important;
+    margin: 4px 0px 20px 0px !important;
+  }
+}
+@media (min-width: 992px) {
+  #extr-page .login-header-big {
+    font-size: 48px !important;
+    margin: 4px 0px 20px 0px !important;
+  }
+}
+label.error {
+  color: red;
+  font-size: 11px;
+}
+
+.text-color-white {
+  color: white;
+}
+.c-green {
+  color: #92d050;
+}
