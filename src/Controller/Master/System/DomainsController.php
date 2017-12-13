@@ -31,8 +31,8 @@ class DomainsController extends AppController
     public function initialize()
     {
         parent::initialize();
-        $this->loadComponent('SysModelDomains');
-        $this->loadComponent('SysModelSapps');
+        $this->_loadComponent('SysModelDomains');
+        $this->_loadComponent('SysModelSapps');
     }
 
     /**

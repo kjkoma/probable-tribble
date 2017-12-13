@@ -32,8 +32,8 @@ class ApiDomainsController extends ApiController
     public function initialize()
     {
         parent::initialize();
-        $this->loadComponent('SysModelDomains');
-        $this->_loadModelComponent('ModelDomainApps');
+        $this->_loadComponent('SysModelDomains');
+        $this->_loadComponent('ModelDomainApps');
     }
 
     /**
@@ -68,7 +68,6 @@ class ApiDomainsController extends ApiController
         $data = $this->validateParameter('domain', ['post']);
         if (!$data) return;
 
-        $user_id   = $this->AppUser->user()['id'];
         $domain    = $data['domain'];
         $apps      = array_key_exists('domain_apps', $domain) ? $domain['domain_apps'] : null;
 
@@ -77,11 +76,11 @@ class ApiDomainsController extends ApiController
 
         try {
             // ドメインを保存
-            $newDomain = $this->SysModelDomains->add($domain, $user_id);
+            $newDomain = $this->SysModelDomains->add($domain);
             $this->AppError->result($newDomain);
 
             // ドメインアプリケーションを保存
-            $newApps = ($this->AppError->has()) ? null : $this->ModelDomainApps->addByDomainId($newDomain['data']['id'], $apps, $user_id);
+            $newApps = ($this->AppError->has()) ? null : $this->ModelDomainApps->addByDomainId($newDomain['data']['id'], $apps);
             $this->AppError->result($newApps);
 
             // エラー判定
@@ -115,7 +114,6 @@ class ApiDomainsController extends ApiController
         $data = $this->validateParameter('domain', ['post']);
         if (!$data) return;
 
-        $user_id   = $this->AppUser->user()['id'];
         $domain    = $data['domain'];
         $apps      = array_key_exists('domain_apps', $domain) ? $domain['domain_apps'] : null;
 
@@ -124,7 +122,7 @@ class ApiDomainsController extends ApiController
 
         try {
             // ドメインを保存
-            $updateDomain = $this->SysModelDomains->save($domain, $user_id);
+            $updateDomain = $this->SysModelDomains->save($domain);
             $this->AppError->result($updateDomain);
 
             if (!$this->AppError->has() && $apps) {
@@ -133,7 +131,7 @@ class ApiDomainsController extends ApiController
                 $this->AppError->result($deleteApps);
 
                 // ドメインアプリケーションを保存
-                $updateApps = ($this->AppError->has()) ? null : $this->ModelDomainApps->addByDomainId($domain['id'], $apps, $user_id);
+                $updateApps = ($this->AppError->has()) ? null : $this->ModelDomainApps->addByDomainId($domain['id'], $apps);
                 $this->AppError->result($updateApps);
             }
 

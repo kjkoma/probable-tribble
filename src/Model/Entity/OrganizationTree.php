@@ -32,16 +32,6 @@ class OrganizationTree extends Entity
      * @var array
      */
     protected $_accessible = [
-        'domain_id' => true,
-        'customer_id' => true,
-        'ancestor' => true,
-        'descendant' => true,
-        'is_root' => true,
-        'created_at' => true,
-        'created_user' => true,
-        'modified_at' => true,
-        'modified_user' => true,
-        'domain' => true,
-        'customer' => true
+        '*' => true
     ];
 }

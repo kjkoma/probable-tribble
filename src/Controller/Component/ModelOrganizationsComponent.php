@@ -23,6 +23,9 @@ namespace App\Controller\Component;
  */
 class ModelOrganizationsComponent extends AppModelComponent
 {
+    /** @var array $components 利用コンポーネント */
+    public $components = ['ModelOrganizationTree'];
+
     /**
      * 本クラスの初期化処理を行う
      *  
@@ -40,14 +43,54 @@ class ModelOrganizationsComponent extends AppModelComponent
      * 資産管理組織情報を取得する
      *  
      * - - -
-     * @param integer $organization_id 資産管理組織ID
+     * @param integer $organizationId 資産管理組織ID
      * @return \App\Model\Entity\Organization 資産管理組織情報
      */
-    public function get($organization_id)
+    public function get($organizationId)
     {
-        return $this->modelTable->findById($organization_id)
-            ->contain(['Domains', 'Customers'])
+        return $this->modelTable->findById($organizationId)
             ->first();
+    }
+
+    /**
+     * 資産管理組織を検索する（kname or name）
+     *  
+     * - - -
+     * @param string $search 検索文字列
+     * @param string $organizationId 組織ID（指定組織配下を取得しない場合に指定）
+     * @return array 資産管理組織一覧（select2用id/textペア）
+     */
+    public function find2List($search, $organizationId = null)
+    {
+        $descendant = [];
+        if (!is_null($organizationId)) {
+            $list = $this->ModelOrganizationTree->descendant($organizationId, true);
+            foreach($list as $item) {
+                array_push($descendant, $item['descendant']);
+            }
+        }
+
+        $list = $this->modelTable->find('valid')
+            ->andWhere(function($exp) use ($search) {
+                return $exp->or_([
+                    'kname like ' => '%' . $search . '%',
+                    'name like ' => '%' . $search . '%',
+                ]);
+            })
+            ->where(function($exp) use ($descendant) {
+                return $exp->notIn('id', $descendant);
+            })
+            ->all();
+
+        $organizations = [];
+        foreach($list as $item) {
+            array_push($organizations, [
+                'id'   => $item['id'],
+                'text' => $item['kname']
+            ]);
+        }
+
+        return $organizations;
     }
 
 }

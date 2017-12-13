@@ -47,7 +47,7 @@ class OrganizationsTable extends AppTable
         parent::initialize($config);
 
         $this->setTable('organizations');
-        $this->setDisplayField('name');
+        $this->setDisplayField('kname');
         $this->setPrimaryKey('id');
 
         $this->belongsTo('Domains', [
@@ -65,12 +65,12 @@ class OrganizationsTable extends AppTable
         $this->hasMany('Ancestor', [ // alias
             'foreignKey' => 'ancestor',
             'className'  => 'OrganizationTree',
-            'dependent' => true
+            'dependent' => false
         ]);
         $this->hasMany('Descendant', [ // alias
             'foreignKey' => 'descendant',
             'className'  => 'OrganizationTree',
-            'dependent' => true
+            'dependent' => false
         ]);
 
         $this->_sorted   = ['Organizations.kname' => 'ASC'];

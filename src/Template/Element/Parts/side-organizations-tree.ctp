@@ -72,13 +72,7 @@ $itemName = isset($itemName) ? $itemName : "kname";
     <div class="widget-body">
 
       <!-- tree -->
-      <div id="treeview" class="treeview narrow borderless">
-
-        <ul class="list-group">
-
-            <li class="list-group-item"></li>
-
-        </ul>
+      <div id="tree">
 
        <!-- End list -->
       </div>
@@ -93,5 +87,5 @@ $itemName = isset($itemName) ? $itemName : "kname";
 </article>
 
 <!-- load script -->
-<?php $this->Html->script('wnote/wnote.treeview.js', ['block' => true]); ?>
-<?php $this->Html->script('wnote/wnote.treeview.organizations.js', ['block' => true]); ?>
+<?php $this->Html->script('wnote/wnote.tree.js', ['block' => true]); ?>
+<?php $this->Html->script('wnote/wnote.tree.organizations.js', ['block' => true]); ?>

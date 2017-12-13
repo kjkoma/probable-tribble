@@ -20,6 +20,7 @@ body.smart-style-6 #logo-group>span#logo:before {
     color: #c1c1d7 !important;
 }
 
+/* api loading style */
 #api-loading {
   display: table;
   width: 100%;
@@ -41,14 +42,35 @@ body.smart-style-6 #logo-group>span#logo:before {
   background: url("/img/api-loading.gif") center center no-repeat;
 }
 
-.treeview li.list-group-item {
-    background-color: rgba(255,255,255,0);
-}
-.treeview.narrow li.list-group-item {
-    padding-top   : 2px !important;
-    padding-bottom: 2px !important;
-}
 
-.treeview.borderless li.list-group-item {
+/* fancytree override style */
+ul.fancytree-container {
+    background-color: rgba(255,255,255,0.3);
     border : none;
 }
+span.fancytree-active span.fancytree-title, span.fancytree-selected span.fancytree-title {
+    background-color: rgba(0,153,255,0.3);
+}
+
+/* select2 override style */
+.select2-container .select2-choice, .select2-selection {
+    background-color: rgba(255,255,255,0.3);
+    color: #000000;
+}
+
+.smart-style-5 .select2-container .select2-choice, .smart-style-5 .select2-selection {
+    background-color: rgba(255,255,255,0.3);
+    color: #ffffff;
+}
+
+.select2-container .select2-choice .select2-arrow, .select2-selection__arrow {
+    color: #000000;
+}
+.smart-style-5 .select2-search input {
+    background-color: rgba(32,32,32,0.3);
+}
+.select2-search-choice-close, .select2-selection__clear {
+    display: inline-block;
+    margin: 0 12px 0 6px;
+}
+

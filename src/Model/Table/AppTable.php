@@ -104,7 +104,9 @@ class AppTable extends Table
         if ($this->_currentDomainId()) {
             if (!array_key_exists('allowWithoutDomainId', $options)
                 || $options['allowWithoutDomainId'] != "true") {
-                $query = $query->where(['domain_id' => $this->_currentDomainId()]);
+                if ($primary) {
+                    $query = $query->where([$this->getAlias() . '.domain_id' => $this->_currentDomainId()]);
+                }
             }
         }
         return $query;

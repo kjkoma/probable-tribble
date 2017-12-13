@@ -245,7 +245,7 @@ WNote.ajaxSend = function(_url, _type, _data) {
 }
 
 /**
- * 同期型のAjax送信を行い、結果を返す(※Validationのリモートチェック用)
+ * 同期型のAjax送信を行い、結果を返す(※リモートValidation/Treeデータ取得用)
  *
  * @param {string} _url  送信先のURL
  * @param {string} _type GET or POST
@@ -365,6 +365,24 @@ WNote.ajaxSendBasic = function(_url, _type, _data, _showLoading, _successHandler
     });
 
     return promise;
+}
+
+/**
+ * ajax送信時のbeforeSendオプションを追加する
+ *
+ * @param {object} _options ajax送信オプション
+ * 
+ * @return {object} ajax送信オプション
+ */
+WNote.ajaxAddSelect2Options = function(_options) {
+    _options.beforeSend = function(XMLHttpRequest) {
+            // JWTをヘッダーに追加
+            XMLHttpRequest.setRequestHeader ('Authorization', 'Bearer ' + $('#jwt').val());
+            return WNote.ajaXSendBeforeSendHandler(XMLHttpRequest);
+    };
+    _options.type = "POST";
+    _options.delay = 300;
+    return _options;
 }
 
 /**
@@ -597,6 +615,13 @@ WNote.Form.setFormValues = function(obj) {
                 if ($(e).attr(WNOTE.DATA_ATTR.ID) == val) {
                     $(e).prop('checked', true);
                 }
+            } else if ($(e).hasClass('select2')) {
+                var text_key = key.split('_');
+                text_key = (text_key.length > 1) ? text_key[0] + '_text' : text_key + '_text';
+                if (obj[text_key]) {
+                    var option = new Option(obj[text_key], val, true, true);
+                    $(e).append(option).trigger('change');
+                }
             } else {
                 $(e).val(val);
             }
@@ -622,6 +647,8 @@ WNote.Form.clearFormValues = function(appFormKey) {
             } else {
                 $(e).prop('checked', false);
             }
+        } else if ($(e).hasClass('select2')) {
+            $(e).val(null).trigger('change');
         } else {
             $(e).val(val);
         }

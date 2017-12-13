@@ -35,18 +35,6 @@ class Organization extends Entity
      * @var array
      */
     protected $_accessible = [
-        'domain_id' => true,
-        'customer_id' => true,
-        'kname' => true,
-        'name' => true,
-        'remarks' => true,
-        'dsts' => true,
-        'created_at' => true,
-        'created_user' => true,
-        'modified_at' => true,
-        'modified_user' => true,
-        'domain' => true,
-        'customer' => true,
-        'users' => true
+        '*' => true
     ];
 }

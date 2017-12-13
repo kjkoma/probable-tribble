@@ -222,7 +222,7 @@ class ApiController extends Controller
      * - - -
      * @param string $modelComponent モデル用コンポーネントの名前
      */
-    protected function _loadModelComponent($modelComponent)
+    protected function _loadComponent($modelComponent)
     {
         $this->loadComponent($modelComponent, [
             'appUser' => $this->AppUser,

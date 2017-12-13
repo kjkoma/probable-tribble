@@ -35,7 +35,7 @@ class CustomersController extends AppController
     public function initialize()
     {
         parent::initialize();
-        $this->_loadModelComponent('ModelCustomers');
+        $this->_loadComponent('ModelCustomers');
     }
 
     /**

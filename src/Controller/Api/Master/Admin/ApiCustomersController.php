@@ -32,7 +32,7 @@ class ApiCustomersController extends ApiController
     public function initialize()
     {
         parent::initialize();
-        $this->_loadModelComponent('ModelCustomers');
+        $this->_loadComponent('ModelCustomers');
     }
 
     /**
@@ -64,13 +64,12 @@ class ApiCustomersController extends ApiController
         $data = $this->validateParameter('customer', ['post']);
         if (!$data) return;
 
-        $user_id   = $this->AppUser->user()['id'];
-        $customer  = $data['customer'];
+        $customer = $data['customer'];
         $customer['domain_id'] = $this->AppUser->current();
 
         try {
             // 資産管理会社を保存
-            $newCustomer = $this->ModelCustomers->add($customer, $user_id);
+            $newCustomer = $this->ModelCustomers->add($customer);
             $this->AppError->result($newCustomer);
 
             // エラー判定
@@ -97,12 +96,11 @@ class ApiCustomersController extends ApiController
         $data = $this->validateParameter('customer', ['post']);
         if (!$data) return;
 
-        $user_id   = $this->AppUser->user()['id'];
         $customer  = $data['customer'];
 
         try {
             // 資産管理会社を保存
-            $updateCustomer = $this->ModelCustomers->save($customer, $user_id);
+            $updateCustomer = $this->ModelCustomers->save($customer);
             $this->AppError->result($updateCustomer);
 
             // エラー判定

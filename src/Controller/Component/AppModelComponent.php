@@ -26,9 +26,6 @@ use Cake\ORM\TableRegistry;
  */
 class AppModelComponent extends AppComponent
 {
-    /** @var \App\Controller\Component\AppUserComponent $_appUser 認証ユーザー */
-    var $_appUser;
-
     /**
      * 本クラスの初期化処理を行う
      *  
@@ -38,19 +35,16 @@ class AppModelComponent extends AppComponent
      *         'appUser'     => 認証ユーザー情報（AppUserComponentのオブジェクト）
      *         'modelName'   => テーブルオブジェクトに登録するモデル名(string),
      *         'modelConfig' => テーブルオブジェクトの登録時のコンフィグ(array)
+     *         'load' => 初期化時にロード処理を行うかどうかを指定(string)/'true':行う(default)/'false':行わない
      *     ]
-     * @param string $modelName モデル名
-     * @param array $modelConfig モデルに対するコンフィグ
      * @return void
      */
     public function initialize(array $config)
     {
-        $this->_appUser = $config['appUser'];
-
         $config = ($config) ? $config : [];
         $modelConfig = array_key_exists('modelConfig', $config) ? $config['modelConfig'] : [];
-        $modelConfig['appUser'] = $this->_appUser;
-        $config['modelConfig'] = $modelConfig;
+        $modelConfig['appUser'] = $config['appUser'];
+        $config['modelConfig']  = $modelConfig;
 
         parent::initialize($config);
     }
@@ -81,28 +75,6 @@ class AppModelComponent extends AppComponent
     protected function _allow()
     {
         return ['allowWithoutDomainId' => 'true'];
-    }
-
-    /**
-     * 認証ユーザーを取得する
-     *  
-     * - - -
-     * @return \App\Model\Entity\Suser 認証ユーザーのユーザー情報を返す
-     */
-    public function user()
-    {
-        return $this->_appUser->user();
-    }
-
-    /**
-     * 現在のドメインを取得する
-     *  
-     * - - -
-     * @return integer 現在のドメインIDを返す
-     */
-    public function currentDomainId()
-    {
-        return $this->_appUser->current();
     }
 
 }

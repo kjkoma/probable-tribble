@@ -16,7 +16,6 @@
 namespace App\Controller\Component;
 
 use Cake\Core\Configure;
-use Cake\ORM\TableRegistry;
 use Firebase\JWT\JWT;
 use Cake\Utility\Security;
 

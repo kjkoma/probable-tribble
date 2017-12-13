@@ -46,6 +46,9 @@
     <?= $this->Html->css('smartadmin-production.min.css', ['media' => 'screen']) ?>
     <?= $this->Html->css('smartadmin-skins.min.css', ['media' => 'screen']) ?>
 
+    <!-- Tree Style -->
+    <?= $this->Html->css('fancytree/ui.fancytree.min.css', ['media' => 'screen']) ?>
+
     <!-- Wnote Style -->
     <?= $this->Html->css('wnote.css', ['media' => 'screen']) ?>
 
@@ -121,7 +124,7 @@
 <![endif]-->
 
 <!-- Bootstrap Tree View JS FILE -->
-<?= $this->Html->script('bootstrap/bootstrap-treeview.min.js') ?>
+<?= $this->Html->script('fancytree/fancytree-all.min.js') ?>
 
 <!-- MAIN APP JS FILE -->
 <?= $this->Html->script('app.min.js') ?>

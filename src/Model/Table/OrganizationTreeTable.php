@@ -46,23 +46,26 @@ class OrganizationTreeTable extends AppTable
         parent::initialize($config);
 
         $this->setTable('organization_tree');
+        $this->setPrimaryKey(['id']);
 
         $this->belongsTo('Domains', [
-            'foreignKey' => 'domain_id',
-            'joinType' => 'INNER'
+            'foreignKey'   => 'domain_id',
+            'joinType'     => 'INNER'
         ]);
         $this->belongsTo('Customers', [
-            'foreignKey' => 'customer_id',
-            'joinType' => 'INNER'
+            'foreignKey'   => 'customer_id',
+            'joinType'     => 'INNER'
         ]);
         $this->belongsTo('Ancestor', [ // alias
-            'foreignKey' => 'ancestor',
-            'className' => 'Organizations'
-            ]);
+            'foreignKey'   => 'ancestor',
+            'className'    => 'Organizations',
+            'propertyName' => 'organization'
+        ]);
         $this->belongsTo('Descendant', [ // alias
-            'foreignKey' => 'descendant',
-            'className' => 'Organizations' 
-            ]);
+            'foreignKey'   => 'descendant',
+            'className'    => 'Organizations',
+            'propertyName' => 'organization'
+        ]);
     }
 
     /**
@@ -84,8 +87,12 @@ class OrganizationTreeTable extends AppTable
             ->notEmpty('descendant');
 
         $validator
-            ->requirePresence('is_root', 'create')
-            ->notEmpty('is_root');
+            ->integer('neighbor')
+            ->allowEmpty('customer_id');
+
+        $validator
+            ->integer('customer_id')
+            ->allowEmpty('customer_id');
 
         $validator
             ->integer('created_user')
@@ -114,4 +121,5 @@ class OrganizationTreeTable extends AppTable
 
         return $rules;
     }
+
 }

@@ -31,7 +31,7 @@ class SusersController extends AppController
     public function initialize()
     {
         parent::initialize();
-        $this->loadComponent('SysModelSusers');
+        $this->_loadComponent('SysModelSusers');
     }
 
     /**

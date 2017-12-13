@@ -162,12 +162,12 @@ class AppUserComponent extends AppComponent
      * 指定されたシステムユーザーの利用可能ドメイン一覧を作成する
      *  
      * - - -
-     * @param integer $suser_id システムユーザーID
+     * @param integer $suserId システムユーザーID
      */
-    private function _createDomains($suser_id)
+    private function _createDomains($suserId)
     {
         // 利用可能ドメイン取得
-        $this->_domains = $this->SysModelSuserDomains->findBySuserId($suser_id, true);
+        $this->_domains = $this->SysModelSuserDomains->findBySuserId($suserId, true);
     }
 
     /**
@@ -190,13 +190,13 @@ class AppUserComponent extends AppComponent
      * 指定されたユーザーのシステムロールの識別名を作成する
      *  
      * - - -
-     * @param integer $srole_id システムロールID
+     * @param integer $sroleId システムロールID
      */
-    private function _createSroleKname($srole_id)
+    private function _createSroleKname($sroleId)
     {
         // システムロールの識別名を取得
         $sroles =$this->table("Sroles")
-            ->findById($srole_id)
+            ->findById($sroleId)
             ->first();
 
         $this->_roleKname = $sroles['kname'];

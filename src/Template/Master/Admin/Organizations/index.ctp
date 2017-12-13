@@ -118,38 +118,24 @@ $this->Breadcrumbs->add('資産管理グループ', ['controller' => 'Organizati
                             </fieldset>
 
                             <header>
-                                資産管理会社
-                            </header>
-
-                            <fieldset>
-                                <!-- 資産管理会社 -->
-                                <section>
-                                    <?= $this->element('Parts/select-customers', [
-                                        'customers' => $customers,
-                                        'name'      => 'organization.customer_id',
-                                        'id'        => 'customer_id',
-                                        'form'      => 'form-organization',
-                                    ]) ?>
-                                </section>
-                            </fieldset>
-
-                            <header>
                                 親グループ
                             </header>
 
                             <fieldset>
                                 <!-- 親グループ -->
                                 <section>
-                                    <label class="input">
-                                        <input type="text" name="organization.parent_id" id="parent_id" class="input-xs"
-                                               data-app-form="form-organization" placeholder="親となる資産管理組織（グループ）を入力・選択してください（親が資産管理会社の場合は空白）"
-                                               disabled="disabled">
-                                    </label>
+                                    <div class="form-group">
+                                        <select name="organization.parent_id" id="parent_id" class="select2 form-control input-sm"
+                                               data-app-form="form-organization" data-placeholder="親となる資産管理組織（グループ）を入力・選択してください（親が資産管理会社の場合は空白）"
+                                               disabled="disabled"
+                                               style="width=100%;"></select>
+                                    </div>
                                 </section>
                             </fieldset>
 
                         <!-- End customer form -->
                         <input type="hidden" name="organization.id" id="id" data-app-form="form-organization">
+                        <input type="hidden" name="organization.customer_id" id="customer_id" data-app-form="form-organization">
                         <?= $this->Form->end() ?>
                         </form>
 

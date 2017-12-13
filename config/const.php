@@ -44,6 +44,10 @@ return [
                 'valid'   => '1',
                 'notadd'  => '2',
             ],
+            'Neighbor' => [
+                'false' => '0',
+                'true'  => '1',
+            ],
         ],
         'Session'  => [
             'Auth' => [

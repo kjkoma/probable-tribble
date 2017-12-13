@@ -26,13 +26,33 @@ const MYPAGE = {
  *  -------------------------------------------------------------------------*/
 /** 選択中の資産管理組織データ */
 MyPage.selectOrganization = {
-    organization: {}
+    organization: {},
+    parent: {}
 };
 
 /** ---------------------------------------------------------------------------
  *  初期処理
  *  -------------------------------------------------------------------------*/
 $(function() {
+    // 親選択
+    $('#parent_id').select2({
+        allowClear: true,
+        placeholder: '資産管理会社直下の場合は親グループを空に設定してください。',
+        ajax: WNote.ajaxAddSelect2Options({
+            url: '/api/master/admin/api-organizations/find-list',
+            data: function (params) {
+                return {
+                    term: params.term,
+                    organization_id: MyPage.selectOrganization.organization['id']
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: (data.data.param) ? data.data.param.organizations : []
+                };
+            }
+        })
+    });
 
     /** 各種操作イベント登録 */
     WNote.registerEvent('click', 'edit'   , MyPage.edit);
@@ -47,23 +67,11 @@ $(function() {
  *  イベント処理（資産管理組織選択）
  *  -------------------------------------------------------------------------*/
 /**
- * ツリービュー（Element/Parts/side-organizations-tree）用選択イベントのハンドラの実装
+ * ツリー（Element/Parts/side-organizations-tree）用選択イベントのハンドラの実装(組織選択時)
  */
-WNote.Treeview.OnNodeSelectedHandler = function(event, data) {
-console.log(event);
-console.log(data);
-/*
-    // 選択資産管理組織の取得
-    var id = $(event.target).attr(WNOTE.DATA_ATTR.ID);
-
-    // 文字の部分選択時はSPANタグ要素がevent.targetになっているので親要素よりIDを取得する
-    if ($(event.target).prop("tagName") == "SPAN") {
-        id = $(event.target).parent().attr(WNOTE.DATA_ATTR.ID);
-    }
-
+WNote.Tree.Organization.nodeActivateItemHandler = function(node) {
     // 資産管理組織の取得
-    MyPage.getCustomer(id);
-*/
+    MyPage.getOrganization(node.data.organization_id);
 }
 
 /**
@@ -88,6 +96,7 @@ MyPage.getOrganization = function(organization_id) {
  */
 MyPage.getOrganizationSuccess = function(data) {
     MyPage.selectOrganization.organization = data.data.param.organization;
+    MyPage.selectOrganization.parent = data.data.param.parent;
     WNote.Form.viewMode(MYPAGE.FORM_KEY);
     WNote.hideLoading();
     MyPage.setFormValues();
@@ -100,6 +109,21 @@ MyPage.getOrganizationSuccess = function(data) {
 MyPage.setFormValues = function() {
     WNote.Form.clearFormValues(MYPAGE.FORM_KEY);
     WNote.Form.setFormValues(MyPage.selectOrganization.organization);
+    WNote.Form.setFormValues(MyPage.selectOrganization.parent);
+}
+
+/**
+ * 資産管理会社を設定する
+ * 
+ */
+MyPage.setExtendValues = function() {
+    $('#customer_id').val(WNote.Tree.Organization.Customer.value);
+
+    var active = WNote.Tree.active();
+    if (active.data.type == WNOTE.TREE.TYPES.ITEM) {
+        var option = new Option(active.title, active.data.organization_id, true, true);
+        $('#parent_id').append(option).trigger('change');
+    }
 }
 
 /** ---------------------------------------------------------------------------
@@ -121,6 +145,8 @@ MyPage.edit = function() {
 MyPage.add = function() {
     WNote.Form.clearFormValues(MYPAGE.FORM_KEY);
     WNote.Form.addMode(MYPAGE.FORM_KEY);
+    MyPage.setExtendValues();
+    $('#parent_id').prop('disabled', true);
 }
 
 /** ---------------------------------------------------------------------------
@@ -182,8 +208,11 @@ MyPage.save = function() {
 MyPage.saveAddSuccess = function(data) {
 WNote.log(data); // debug
     MyPage.getOrganization(data.data.param.organization.id);
-    WNote.ajaxSuccessHandler(data, '入力された内容を登録しました。ページを再表示します。');
-    location.reload();
+    WNote.ajaxSuccessHandler(data, '入力された内容を登録しました。');
+
+    var active = WNote.Tree.active();
+    WNote.Tree.activate(WNote.Tree.parent());
+    WNote.Tree.activate(active);
 }
 /**
  * 保存ボタンクリック成功時のハンドラの実装（編集時）
@@ -195,6 +224,10 @@ WNote.log(data); // debug
     WNote.Form.viewMode(MYPAGE.FORM_KEY);
     WNote.Form.validateClear();
     WNote.ajaxSuccessHandler(data, '入力された内容を保存しました。');
+
+    var active = WNote.Tree.active();
+    WNote.Tree.activate(WNote.Tree.parent());
+    WNote.Tree.activate(active);
 }
 
 /**
@@ -257,7 +290,7 @@ WNote.log(data); // debug
     WNote.Form.clearFormValues(MYPAGE.FORM_KEY);
     WNote.Form.initMode(MYPAGE.FORM_KEY);
     WNote.ajaxSuccessHandler(data, '選択されたデータが正常に削除されました。ページを再表示します。');
-    location.reload();
+    WNote.Tree.activate(WNote.Tree.parent());
 }
 
 /**
@@ -266,7 +299,7 @@ WNote.log(data); // debug
  */
 MyPage.deleteCustomer = function() {
     // 送信データ作成
-    var organization_id = (MyPage.selectOrganization.organization['id']) ? MyPage.selectOrganization.organization['id'] : undefined;
+    var organization_id = MyPage.selectOrganization.organization['id'];
 
     // 送信データの検証
     if (!WNote.ajaxValidateWarning(organization_id, MyPage.deleteValidate(organization_id))) {

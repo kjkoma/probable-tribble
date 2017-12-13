@@ -40,14 +40,14 @@ class SysModelSuserDomainsComponent extends AppComponent
      * 特定のシステムユーザードメイン一覧を取得する
      *  
      * - - -
-     * @param integer $suser_id システムユーザーID
+     * @param integer $suserId システムユーザーID
      * @param boolean $toArray true:配列で返す|false:ResultSetで返す（default）
      * @return array ドメイン一覧
      */
-    public function findBySuserId($suser_id, $toArray = false)
+    public function findBySuserId($suserId, $toArray = false)
     {
         $query = $this->modelTable->find('sorted')
-            ->where(['suser_id' => $suser_id]);
+            ->where(['suser_id' => $suserId]);
 
         return ($toArray) ? $query->toArray() : $query->all();
     }
@@ -56,14 +56,14 @@ class SysModelSuserDomainsComponent extends AppComponent
      * 指定のシステムユーザーID／ドメインIDのデータを取得する
      *  
      * - - -
-     * @param integer $suser_id システムユーザーID
-     * @param integer $domain_id ドメインID
+     * @param integer $suserId システムユーザーID
+     * @param integer $domainId ドメインID
      * @return \App\Model\Entity\SuserDomain システムユーザードメインデータ
      */
-    public function findByUniqueKey($suser_id, $domain_id)
+    public function findByUniqueKey($suserId, $domainId)
     {
         $query = $this->modelTable->find('all')
-            ->where(['suser_id' => $suser_id, 'domain_id' => $domain_id]);
+            ->where(['suser_id' => $suserId, 'domain_id' => $domainId]);
 
         return $query->first();
     }
@@ -72,12 +72,11 @@ class SysModelSuserDomainsComponent extends AppComponent
      * 指定したシステムユーザーIDに対して１つ以上のドメインデータを追加する
      *  
      * - - -
-     * @param integer $suser_id システムユーザーID
+     * @param integer $suserId システムユーザーID
      * @param array $suserDomain 複数のシステムユーザードメインデータ（リクエストデータ）
-     * @param integer $user_id ユーザーID
      * @return array 保存結果（result:true/false, errors:エラー内容, data: 保存データ）
      */
-    public function addBySuserId($suser_id, $suserDomain, $user_id)
+    public function addBySuserId($suserId, $suserDomain)
     {
         $suserDomain = is_array($suserDomain) ? $suserDomain : [ $suserDomain ];
 
@@ -87,11 +86,11 @@ class SysModelSuserDomainsComponent extends AppComponent
                 continue;
             }
             $result = $this->add([
-                'suser_id'       => $suser_id,
+                'suser_id'       => $suserId,
                 'domain_id'      => $domain['domain_id'],
                 'srole_id'       => $domain['srole_id'],
                 'default_domain' => (array_key_exists('default_domain', $domain)) ? $domain['default_domain'] : '0',
-            ], $user_id);
+            ]);
             if (!$result['result']) {
                 return $result;
             }
@@ -104,12 +103,12 @@ class SysModelSuserDomainsComponent extends AppComponent
      * 指定されたシステムユーザーIDのデータを削除する
      *  
      * - - -
-     * @param integer $suser_id システムユーザーID
+     * @param integer $suserId システムユーザーID
      * @return boolean true:成功|false:失敗
      */
-    public function deleteBySuserId($suser_id)
+    public function deleteBySuserId($suserId)
     {
-        $domains = $this->findBySuserId($suser_id);
+        $domains = $this->findBySuserId($suserId);
 
         foreach($domains as $domain) {
             $result = $this->delete($domain['id']);

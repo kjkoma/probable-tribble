@@ -40,14 +40,14 @@ class ModelDomainAppsComponent extends AppModelComponent
      * 特定のドメインアプリケーション一覧を取得する
      *  
      * - - -
-     * @param integer $domain_id ドメインID
+     * @param integer $domainId ドメインID
      * @param boolean $toArray true:配列で返す|false:ResultSetで返す（default）
      * @return array アプリケーション一覧
      */
-    public function findByDomainId($domain_id, $toArray = false)
+    public function findByDomainId($domainId, $toArray = false)
     {
         $query = $this->modelTable->find('sorted', $this->_allow())
-            ->where(['domain_id' => $domain_id]);
+            ->where(['domain_id' => $domainId]);
 
         return ($toArray) ? $query->toArray() : $query->all();
     }
@@ -60,10 +60,10 @@ class ModelDomainAppsComponent extends AppModelComponent
      * @param integer $sapp_id アプリケーションID
      * @return \App\Model\Entity\DomainApps ドメインアプリケーションデータ
      */
-    public function findByUniqueKey($domain_id, $sapp_id)
+    public function findByUniqueKey($domainId, $sapp_id)
     {
         $query = $this->modelTable->find('all', $this->_allow())
-            ->where(['domain_id' => $domain_id, 'sapp_id' => $sapp_id]);
+            ->where(['domain_id' => $domainId, 'sapp_id' => $sapp_id]);
 
         return $query->first();
     }
@@ -72,18 +72,17 @@ class ModelDomainAppsComponent extends AppModelComponent
      * 指定したドメインIDに対して１つ以上のアプリケーションデータを追加する
      *  
      * - - -
-     * @param integer $domain_id ドメインID
+     * @param integer $domainId ドメインID
      * @param array $domainApps 複数のドメインアプリケーションデータ（リクエストデータ）
-     * @param integer $user_id ユーザーID
      * @return array 保存結果（result:true/false, errors:エラー内容, data: 保存データ）
      */
-    public function addByDomainId($domain_id, $domainApps, $user_id)
+    public function addByDomainId($domainId, $domainApps)
     {
         $domainApps = is_array($domainApps) ? $domainApps : [ $domainApps ];
 
         $result = ['result' => true];
-        foreach($domainApps as $sapp_id) {
-            $result = $this->add(['domain_id' => $domain_id, 'sapp_id' => $sapp_id], $user_id);
+        foreach($domainApps as $sappId) {
+            $result = $this->add(['domain_id' => $domainId, 'sapp_id' => $sappId]);
             if (!$result['result']) {
                 return $result;
             }
@@ -96,12 +95,12 @@ class ModelDomainAppsComponent extends AppModelComponent
      * 指定されたドメインのデータを削除する
      *  
      * - - -
-     * @param integer $domain_id ドメインID
+     * @param integer $domainId ドメインID
      * @return boolean true:成功|false:失敗
      */
-    public function deleteByDomainId($domain_id)
+    public function deleteByDomainId($domainId)
     {
-        $apps = $this->findByDomainId($domain_id);
+        $apps = $this->findByDomainId($domainId);
 
         foreach($apps as $app) {
             $result = $this->delete($app['id'], $this->_allow());

@@ -40,12 +40,12 @@ class ModelCustomersComponent extends AppModelComponent
      * 資産管理会社情報を取得する
      *  
      * - - -
-     * @param integer $customer_id 資産管理会社ID
+     * @param integer $customerId 資産管理会社ID
      * @return \App\Model\Entity\Customer 資産管理会社情報
      */
-    public function get($customer_id)
+    public function get($customerId)
     {
-        return $this->modelTable->findById($customer_id)
+        return $this->modelTable->findById($customerId)
             ->contain(['Domains'])
             ->first();
     }

@@ -40,12 +40,17 @@ class AppComponent extends Component
     public $components = ['AppLog'];
 
     /**
-     * 本コンポーネントが扱う主たるモデルのテーブルオブジェクト
+     * @var mixed $modelTable 本コンポーネントが扱う主たるモデルのテーブルオブジェクト
      */
     public $modelTable;
 
     /**
-     * データベースへの接続コネクション
+     * @var \App\Controller\Component\AppUserComponent $_appUser 認証ユーザー
+     */
+    protected $_appUser;
+
+    /**
+     * @var \Cake\Database\Connection $_con データベースへの接続コネクション
      */
     private $_con;
 
@@ -64,11 +69,33 @@ class AppComponent extends Component
     {
         parent::initialize($config);
 
-        $modelName   = array_key_exists('modelName'  , $config) ? $config['modelName']   : null;
-        $modelConfig = array_key_exists('modelConfig', $config) ? $config['modelConfig'] : [];
+        $this->_appUser   = array_key_exists('appUser'    , $config) ? $config['appUser']     : null;
+        $modelName        = array_key_exists('modelName'  , $config) ? $config['modelName']   : null;
+        $modelConfig      = array_key_exists('modelConfig', $config) ? $config['modelConfig'] : [];
         $this->modelTable = is_null($modelName) ? null : $this->table($modelName, $modelConfig);
-
         $this->_con       = ConnectionManager::get('default');
+    }
+
+    /**
+     * 認証ユーザーを取得する
+     *  
+     * - - -
+     * @return \App\Model\Entity\Suser 認証ユーザーのユーザー情報を返す
+     */
+    public function user()
+    {
+        return ($this->_appUser->user()) ? $this->_appUser->user()['id'] : null;
+    }
+
+    /**
+     * 現在のドメインを取得する
+     *  
+     * - - -
+     * @return integer 現在のドメインIDを返す
+     */
+    public function current()
+    {
+        return $this->_appUser->current();
     }
 
     /**
@@ -218,14 +245,13 @@ class AppComponent extends Component
      *  
      * - - -
      * @param mixed $data 保存するデータ
-     * @param integer $user_id ユーザーID
      * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
      */
-    public function add($data, $user_id)
+    public function add($data)
     {
         $entity = $this->modelTable->newEntity($data);
-        $entity['created_user']  = $user_id;
-        $entity['modified_user'] = $user_id;
+        $entity['created_user']  = $this->user();
+        $entity['modified_user'] = $this->user();
 
         $result = $this->modelTable->save($entity);
         if (!$result || $entity->errors()) {
@@ -240,11 +266,10 @@ class AppComponent extends Component
      *  
      * - - -
      * @param mixed $data 保存するデータ
-     * @param integer $user_id ユーザーID
      * @param array $options finderのオプション（ドメイン指定なしでも検索可能な場合などに利用）
      * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
      */
-    public function save($data, $user_id, $options = [])
+    public function save($data, $options = [])
     {
         if (!array_key_exists('id', $data)) {
             return $this->_invalid('保存データが指定されていません。');
@@ -256,7 +281,7 @@ class AppComponent extends Component
 
         $entity = $this->modelTable->get($data['id'], $options);
         $entity = $this->modelTable->patchEntity($entity, $data);
-        $entity['modified_user'] = $user_id;
+        $entity['modified_user'] = $this->user();
 
         $result = $this->modelTable->save($entity);
         if (!$result || $entity->errors()) {
@@ -289,6 +314,20 @@ class AppComponent extends Component
         if (!$result || $entity->errors()) {
             return $this->_result(false, false, $entity->errors());
         }
+
+        return $this->_result(true, $result, false);
+    }
+
+    /**
+     * 指定条件のエンティティを削除する
+     *  
+     * - - -
+     * @param mixed $conditions 削除するデータの条件
+     * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
+     */
+    public function deleteAll($conditions)
+    {
+        $result = $this->modelTable->deleteAll($conditions);
 
         return $this->_result(true, $result, false);
     }

@@ -32,8 +32,8 @@ class ApiSusersController extends ApiController
     public function initialize()
     {
         parent::initialize();
-        $this->loadComponent('SysModelSusers');
-        $this->_loadModelComponent('SysModelSuserDomains');
+        $this->_loadComponent('SysModelSusers');
+        $this->_loadComponent('SysModelSuserDomains');
     }
 
     /**
@@ -68,7 +68,6 @@ class ApiSusersController extends ApiController
         $data = $this->validateParameter('suser', ['post']);
         if (!$data) return;
 
-        $user_id   = $this->AppUser->user()['id'];
         $suser     = $data['suser'];
         $domains   = array_key_exists('suser_domains', $data) ? $data['suser_domains'] : null;
 
@@ -77,11 +76,11 @@ class ApiSusersController extends ApiController
 
         try {
             // ユーザーを保存
-            $newSuser = $this->SysModelSusers->add($suser, $user_id);
+            $newSuser = $this->SysModelSusers->add($suser);
             $this->AppError->result($newSuser);
 
             // ユーザードメインを保存
-            $newDomains = ($this->AppError->has()) ? null : $this->SysModelSuserDomains->addBySuserId($newSuser['data']['id'], $domains, $user_id);
+            $newDomains = ($this->AppError->has()) ? null : $this->SysModelSuserDomains->addBySuserId($newSuser['data']['id'], $domains);
             $this->AppError->result($newDomains);
 
             // エラー判定
@@ -115,7 +114,6 @@ class ApiSusersController extends ApiController
         $data = $this->validateParameter('suser', ['post']);
         if (!$data) return;
 
-        $user_id   = $this->AppUser->user()['id'];
         $suser     = $data['suser'];
         $domains   = array_key_exists('suser_domains', $data) ? $data['suser_domains'] : null;
 
@@ -124,7 +122,7 @@ class ApiSusersController extends ApiController
 
         try {
             // ユーザーを保存
-            $updateSuser = $this->SysModelSusers->save($suser, $user_id);
+            $updateSuser = $this->SysModelSusers->save($suser);
             $this->AppError->result($updateSuser);
 
             if (!$this->AppError->has() && $domains) {
@@ -133,7 +131,7 @@ class ApiSusersController extends ApiController
                 $this->AppError->result($deleteDomains);
 
                 // ユーザードメインを保存
-                $updateDomains = ($this->AppError->has()) ? null : $this->SysModelSuserDomains->addBySuserId($suser['id'], $domains, $user_id);
+                $updateDomains = ($this->AppError->has()) ? null : $this->SysModelSuserDomains->addBySuserId($suser['id'], $domains);
                 $this->AppError->result($updateDomains);
             }
 

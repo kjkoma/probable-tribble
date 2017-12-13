@@ -33,7 +33,7 @@ class OrganizationsController extends AppController
     public function initialize()
     {
         parent::initialize();
-        $this->_loadModelComponent('ModelCustomers');
+        $this->_loadComponent('ModelCustomers');
     }
 
     /**
@@ -55,13 +55,9 @@ class OrganizationsController extends AppController
      */
     public function index()
     {
-        $customers = $this->ModelCustomers->valid();
-        $first_customer_id = '-1';
-        foreach($customers as $customer) {
-            $first_customer_id = $customer['id'];
-        }
+        $customers     = $this->ModelCustomers->valid();
 
-        $this->set(compact('customers', 'first_customer_id'));
+        $this->set(compact('customers'));
         $this->render();
     }
 }

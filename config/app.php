@@ -224,6 +224,7 @@ return [
             'persistent' => false,
             // 'host' => '54.213.141.12',
             'host' => '192.168.4.40',
+            // 'host' => '192.168.11.10',
             /**
              * CakePHP will use the default DB port based on the driver selected
              * MySQL on MAMP uses port 8889, MAMP users will want to uncomment
@@ -289,6 +290,7 @@ return [
             'persistent' => false,
             //'host' => '54.213.141.12',
             'host' => '192.168.4.40',
+            // 'host' => '192.168.11.10',
             //'port' => 'non_standard_port_number',
             'username' => 'wnoteadmin',
             'password' => '831sCjfPH5',
