@@ -40,19 +40,6 @@ class ModelOrganizationsComponent extends AppModelComponent
     }
 
     /**
-     * 資産管理組織情報を取得する
-     *  
-     * - - -
-     * @param integer $organizationId 資産管理組織ID
-     * @return \App\Model\Entity\Organization 資産管理組織情報
-     */
-    public function get($organizationId)
-    {
-        return $this->modelTable->findById($organizationId)
-            ->first();
-    }
-
-    /**
      * 資産管理組織を検索する（kname or name）
      *  
      * - - -
@@ -70,17 +57,19 @@ class ModelOrganizationsComponent extends AppModelComponent
             }
         }
 
-        $list = $this->modelTable->find('valid')
+        $query = $this->modelTable->find('valid')
             ->andWhere(function($exp) use ($search) {
                 return $exp->or_([
                     'kname like ' => '%' . $search . '%',
                     'name like ' => '%' . $search . '%',
                 ]);
-            })
-            ->where(function($exp) use ($descendant) {
+            });
+        if (count($descendant) > 0) {
+            $query->where(function($exp) use ($descendant) {
                 return $exp->notIn('id', $descendant);
-            })
-            ->all();
+            });
+        }
+        $list = $query->all();
 
         $organizations = [];
         foreach($list as $item) {

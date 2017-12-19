@@ -64,10 +64,19 @@ $(function() {
 });
 
 /** ---------------------------------------------------------------------------
+ *  イベント処理（資産管理会社変更）
+ *  -------------------------------------------------------------------------*/
+/** 資産管理会社変更時のイベントハンドラの実装 */
+WNote.Tree.Organization.afterChangeCustomerHandler = function(event) {
+    WNote.Form.formActionStatus.Before = WNOTE.FORM_STATUS.INIT;
+    MyPage.cancel();
+}
+
+/** ---------------------------------------------------------------------------
  *  イベント処理（資産管理組織選択）
  *  -------------------------------------------------------------------------*/
 /**
- * ツリー（Element/Parts/side-organizations-tree）用選択イベントのハンドラの実装(組織選択時)
+ * ツリー（Element/Parts/side-tree-organizations）用選択イベントのハンドラの実装(組織選択時)
  */
 WNote.Tree.Organization.nodeActivateItemHandler = function(node) {
     // 資産管理組織の取得
@@ -84,7 +93,7 @@ MyPage.getOrganization = function(organization_id) {
     WNote.ajaxFailureMessage = '資産管理組織データの読込に失敗しました。再度資産管理組織を選択してください。';
     WNote.ajaxSendBasic('/api/master/admin/api-organizations/organization', 'POST',
         { 'organization_id': organization_id },
-        true,
+        false,
         MyPage.getOrganizationSuccess
     );
 }
@@ -209,10 +218,9 @@ MyPage.saveAddSuccess = function(data) {
 WNote.log(data); // debug
     MyPage.getOrganization(data.data.param.organization.id);
     WNote.ajaxSuccessHandler(data, '入力された内容を登録しました。');
-
-    var active = WNote.Tree.active();
-    WNote.Tree.activate(WNote.Tree.parent());
-    WNote.Tree.activate(active);
+    var current = WNote.Tree.active();
+    WNote.Tree.activateParent();
+    WNote.Tree.expand(current.key);
 }
 /**
  * 保存ボタンクリック成功時のハンドラの実装（編集時）
@@ -224,10 +232,11 @@ WNote.log(data); // debug
     WNote.Form.viewMode(MYPAGE.FORM_KEY);
     WNote.Form.validateClear();
     WNote.ajaxSuccessHandler(data, '入力された内容を保存しました。');
-
-    var active = WNote.Tree.active();
-    WNote.Tree.activate(WNote.Tree.parent());
-    WNote.Tree.activate(active);
+    var current = WNote.Tree.active();
+    WNote.Tree.activateParent();
+    if (WNote.Tree.node(current.key)) {
+        WNote.Tree.activate(current.key);
+    }
 }
 
 /**
@@ -278,7 +287,7 @@ MyPage.saveValidate = function(saveType, data) {
  */
 MyPage.delete = function() {
     WNote.showConfirmMessage('資産管理組織を削除すると資産管理組織に関連するデータがすべて削除され、復元することができません。本当に削除してもよろしいですか？');
-    WNote.showConfirmYesHandler = MyPage.deleteCustomer;
+    WNote.showConfirmYesHandler = MyPage.deleteOrganization;
 }
 /**
  * 削除ボタンクリック成功時のハンドラの実装
@@ -290,14 +299,14 @@ WNote.log(data); // debug
     WNote.Form.clearFormValues(MYPAGE.FORM_KEY);
     WNote.Form.initMode(MYPAGE.FORM_KEY);
     WNote.ajaxSuccessHandler(data, '選択されたデータが正常に削除されました。ページを再表示します。');
-    WNote.Tree.activate(WNote.Tree.parent());
+    WNote.Tree.activateParent();
 }
 
 /**
  * 資産管理組織データを削除する
  *
  */
-MyPage.deleteCustomer = function() {
+MyPage.deleteOrganization = function() {
     // 送信データ作成
     var organization_id = MyPage.selectOrganization.organization['id'];
 

@@ -27,7 +27,7 @@ use Cake\Core\Configure;
 class AppUserComponent extends AppComponent
 {
     /** @var array $components 利用コンポーネント */
-    public $components = ['SysModelSusers', 'SysModelSuserDomains'];
+    public $components = ['SysModelSusers', 'SysModelSuserDomains', 'ModelDomainApps'];
 
     /** @var string ログイン時のIPアドレス */
     private $_ip;
@@ -40,6 +40,9 @@ class AppUserComponent extends AppComponent
 
     /** @var integer $_current 現在のドメイン */
     private $_current;
+
+    /** @var array $_sapps 現在のドメインで利用可能なアプリケーション */
+    private $_sapps;
 
     /** @var string $_roleKName システム権限の識別名 */
     private $_roleKname;
@@ -99,6 +102,17 @@ class AppUserComponent extends AppComponent
     }
 
     /**
+     * 現在のドメインで利用可能なアプリケーション一覧を取得する
+     *  
+     * - - -
+     * @return integer 利用可能なアプリケーション一覧
+     */
+    public function sapps()
+    {
+        return $this->_sapps;
+    }
+
+    /**
      * システムロールの識別名を取得する
      *  
      * - - -
@@ -128,6 +142,9 @@ class AppUserComponent extends AppComponent
         // 初回はデフォルトドメインをカレントドメインとして設定
         $this->_createCurrent($this->_domains);
 
+        // 現在のドメインで利用可能なアプリケーションの取得
+        $this->_createSapps();
+
         // システムロールの識別名を取得
         $this->_createSroleKname($this->_user['srole_id']);
     }
@@ -150,7 +167,7 @@ class AppUserComponent extends AppComponent
             // 利用可能ドメイン取得
             $this->_createDomains($this->_user['id']);
 
-            // 初回はデフォルトドメインをカレントドメインとして設定
+            // カレントドメインを設定
             $this->_createCurrent($this->_domains, $current);
 
             // システムロールの識別名を取得
@@ -167,7 +184,7 @@ class AppUserComponent extends AppComponent
     private function _createDomains($suserId)
     {
         // 利用可能ドメイン取得
-        $this->_domains = $this->SysModelSuserDomains->findBySuserId($suserId, true);
+        $this->_domains = $this->SysModelSuserDomains->findBySuserIdWithRole($suserId, true);
     }
 
     /**
@@ -183,7 +200,25 @@ class AppUserComponent extends AppComponent
             if ($d->default_domain == Configure::read('WNote.DB.SuserDomains.DefaultDomain.default')) {
                 $this->_current = $d->domain_id;
             }
+            if ($current && $d->domain_id == $current) {
+                $this->_current = $d->domain_id;
+                break;
+            }
         }
+    }
+
+    /**
+     * 現在のドメインで利用可能なアプリケーションを作成する
+     *  
+     * - - -
+     */
+    private function _createSapps()
+    {
+        // 現在の認証ユーザーデータでモデルを再設定する
+        $this->ModelDomainApps->reset(['appUser' => $this]);
+
+        // 利用可能なアプリケーション取得
+        $this->_sapps = $this->ModelDomainApps->available(true);
     }
 
     /**
@@ -247,9 +282,9 @@ class AppUserComponent extends AppComponent
      * - - -
      * @return boolean true:管理者|false:管理者以外
      */
-    public function isAdmin()
+    public function hasAdmin()
     {
-        if ($this->roleKname() == Configure::read('WNote.DB.Sroles.Kname.wnoteadmin')
+        if ($this->isSuperAdmin()
             || $this->roleKname() == Configure::read('WNote.DB.Sroles.Kname.sysadmin')) {
             return true;
         }
@@ -257,6 +292,45 @@ class AppUserComponent extends AppComponent
         return false;
     }
 
+    /**
+     * WNoteの管理者かどうかを返す
+     *  
+     * - - -
+     * @return boolean true:管理者|false:管理者以外
+     */
+    public function hasSuperAdmin()
+    {
+        if ($this->roleKname() == Configure::read('WNote.DB.Sroles.Kname.wnoteadmin')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 現在のドメイン上の管理者かどうかを返す
+     *  
+     * - - -
+     * @return boolean true:管理者|false:管理者以外
+     */
+    public function hasDomainAdmin()
+    {
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+
+        $domainId = $this->current();
+        $domains = $this->domains();
+        if ($domains) {
+            foreach ($domains as $domain) {
+                if ($domain['domain_id'] == $domainId && 
+                    $domain['srole']['kname'] == Configure::read('WNote.DB.Sroles.Kname.admin')) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     /**
      * 指定されたドメインに対する権限があるかどうかを判定する
@@ -299,6 +373,9 @@ class AppUserComponent extends AppComponent
         // 現在のドメインを変更
         $this->_current = $domainId;
 
+        // 利用可能なドメインを再取得する
+        $this->_createSapps();
+
         return true;
     }
 
@@ -315,6 +392,7 @@ class AppUserComponent extends AppComponent
             'user'      => $this->user(),
             'domains'   => $this->domains(),
             'current'   => $this->current(),
+            'sapps'     => $this->sapps(),
             'roleKname' => $this->roleKname(),
         ];
     }
@@ -342,6 +420,9 @@ class AppUserComponent extends AppComponent
         }
         if (array_key_exists('current', $array) && !is_null($array['current'])) {
             $this->_current = $array['current'];
+        }
+        if (array_key_exists('sapps', $array) && !is_null($array['sapps'])) {
+            $this->_sapps = $array['sapps'];
         }
         if (array_key_exists('roleKname', $array) && !is_null($array['roleKname'])) {
             $this->_roleKname = $array['roleKname'];

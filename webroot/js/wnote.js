@@ -64,6 +64,7 @@ WNote.Form.validator; // バリデーション用オブジェクト
 /** ユーティリティ用のルートオブジェクト */
 WNote.Util = {};
 WNote.Util.Validate = {};
+WNote.Util.All = {};
 
 /** 各ページのルートオブジェクト */
 var MyPage = {};
@@ -82,6 +83,10 @@ $(function() {
     WNote.registerEvent('click', 'change-domain'  , WNote.changeDomainHandler);       // ドメイン変更イベント（ヘッダー部ドメイン選択イベント）
     WNote.registerEvent('click', 'side-list'      , WNote.sideListClickHandler);      // サイドリスト（Element/Parts/side-list）用クリックイベント
     WNote.registerEvent('click', 'side-datatable' , WNote.sideDatatableClickHandler); // サイドデータテーブル（Element/Parts/side-datatable）用クリックイベント
+
+    // DatePicker設定
+    $.datepicker.regional['ja'] = WNote.Util.All.datePickerConfig();
+    $.datepicker.setDefaults($.datepicker.regional['ja']);
 });
 
 /** ---------------------------------------------------------------------------
@@ -301,9 +306,9 @@ WNote.ajaxValidateSend = function(_url, _type, _data) {
  * @return {object} Promise
  */ 
 WNote.ajaxSendBasic = function(_url, _type, _data, _showLoading, _successHandler, _failureHandler) {
-    _showLoading    = (_showLoading)    ? _showLoading    : true;
-    _successHandler = (_successHandler) ? _successHandler : WNote.ajaxSuccessHandler;
-    _failureHandler = (_failureHandler) ? _failureHandler : WNote.ajaxFailureHandler;
+    _showLoading    = (_showLoading !== undefined)    ? _showLoading    : true;
+    _successHandler = (_successHandler !== undefined) ? _successHandler : WNote.ajaxSuccessHandler;
+    _failureHandler = (_failureHandler !== undefined) ? _failureHandler : WNote.ajaxFailureHandler;
 
     // ローディング画面表示
     if (_showLoading) {
@@ -381,7 +386,7 @@ WNote.ajaxAddSelect2Options = function(_options) {
             return WNote.ajaXSendBeforeSendHandler(XMLHttpRequest);
     };
     _options.type = "POST";
-    _options.delay = 300;
+    _options.delay = 200;
     return _options;
 }
 
@@ -1076,5 +1081,30 @@ WNote.Util.Validate.UnhighlightHandler = function(element) {
  */
 WNote.Util.Validate.ErrorPlacementHandler = function(error, element) {
     error.insertAfter(element.parent());
+}
+
+
+/** ---------------------------------------------------------------------------
+ *  ユーティリティ（その他）
+ *  -------------------------------------------------------------------------*/
+WNote.Util.All.datePickerConfig = function() {
+    return {
+        closeText: '閉じる',
+        prevText: '<前',
+        nextText: '次>',
+        currentText: '今日',
+        monthNames: ['1月','2月','3月','4月','5月','6月',
+        '7月','8月','9月','10月','11月','12月'],
+        monthNamesShort: ['1月','2月','3月','4月','5月','6月',
+        '7月','8月','9月','10月','11月','12月'],
+        dayNames: ['日曜日','月曜日','火曜日','水曜日','木曜日','金曜日','土曜日'],
+        dayNamesShort: ['日','月','火','水','木','金','土'],
+        dayNamesMin: ['日','月','火','水','木','金','土'],
+        weekHeader: '週',
+        dateFormat: 'yy/mm/dd',
+        firstDay: 0,
+        isRTL: false,
+        showMonthAfterYear: true,
+        yearSuffix: '年'};
 }
 

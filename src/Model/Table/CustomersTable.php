@@ -58,6 +58,12 @@ class CustomersTable extends AppTable
             'dependent' => true
         ]);
 
+        $this->hasMany('Users', [
+            'foreignKey' => 'customer_id',
+            'joinType' => 'INNER',
+            'dependent' => true
+        ]);
+
         $this->_sorted   = ['Customers.kname' => 'ASC'];
     }
 

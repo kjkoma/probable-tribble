@@ -34,6 +34,7 @@ class ApiOrganizationsController extends ApiController
         parent::initialize();
         $this->_loadComponent('ModelOrganizations');
         $this->_loadComponent('ModelOrganizationTree');
+        $this->_loadComponent('ModelUsers');
     }
 
     /**
@@ -173,24 +174,26 @@ class ApiOrganizationsController extends ApiController
 
         $organizationId = $data['id'];
 
+        // 子孫を取得
+        $descendant = $this->ModelOrganizationTree->descendant($organizationId, true);
+
         // トランザクション開始
         $this->ModelOrganizations->begin();
 
         try {
-            // 資産管理組織を削除(資産管理組織階層以外はTableのDependencyを利用して依存データを削除)
-            $deleteOrganization = $this->ModelOrganizations->delete($organizationId);
-            $this->AppError->result($deleteOrganization);
+            // 子孫をを含めすべて削除する
+            foreach($descendant as $tree) {
+                // 資産管理組織を削除(TableのDependencyを利用して依存データを削除)
+                $deleteOrganization = $this->ModelOrganizations->delete($tree['descendant']);
+                $this->AppError->result($deleteOrganization);
 
-            // 資産管理組織階層を削除
-            $deleteOrganizationTree = ($this->AppError->has()) ? null : $this->ModelOrganizationTree->deleteTree($organizationId);
-            $this->AppError->result($deleteOrganizationTree);
-
-            // エラー判定
-            if ($this->AppError->has()) {
-                // ロールバック
-                $this->ModelOrganizations->rollback();
-                $this->setResponseError('your request is failure.', $this->AppError->errors());
-                return;
+                // エラー判定
+                if ($this->AppError->has()) {
+                    // ロールバック
+                    $this->ModelOrganizations->rollback();
+                    $this->setResponseError('your request is failure.', $this->AppError->errors());
+                    return;
+                }
             }
 
             // コミット
@@ -235,6 +238,12 @@ class ApiOrganizationsController extends ApiController
         // ルート組織を取得する
         $organizations = $this->ModelOrganizationTree->root($data['customer_id']);
 
+        // 配下組織を取得する
+        foreach($organizations as $i => $organization) {
+            $children = $this->ModelOrganizationTree->tree($organization['ancestor']);
+            $organizations[$i]['children'] = $children;
+        }
+
         // レスポンスメッセージの作成
         $this->setResponse(true, 'your request is succeed', ['organizations' => $organizations]);
     }
@@ -251,8 +260,41 @@ class ApiOrganizationsController extends ApiController
         // 配下組織を取得する
         $organizations = $this->ModelOrganizationTree->tree($data['organization_id']);
 
+        // 配下組織の配下組織を取得する
+        foreach($organizations as $i => $organization) {
+            $children = $this->ModelOrganizationTree->tree($organization['descendant']);
+            $organizations[$i]['children'] = $children;
+        }
+
         // レスポンスメッセージの作成
         $this->setResponse(true, 'your request is succeed', ['organizations' => $organizations]);
+    }
+
+    /**
+     * 指定組織配下の組織とユーザーを取得する
+     *
+     */
+    public function childrenWithUsers()
+    {
+        $data = $this->validateParameter('organization_id', ['post']);
+        if (!$data) return;
+
+        // 配下組織を取得する
+        $organizations = $this->ModelOrganizationTree->tree($data['organization_id']);
+
+        // 配下のユーザーを取得する
+        $users = $this->ModelUsers->treeNode($data['organization_id']);
+
+        // 配下組織の配下組織を取得する
+        foreach($organizations as $i => $organization) {
+            $children       = $this->ModelOrganizationTree->tree($organization['descendant']);
+            $children_users = $this->ModelUsers->treeNode($organization['descendant']);
+            $organizations[$i]['children'] = $children;
+            $organizations[$i]['users']    = $children_users;
+        }
+
+        // レスポンスメッセージの作成
+        $this->setResponse(true, 'your request is succeed', ['organizations' => $organizations, 'users' => $users]);
     }
 
     /**
@@ -268,7 +310,8 @@ class ApiOrganizationsController extends ApiController
         }
 
         // 配下組織を取得する
-        $organizations = $this->ModelOrganizations->find2List($data['term'], $data['organization_id']);
+        $organizationId = array_key_exists('organization_id', $data) ? $data['organization_id'] : null;
+        $organizations = $this->ModelOrganizations->find2List($data['term'], $organizationId);
 
         // レスポンスメッセージの作成
         $this->setResponse(true, 'your request is succeed', ['organizations' => $organizations]);

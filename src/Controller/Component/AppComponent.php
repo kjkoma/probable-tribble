@@ -69,10 +69,35 @@ class AppComponent extends Component
     {
         parent::initialize($config);
 
+        $this->setup($config);
+    }
+
+    /**
+     * 本クラスの再初期化を行う
+     *  
+     * - - -
+     * @param array $config コンフィグ
+     * @return void
+     */
+    public function reset(array $config)
+    {
+        $this->setup($config, false);
+    }
+
+    /**
+     * 本クラスの初期設定を行う
+     *  
+     * - - -
+     * @param array $config コンフィグ
+     * @param boolean $init true:初期化時/false:再作成時
+     * @return void
+     */
+    public function setup(array $config, $init = true)
+    {
         $this->_appUser   = array_key_exists('appUser'    , $config) ? $config['appUser']     : null;
         $modelName        = array_key_exists('modelName'  , $config) ? $config['modelName']   : null;
         $modelConfig      = array_key_exists('modelConfig', $config) ? $config['modelConfig'] : [];
-        $this->modelTable = is_null($modelName) ? null : $this->table($modelName, $modelConfig);
+        $this->modelTable = is_null($modelName) ? null : $this->table($modelName, $modelConfig, $init);
         $this->_con       = ConnectionManager::get('default');
     }
 
@@ -104,10 +129,15 @@ class AppComponent extends Component
      * - - -
      * @param string $modelName テーブルオブジェクトに登録するモデル名
      * @param array $modelConfig テーブルオブジェクトの登録時のコンフィグ
+     * @param boolean $init true:初期化時/false:再作成時
      * @return \Cake\ORM\Table テーブルオブジェクト
      */
-    public function table($modelName, $modelConfig = [])
+    public function table($modelName, $modelConfig = [], $init = true)
     {
+        if (!$init) {
+            TableRegistry::remove($modelName);
+        }
+
         return TableRegistry::get($modelName, $modelConfig);
     }
 

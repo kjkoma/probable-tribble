@@ -71,9 +71,9 @@ class SysModelSrolesComponent extends AppComponent
      * @param boolean $toArray true:配列で返す|false:ResultSetで返す（default）
      * @return array システムロールー一覧
      */
-    public function publics($toArray = false)
+    public function generals($toArray = false)
     {
-        $query = $this->modelTable->find('publics');
+        $query = $this->modelTable->find('generals');
 
         return ($toArray) ? $query->toArray() : $query->all();
     }

@@ -78,6 +78,20 @@ class AppUserHelper extends AppHelper
     }
 
     /**
+     * 認証ユーザーのシステム権限を取得する
+     *
+     * - - -
+     * @return array システム権限の識別子
+     */
+    public function role()
+    {
+        return $this->nArray(
+            $this->_appUser,
+            'roleKname'
+        );
+    }
+
+    /**
      * 認証ユーザーの現在のドメインIDを取得する
      *
      * - - -
@@ -106,6 +120,40 @@ class AppUserHelper extends AppHelper
     }
 
     /**
+     * 現在のドメイン上でユーザーが持つドメインロールを取得する
+     *  
+     * - - -
+     * @return string ドメインロールの識別子（kname）
+     */
+    public function domainRole()
+    {
+        $domainId = $this->domain();
+        $domains = $this->domains();
+        if ($domains) {
+            foreach ($domains as $domain) {
+                if ($domain['domain_id'] == $domainId) {
+                    return $domain['srole']['kname'];
+                }
+            }
+        }
+        return '';
+    }
+
+    /**
+     * 現在のドメインで利用可能なアプリケーション一覧を取得する
+     *
+     * - - -
+     * @return array 利用可能なアプリケーション一覧
+     */
+    public function sapps()
+    {
+        return $this->nArray(
+            $this->_appUser,
+            'sapps'
+        );
+    }
+
+    /**
      * 認証ユーザーのログイン有無を取得する
      *
      * - - -
@@ -123,20 +171,71 @@ class AppUserHelper extends AppHelper
     }
 
     /**
-     * 認証ユーザーがシステム管理者かどうかを判定する
+     * 認証ユーザーがシステム管理者以上の権限を有するかを判定する
      *
      * - - -
      * @return boolean true:システム管理者|false:システム管理者以外
      */
-    public function isAdmin()
+    public function hasAdmin()
     {
-        $roleKname = $this->nArray(
-            $this->_appUser,
-            'roleKname'
-        );
+        if ($this->hasSuperAdmin()) {
+            return true;
+        }
 
-        if ($roleKname == $this->conf('WNote.DB.Sroles.Kname.wnoteadmin')
-            || $roleKname == $this->conf('WNote.DB.Sroles.Kname.sysadmin')) {
+        if ($this->role() == $this->conf('WNote.DB.Sroles.Kname.sysadmin')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 認証ユーザーがWNoteの管理者かどうかを判定する
+     *  
+     * - - -
+     * @return boolean true:管理者|false:管理者以外
+     */
+    public function hasSuperAdmin()
+    {
+        if ($this->role() == $this->conf('WNote.DB.Sroles.Kname.wnoteadmin')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 現在のドメイン上の管理者以上の権限を有するかを返す
+     *  
+     * - - -
+     * @return boolean true:管理者|false:管理者以外
+     */
+    public function hasDomainAdmin()
+    {
+        if ($this->hasSuperAdmin()) {
+            return true;
+        }
+
+        if ($this->domainRole() == $this->conf('WNote.DB.Sroles.Kname.admin')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 現在のドメイン上の一般利用者以上の権限を有するかを返す
+     *  
+     * - - -
+     * @return boolean true:一般利用者|false:一般利用者
+     */
+    public function hasDomainGeneral()
+    {
+        if ($this->hasDomainAdmin()) {
+            return true;
+        }
+
+        if ($this->domainRole() == $this->conf('WNote.DB.Sroles.Kname.general')) {
             return true;
         }
 
@@ -172,6 +271,28 @@ class AppUserHelper extends AppHelper
         if ($domains) {
             foreach ($domains as $domain) {
                 if ($domain['domain_id'] == $domainId) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 現在のドメインで利用可能なアプリケーションかどうかを判定する
+     *
+     * - - -
+     * @param string $kname アプリケーション識別子
+     * @return boolean true:利用可能|false:利用不可
+     */
+    public function allowSapp($kname)
+    {
+        $sapps = $this->sapps();
+
+        if ($sapps) {
+            foreach ($sapps as $sapp) {
+                if ($sapp['sapp']['kname'] == $kname) {
                     return true;
                 }
             }

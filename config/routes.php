@@ -82,13 +82,13 @@ Router::scope('/', function (RouteBuilder $routes) {
             $routes->prefix('admin', function (RouteBuilder $routes) {
                 $routes->fallbacks(DashedRoute::class);
             });
-            $routes->prefix('public', function (RouteBuilder $routes) {
+            $routes->prefix('general', function (RouteBuilder $routes) {
                 $routes->fallbacks(DashedRoute::class);
             });
         });
     });
 
-    /* System Master Routes */
+    /* Master Routes */
     Router::prefix('master', function (RouteBuilder $routes) {
         $routes->prefix('system', function (RouteBuilder $routes) {
             $routes->fallbacks(DashedRoute::class);
@@ -96,7 +96,7 @@ Router::scope('/', function (RouteBuilder $routes) {
         $routes->prefix('admin', function (RouteBuilder $routes) {
             $routes->fallbacks(DashedRoute::class);
         });
-        $routes->prefix('public', function (RouteBuilder $routes) {
+        $routes->prefix('general', function (RouteBuilder $routes) {
             $routes->fallbacks(DashedRoute::class);
         });
     });

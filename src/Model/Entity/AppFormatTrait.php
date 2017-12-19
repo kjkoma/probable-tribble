@@ -38,7 +38,7 @@ trait AppFormatTrait
         }
 
         $dt = Time::parse($date);
-        return $dt->i18nFormat('yyyy-MM-dd');
+        return $dt->i18nFormat('yyyy/MM/dd');
     }
 
     /**
@@ -120,5 +120,37 @@ trait AppFormatTrait
         }
 
         return $this->__dateFormat($this->_properties['end_date']);
+    }
+
+    /**
+     * 販売開始日を取得する
+     *  
+     * - - -
+     * @param string $value    文字列
+     * @return string トリム後の文字列
+     */
+    public function _getSalesStart()
+    {
+        if (!isset($this->_properties['sales_start'])) {
+            return null;
+        }
+
+        return $this->__dateFormat($this->_properties['sales_start']);
+    }
+
+    /**
+     * 販売終了日を取得する
+     *  
+     * - - -
+     * @param string $value    文字列
+     * @return string トリム後の文字列
+     */
+    public function _getSalesEnd()
+    {
+        if (!isset($this->_properties['sales_end'])) {
+            return null;
+        }
+
+        return $this->__dateFormat($this->_properties['sales_end']);
     }
 }

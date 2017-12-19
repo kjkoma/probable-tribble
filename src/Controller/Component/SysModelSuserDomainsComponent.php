@@ -53,6 +53,23 @@ class SysModelSuserDomainsComponent extends AppComponent
     }
 
     /**
+     * 特定のシステムユーザードメイン一覧を取得する(ロールデータ含む)
+     *  
+     * - - -
+     * @param integer $suserId システムユーザーID
+     * @param boolean $toArray true:配列で返す|false:ResultSetで返す（default）
+     * @return array ドメイン一覧
+     */
+    public function findBySuserIdWithRole($suserId, $toArray = false)
+    {
+        $query = $this->modelTable->find('sorted')
+            ->where(['suser_id' => $suserId])
+            ->contain(['Sroles']);
+
+        return ($toArray) ? $query->toArray() : $query->all();
+    }
+
+    /**
      * 指定のシステムユーザーID／ドメインIDのデータを取得する
      *  
      * - - -

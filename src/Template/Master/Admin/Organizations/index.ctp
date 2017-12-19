@@ -14,6 +14,7 @@
  * 2017.12.31 R&D 新規作成
  */
 $this->assign('title', '資産管理グループ');
+$this->assign('onlyDomainAdmin', true);
 $this->Breadcrumbs->add('Home', ['prefix' => false, 'controller' => 'Home', 'action' => 'home']);
 $this->Breadcrumbs->add('マスタ（管理）', '#');
 $this->Breadcrumbs->add('資産管理グループ', ['controller' => 'Organizations', 'action' => 'index']);
@@ -27,18 +28,18 @@ $this->Breadcrumbs->add('資産管理グループ', ['controller' => 'Organizati
     <div class="row">
 
         <!-- ********************************** -->
-        <!-- Customer List                      -->
+        <!-- Organization List                  -->
         <!-- ********************************** -->
-        <?= $this->element('Parts/side-organizations-tree', [
+        <?= $this->element('Parts/side-tree-organizations', [
             'title'     => '資産管理グループ',
             'customers' => $customers,
         ]) ?>
 
         <!-- ********************************** -->
-        <!-- Customer Details                       -->
+        <!-- Organization Details               -->
         <!-- ********************************** -->
 
-        <!-- CUSTOMER DETAIL widget -->
+        <!-- DETAIL widget -->
         <article class="col-sm-8 sortable-grid ui-sortable">
 
             <!-- widget ID -->
@@ -49,7 +50,7 @@ $this->Breadcrumbs->add('資産管理グループ', ['controller' => 'Organizati
                  data-widget-togglebutton="false"
                  data-widget-sortable="false">
 
-                <!-- CUSTOMER DETAILS widget header -->
+                <!-- DETAILS widget header -->
                 <header role="heading">
                     <span class="widget-icon"> <i class="fa fa-lg fa-building"></i> </span>
                     <h2>資産管理グループ詳細</h2>
@@ -71,10 +72,10 @@ $this->Breadcrumbs->add('資産管理グループ', ['controller' => 'Organizati
                 <!-- content -->
                 <div role="content">
 
-                    <!-- CUSTOMER DETAILS widget body -->
+                    <!-- DETAILS widget body -->
                     <div class="widget-body">
 
-                        <!-- customer form -->
+                        <!-- form -->
                         <?= $this->Form->create(null, ['id' => 'form-organization', 'type' => 'post', 'class' => "smart-form"]) ?>
 
                             <header>
@@ -133,13 +134,13 @@ $this->Breadcrumbs->add('資産管理グループ', ['controller' => 'Organizati
                                 </section>
                             </fieldset>
 
-                        <!-- End customer form -->
+                        <!-- End form -->
                         <input type="hidden" name="organization.id" id="id" data-app-form="form-organization">
                         <input type="hidden" name="organization.customer_id" id="customer_id" data-app-form="form-organization">
                         <?= $this->Form->end() ?>
                         </form>
 
-                        <!-- End CUSTOMER DETAILS widget body -->
+                        <!-- End DETAILS widget body -->
                     </div>
 
                     <!-- End content -->
@@ -148,7 +149,7 @@ $this->Breadcrumbs->add('資産管理グループ', ['controller' => 'Organizati
                 <!-- End widget ID -->
             </div>
 
-            <!-- End CUSTOMER DETAILS widget -->
+            <!-- End DETAILS widget -->
         </article>
 
         <!-- End widget grid row -->
@@ -159,6 +160,6 @@ $this->Breadcrumbs->add('資産管理グループ', ['controller' => 'Organizati
 
 
 <!-- load script -->
-<?= $this->element('Common/load-datatable') ?>
+<?php $this->Html->script('wnote/wnote.tree.organizations.js', ['block' => true]); ?>
 <?php $this->Html->script('wnote/master/admin/organizations.index.js', ['block' => true]); ?>
 

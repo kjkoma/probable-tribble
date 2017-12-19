@@ -38,6 +38,7 @@
 
 
             <!-- イベント -->
+            <?php if ($this->AppUser->allowSapp($this->App->conf('WNote.DB.Sapps.Kname.event'))) { ?>
             <li class="">
                 <a href="#" title="Dashboard"><i class="fa fa-lg fa-fw fa-star"></i> <span
                             class="menu-item-parent">イベント</span></a>
@@ -48,8 +49,10 @@
                                     class="menu-item-parent">準備中・・・</span></a></li>
                 </ul>
             </li>
+            <?php } ?>
 
             <!-- 入庫 -->
+            <?php if ($this->AppUser->allowSapp($this->App->conf('WNote.DB.Sapps.Kname.instock'))) { ?>
             <li class="">
                 <a href="#"><i class="fa fa-lg fa-fw fa-archive txt-color-blue"></i> <span
                             class="menu-item-parent">入庫</span></a>
@@ -65,8 +68,10 @@
                                     class="menu-item-parent">未入庫一覧</span></a></li>
                 </ul>
             </li>
+            <?php } ?>
 
             <!-- 出庫 -->
+            <?php if ($this->AppUser->allowSapp($this->App->conf('WNote.DB.Sapps.Kname.picking'))) { ?>
             <li class="">
                 <a href="#"><i class="fa fa-lg fa-fw fa-truck txt-color-blue"></i> <span
                             class="menu-item-parent">出庫</span></a>
@@ -81,8 +86,10 @@
                             <span class="menu-item-parent">準備中・・・</span></a></li>
                 </ul>
             </li>
+            <?php } ?>
 
             <!-- 在庫 -->
+            <?php if ($this->AppUser->allowSapp($this->App->conf('WNote.DB.Sapps.Kname.stock'))) { ?>
             <li class="">
                 <a href="#"><i class="fa fa-lg fa-fw fa-briefcase txt-color-blue"></i> <span
                             class="menu-item-parent">在庫</span></a>
@@ -97,8 +104,10 @@
                             <span class="menu-item-parent">準備中・・・</span></a></li>
                 </ul>
             </li>
+            <?php } ?>
 
             <!-- 棚卸 -->
+            <?php if ($this->AppUser->allowSapp($this->App->conf('WNote.DB.Sapps.Kname.stocktake'))) { ?>
             <li class="">
                 <a href="#"><i class="fa fa-lg fa-fw fa-pencil txt-color-blue"></i> <span
                             class="menu-item-parent">棚卸</span></a>
@@ -113,8 +122,10 @@
                             <span class="menu-item-parent">準備中・・・</span></a></li>
                 </ul>
             </li>
+            <?php } ?>
 
             <!-- 資産 -->
+            <?php if ($this->AppUser->allowSapp($this->App->conf('WNote.DB.Sapps.Kname.asset'))) { ?>
             <li class="">
                 <a href="#"><i class="fa fa-lg fa-fw fa-suitcase txt-color-blue"></i> <span
                             class="menu-item-parent">資産</span></a>
@@ -129,8 +140,10 @@
                             <span class="menu-item-parent">準備中・・・</span></a></li>
                 </ul>
             </li>
+            <?php } ?>
 
             <!-- 貸出・返却 -->
+            <?php if ($this->AppUser->allowSapp($this->App->conf('WNote.DB.Sapps.Kname.rental'))) { ?>
             <li class="">
                 <a href="#"><i class="fa fa-lg fa-fw fa-share-alt txt-color-blue"></i> <span class="menu-item-parent">貸出・返却</span></a>
                 <ul>
@@ -144,32 +157,41 @@
                                     class="menu-item-parent">返却（依頼）</span></a></li>
                 </ul>
             </li>
+            <?php } ?>
 
             <!-- マスタ（一般） -->
+            <?php if ($this->AppUser->hasDomainGeneral()) { ?>
             <li class="">
                 <a href="#">
                     <i class="fa fa-lg fa-fw fa-gear txt-color-blue"></i> <span class="menu-item-parent">マスタ（一般）</span>
                 </a>
                 <ul>
                     <li class="">
-                        <a href="/master/public/companies" title="企業">
+                        <a href="/master/general/companies" title="企業">
                             <i class="fa fa-lg fa-fw fa-building-o"></i> <span class="menu-item-parent">仕入先/メーカー</span>
                         </a>
                     </li>
                     <li class="">
-                        <a href="/master/public/products" title="製品">
+                        <a href="/master/general/products" title="製品">
                             <i class="fa fa-lg fa-fw fa-shopping-cart"></i> <span class="menu-item-parent">製品/モデル</span>
                         </a>
                     </li>
                     <li class="">
-                        <a href="/master/admin/types" title="配送先">
+                        <a href="/master/general/cpus" title="CPU">
+                            <i class="fa fa-lg fa-fw fa-microchip"></i> <span class="menu-item-parent">CPU</span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="/master/general/deliveries" title="配送先">
                             <i class="fa fa-lg fa-fw fa-truck"></i> <span class="menu-item-parent">配送先</span>
                         </a>
                     </li>
                 </ul>
             </li>
+            <?php } ?>
 
             <!-- マスタ（管理） -->
+            <?php if ($this->AppUser->hasDomainAdmin()) { ?>
             <li class="">
                 <a href="#">
                     <i class="fa fa-lg fa-fw fa-gear txt-color-blue"></i> <span class="menu-item-parent">マスタ（管理）</span>
@@ -201,8 +223,10 @@
                     </li>
                 </ul>
             </li>
+            <?php } ?>
 
             <!-- マスタ（システム） -->
+            <?php if ($this->AppUser->hasAdmin()) { ?>
             <li class="">
                 <a href="#">
                     <i class="fa fa-lg fa-fw fa-gear txt-color-blue"></i> <span class="menu-item-parent">マスタ（システム）</span>
@@ -220,7 +244,7 @@
                     </li>
                 </ul>
             </li>
-
+            <?php } ?>
 
             <!-- End Navigation List -->
         </ul>

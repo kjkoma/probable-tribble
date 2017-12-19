@@ -31,7 +31,7 @@ $id       = isset($id)       ? $id       : "";
 $form     = isset($form)     ? $form     : "";
 $disabled = isset($disabled) ? $disabled : true;
 $class    = isset($class)    ? $class    : "";
-$default  = isset($default)  ? $default  : $this->App->conf('WNote.DB.Sroles.Kname.public');
+$default  = isset($default)  ? $default  : $this->App->conf('WNote.DB.Sroles.Kname.general');
 $attr     = isset($attr)     ? $attr     : "";
 $disabled_attr = ($disabled) ? 'disabled="disabled"' : '';
 ?>

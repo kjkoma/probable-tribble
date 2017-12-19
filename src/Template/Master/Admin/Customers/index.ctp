@@ -14,6 +14,7 @@
  * 2017.12.31 R&D 新規作成
  */
 $this->assign('title', '資産管理会社');
+$this->assign('onlyDomainAdmin', true);
 $this->Breadcrumbs->add('Home', ['prefix' => false, 'controller' => 'Home', 'action' => 'home']);
 $this->Breadcrumbs->add('マスタ（管理）', '#');
 $this->Breadcrumbs->add('資産管理会社', ['controller' => 'Customers', 'action' => 'index']);

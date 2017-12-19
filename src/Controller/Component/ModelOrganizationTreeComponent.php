@@ -53,18 +53,7 @@ class ModelOrganizationTreeComponent extends AppModelComponent
             ->order(['Ancestor.kname' => 'ASC'])
             ->all();
 
-        $result = [];
-        foreach($list as $item) {
-            array_push($result, [
-                'id'              => $item['id'],
-                'ancestor'        => $item['ancestor'],
-                'descendant'      => $item['descendant'],
-                'ancestor_name'   => $item['organization']['kname'],
-                'descendant_name' => $item['organization']['kname']
-            ]);
-        }
-
-        return $result;
+        return $this->makeTreeArray($list);
     }
 
     /**
@@ -86,18 +75,7 @@ class ModelOrganizationTreeComponent extends AppModelComponent
             ->order(['Descendant.kname' => 'ASC'])
             ->all();
 
-        $result = [];
-        foreach($list as $item) {
-            array_push($result, [
-                'id'              => $item['id'],
-                'ancestor'        => $item['ancestor'],
-                'descendant'      => $item['descendant'],
-                'ancestor_name'   => $item['organization']['kname'],
-                'descendant_name' => $item['organization']['kname']
-            ]);
-        }
-
-        return $result;
+        return $this->makeTreeArray($list);
     }
 
     /**
@@ -257,7 +235,7 @@ class ModelOrganizationTreeComponent extends AppModelComponent
         $myself         = $this->myself($organizationId);
 
         // 変更前の資産管理会社IDを削除
-        $myself->unsetProperty('customer_id');
+        $myself['customer_id'] = null;
         $result = $this->save($myself->toArray());
         if (!$result['result']) {
             return $result;
@@ -295,32 +273,6 @@ class ModelOrganizationTreeComponent extends AppModelComponent
      * @return array 保存結果（result:true/false, errors:エラー内容, data: 保存データ）
      */
     public function deleteTree($organizationId) {
-        $myself   = $this->myself($organizationId);
-        $children = $this->children($organizationId);
-
-        // 親子関係の付替
-        if (!empty($myself['parent_id'])) {
-            // 親がルート以外の場合
-            $myparent = $this->myparent($organizationId);
-            foreach($children as $child) {
-                $relationship = $this->relationship($myparent['ancestor'], $child['descendant']);
-                $relationship['neighbor'] = Configure::read('WNote.DB.Neighbor.true');
-                $result = $this->save($relationship->toArray());
-                if (!$result['result']) {
-                    return $result;
-                }
-            }
-        } else {
-            // 親がルートの場合
-            foreach($children as $child) {
-                $child['customer_id'] = $myself['customer_id'];
-                $result = $this->save($child);
-                if (!$result['result']) {
-                    return $result;
-                }
-            }
-        }
-
         // 自分自身の削除
         $result = $this->deleteAll(['ancestor' => $organizationId]);
         if (!$result['result']) {
@@ -386,7 +338,7 @@ class ModelOrganizationTreeComponent extends AppModelComponent
         foreach($ancestors as $ancestor) {
             // 子孫の先祖データを削除
             foreach($descendant as $child) {
-                $result = $this->deleteAll(['ancestor' => $ancestor['ancestor'], 'descendant' => $child['id']]);
+                $result = $this->deleteAll(['ancestor' => $ancestor['ancestor'], 'descendant' => $child['descendant']]);
                 if (!$result['result']) {
                     return $result;
                 }
@@ -422,6 +374,28 @@ class ModelOrganizationTreeComponent extends AppModelComponent
         }
         if (!$result && count($myparent) > 0 && $myparent['ancestor'] != $tree['parent_id']) {
             $result = true;
+        }
+
+        return $result;
+    }
+
+    /**
+     * ビューのツリーノード表示形式の配列を作成する
+     *  
+     * - - -
+     * @param array $list 組織一覧のResultSetオブジェクト
+     * @return array ツリーノード表示形式の配列
+     */
+    public function makeTreeArray($list) {
+        $result = [];
+        foreach($list as $item) {
+            array_push($result, [
+                'id'              => $item['id'],
+                'ancestor'        => $item['ancestor'],
+                'descendant'      => $item['descendant'],
+                'ancestor_name'   => $item['organization']['kname'],
+                'descendant_name' => $item['organization']['kname']
+            ]);
         }
 
         return $result;

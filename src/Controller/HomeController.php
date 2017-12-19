@@ -65,7 +65,7 @@ class HomeController extends AppController
      */
     public function changeDomain()
     {
-        if ($this->request->is('post'))$this->AppUser->changeCurrent($data['to_domain_id']);
+        if ($this->request->is('post'))
         {
             $data = $this->request->getData();
             if ($data && array_key_exists('to_domain_id', $data)) {

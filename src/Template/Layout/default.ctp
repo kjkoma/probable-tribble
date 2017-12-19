@@ -73,7 +73,9 @@
     <!-- ** contents ** -->
     <div id="content">
         <?php
-        if ($this->fetch('onlySysAdmin') && !$this->AppUser->isAdmin()) {
+        if ($this->fetch('onlySysAdmin') && !$this->AppUser->hasAdmin()) {
+            echo $this->element('Parts/unauthorized');
+        } else if ($this->fetch('onlyDomainAdmin') && !$this->AppUser->hasDomainAdmin()) {
             echo $this->element('Parts/unauthorized');
         } else {
             echo $this->fetch('content');

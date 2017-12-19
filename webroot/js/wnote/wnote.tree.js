@@ -1,4 +1,12 @@
 /**
+ * ツリーを扱う為の基底となるライブラリ
+ * 
+ * [依存ライブラリ]
+ *   - jquery.js
+ *   - jquery.ui.js
+ *   - fancytree-all.min.js
+ *   - wnote.js
+ * 
  * Copyright (c) Japan Computer Services, Inc.
  *
  * Licensed under The MIT License
@@ -39,6 +47,11 @@ WNote.Tree.Options = {
     source    : [],
     activate  : function(event, data) {
         WNote.Tree.nodeActivate(event, data);
+    },
+    beforeExpand : function(event, data) {
+        if (!data.node.isExpanded()) {
+            WNote.Tree.activate(data.node.key);
+        }
     }
 };
 
@@ -146,16 +159,38 @@ WNote.Tree.activate = function(nodeId)
 }
 
 /**
+ * ツリーノードをアクティブ化後に展開する
+ *
+ * @param {string|number} nodeId ノードID
+ */
+WNote.Tree.expand = function(nodeId)
+{
+    WNote.Tree.activate(nodeId);
+    var node = WNote.Tree.node(nodeId);
+    node.navigate($.ui.keyCode.RIGHT);
+}
+
+/**
+ * 現在のアクティブノードの親ノードをアクティブ化して展開する
+ *
+ */
+WNote.Tree.activateParent = function()
+{
+    var parent = WNote.Tree.parent();
+    WNote.Tree.expand(parent.key);
+}
+
+/**
  * ノードを作成する
  *
- * @param {string}  text    表示名称
- * @param {string}  key     表示名称のキー
- * @param {string}  type    表示タイプ（root or item or value）
- * @param {object}  attr    属性データ
- * @param {boolean} folder  true:フォルダアイコン/false:ファイルアイコン
- * @param {object}  child   子ノード（存在しない場合はnull）
+ * @param {string}  text     表示名称
+ * @param {string}  key      表示名称のキー
+ * @param {string}  type     表示タイプ（root or item or value）
+ * @param {object}  attr     属性データ
+ * @param {boolean} folder   true:フォルダアイコン/false:ファイルアイコン
+ * @param {object}  children 子ノード（存在しない場合はnull）
  */
-WNote.Tree.createNode = function(text, key, type, attr, folder, child)
+WNote.Tree.createNode = function(text, key, type, attr, folder, children)
 {
     return {
         title: text,
@@ -163,6 +198,28 @@ WNote.Tree.createNode = function(text, key, type, attr, folder, child)
         type: type,
         data: attr,
         folder: folder,
-        children: child
+        children: children
     };
+}
+
+/**
+ * サーバーより指定ノード配下の情報を取得する
+ *
+ * @param {string} url   呼び出し先のURL
+ * @param {object} data  送信データのオブジェクト
+ * @return {object} サーバーのレスポンスデータ
+ */
+WNote.Tree.getChildren = function(url, data) {
+    // サーバーよりノード配下の情報を取得
+    var result = WNote.ajaxValidateSend(
+        url, 'POST', data
+    );
+
+    if (!result) {
+        WNote.log(result);
+        WNote.showErrorMessage('エラーが発生した為、選択されたノード配下の情報が取得できませんでした。');
+        return null;
+    }
+
+    return result;
 }

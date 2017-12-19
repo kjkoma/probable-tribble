@@ -1,4 +1,18 @@
 <?php
+/**
+ * Copyright (c) Japan Computer Services, Inc.
+ *
+ * Licensed under The MIT License
+ *
+ * @author    Japan Computer Services, Inc
+ * @copyright Copyright (c) Japan Computer Services, Inc. (http://www.japacom.co.jp)
+ * @since     1.0.0
+ * @version   1.0.0
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT License
+ *
+ * -- Histories --
+ * 2017.12.31 R&D 新規作成
+ */
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -17,7 +31,7 @@ use Cake\ORM\Entity;
  *
  * @property \App\Model\Entity\App[] $apps
  */
-class Sapp extends Entity
+class Sapp extends AppEntity
 {
 
     /**
@@ -30,13 +44,7 @@ class Sapp extends Entity
      * @var array
      */
     protected $_accessible = [
-        'kname' => true,
-        'name' => true,
-        'remarks' => true,
-        'created_at' => true,
-        'created_user' => true,
-        'modified_at' => true,
-        'modified_user' => true,
-        'apps' => true
+        '*' => true,
+        'id' => false
     ];
 }

@@ -1,4 +1,18 @@
 <?php
+/**
+ * Copyright (c) Japan Computer Services, Inc.
+ *
+ * Licensed under The MIT License
+ *
+ * @author    Japan Computer Services, Inc
+ * @copyright Copyright (c) Japan Computer Services, Inc. (http://www.japacom.co.jp)
+ * @since     1.0.0
+ * @version   1.0.0
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT License
+ *
+ * -- Histories --
+ * 2017.12.31 R&D 新規作成
+ */
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -19,7 +33,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Domain $domain
  * @property \App\Model\Entity\Customer $customer
  */
-class OrganizationTree extends Entity
+class OrganizationTree extends AppEntity
 {
 
     /**
@@ -32,6 +46,7 @@ class OrganizationTree extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => true
+        '*' => true,
+        'id' => false
     ];
 }

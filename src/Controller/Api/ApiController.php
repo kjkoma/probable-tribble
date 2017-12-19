@@ -211,7 +211,7 @@ class ApiController extends Controller
         $this->_errors[self::PAYLOAD_ERROR_CODE]   = $code;
         $this->_errors[self::PAYLOAD_ERROR_STATUS] = $status;
 
-        $this->log('=S= ERROR : ' . $code . ' : ' . __($message));
+        $this->log('=S= ERROR : ' . $this->name . ' : ' . $this->request->action . ' : ' . $code . ' : ' . __($message));
         $this->log($keyInfo);
         $this->log('=E= ERROR');
     }
@@ -246,7 +246,7 @@ class ApiController extends Controller
                 if ($match) break;
             }
             if (!$match) {
-                 $this->setError('指定されたHTTPメソッドには対応していません。', 'UNSUPPORTED_HTTP_METHOD', $data);
+                $this->setError('指定されたHTTPメソッドには対応していません。', 'UNSUPPORTED_HTTP_METHOD', $data);
                 return false;
             }
         }

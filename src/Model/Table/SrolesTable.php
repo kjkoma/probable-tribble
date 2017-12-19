@@ -180,9 +180,9 @@ class SrolesTable extends AppTable
      * @param array $options なし
      * @return \Cake\ORM\Query 実行可能なクエリオブジェクト
      */
-    public function findPublics(Query $query, array $options)
+    public function findGenerals(Query $query, array $options)
     {
         return  $query->find('valid')
-            ->where(['role_type' => Configure::read('WNote.DB.Sroles.RoleType.public')]);
+            ->where(['role_type' => Configure::read('WNote.DB.Sroles.RoleType.general')]);
     }
 }

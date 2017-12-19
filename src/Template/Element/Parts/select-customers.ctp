@@ -42,7 +42,7 @@ $labeled  = isset($labeled)  ? $labeled  : true;
 <label class="select">
 <?php } ?>
     <select name="<?= $name ?>" id="<?= $id ?>" class="input-sm <?= $class ?>"
-            data-app-form="<?= $form ?>" data-app-form-default="<?= $this->AppGlobal->domainRoleId($default) ?>"
+            data-app-form="<?= $form ?>" data-app-form-default="<?= $default ?>"
             <?= $attr ?> <?= $disabled_attr ?>>
         <?php foreach($customers as $customer) { ?>
             <option value="<?= h($customer['id']) ?>"><?= h($customer['kname']) ?></option>

@@ -33,20 +33,43 @@ class AppModelComponent extends AppComponent
      * @param array $config コンフィグ
      *     [
      *         'appUser'     => 認証ユーザー情報（AppUserComponentのオブジェクト）
-     *         'modelName'   => テーブルオブジェクトに登録するモデル名(string),
+     *         'modelName'   => テーブルオブジェクトに登録するモデル名(string)
      *         'modelConfig' => テーブルオブジェクトの登録時のコンフィグ(array)
-     *         'load' => 初期化時にロード処理を行うかどうかを指定(string)/'true':行う(default)/'false':行わない
      *     ]
      * @return void
      */
     public function initialize(array $config)
+    {
+        parent::initialize($this->createConfig($config));
+    }
+
+    /**
+     * 本クラスの再初期化を行う
+     *  
+     * - - -
+     * @param array $config コンフィグ
+     * @return void
+     */
+    public function reset(array $config)
+    {
+        parent::reset($this->createConfig($config));
+    }
+
+    /**
+     * 本クラスのコンフィグを作成する
+     *  
+     * - - -
+     * @param array $config コンフィグ
+     * @return array コンフィグ
+     */
+    public function createConfig(array $config)
     {
         $config = ($config) ? $config : [];
         $modelConfig = array_key_exists('modelConfig', $config) ? $config['modelConfig'] : [];
         $modelConfig['appUser'] = $config['appUser'];
         $config['modelConfig']  = $modelConfig;
 
-        parent::initialize($config);
+        return $config;
     }
 
     /**
@@ -55,15 +78,16 @@ class AppModelComponent extends AppComponent
      * - - -
      * @param string $modelName テーブルオブジェクトに登録するモデル名
      * @param array $modelConfig テーブルオブジェクトの登録時のコンフィグ
+     * @param boolean $init true:初期化時/false:再作成時
      * @return \Cake\ORM\Table テーブルオブジェクト
      */
-    public function table($modelName, $modelConfig = [])
+    public function table($modelName, $modelConfig = [], $init = true)
     {
         if (!array_key_exists('appUser', $modelConfig)) {
             $modelConfig['appUser'] = $this->_appUser;
         }
 
-        return TableRegistry::get($modelName, $modelConfig);
+        return parent::table($modelName, $modelConfig, $init);
     }
 
     /**

@@ -37,6 +37,34 @@ class ModelDomainAppsComponent extends AppModelComponent
     }
 
     /**
+     * 本クラスの再初期化処理を行う
+     *  
+     * - - -
+     * @param array $config コンフィグ
+     * @return void
+     */
+    public function reset(array $config)
+    {
+        $config['modelName'] = 'DomainApps';
+        parent::reset($config);
+    }
+
+    /**
+     * 現在の利用可能なアプリケーション一覧を取得する（アプリケーション情報を含む）
+     *  
+     * - - -
+     * @param boolean $toArray true:配列で返す|false:ResultSetで返す（default）
+     * @return array アプリケーション一覧
+     */
+    public function available($toArray = false)
+    {
+        $query = $this->modelTable->find('sorted')
+            ->contain(['Sapps']);
+
+        return ($toArray) ? $query->toArray() : $query->all();
+    }
+
+    /**
      * 特定のドメインアプリケーション一覧を取得する
      *  
      * - - -

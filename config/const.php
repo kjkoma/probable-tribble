@@ -21,22 +21,42 @@ return [
                 'Kname' => [
                     'wnoteadmin' => 'WNOTEADMIN',
                     'sysadmin'   => 'SYSADMIN',
-                    'syspublic'  => 'SYSPUBLIC',
+                    'sysgeneral' => 'SYSGENERAL',
                     'admin'      => 'ADMIN',
-                    'public'     => 'PUBLIC',
+                    'general'    => 'GENERAL',
                     'reference'  => 'REFERENCE',
                 ],
                 'RoleType' => [
-                    'wnote'  => 0,
-                    'system' => 3,
-                    'domain' => 2,
-                    'public' => 1,
+                    'wnote'   => 0,
+                    'system'  => 3,
+                    'domain'  => 2,
+                    'general' => 1,
                 ],
             ],
             'SuserDomains' => [
                 'DefaultDomain' => [
                     'default' => '1',
                     'not'     => '0',
+                ],
+            ],
+            'Sapps' => [
+                'Kname' => [
+                    'event'     => 'EVENT',
+                    'instock'   => 'INSTOCK',
+                    'picking'   => 'PICKING',
+                    'stock'     => 'STOCK',
+                    'stocktake' => 'STOCKTAKE',
+                    'asset'     => 'ASSET',
+                    'rental'    => 'RENTAL',
+                ],
+            ],
+            'Companies' => [
+                'CompanyKbn' => [
+                    'all'      => '0',
+                    'maker'    => '1',
+                    'supplier' => '2',
+                    'delivery' => '3',
+                    'dest'     => '4',
                 ],
             ],
             'Dsts' => [

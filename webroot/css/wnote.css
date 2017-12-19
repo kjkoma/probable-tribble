@@ -42,6 +42,11 @@ body.smart-style-6 #logo-group>span#logo:before {
   background: url("/img/api-loading.gif") center center no-repeat;
 }
 
+/* tree menu additional style */
+.scroll-tree {
+    height:540px;
+    overflow-y: scroll;
+}
 
 /* fancytree override style */
 ul.fancytree-container {

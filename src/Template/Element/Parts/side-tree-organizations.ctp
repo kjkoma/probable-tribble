@@ -88,4 +88,3 @@ $itemName = isset($itemName) ? $itemName : "kname";
 
 <!-- load script -->
 <?php $this->Html->script('wnote/wnote.tree.js', ['block' => true]); ?>
-<?php $this->Html->script('wnote/wnote.tree.organizations.js', ['block' => true]); ?>

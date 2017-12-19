@@ -1,4 +1,18 @@
 <?php
+/**
+ * Copyright (c) Japan Computer Services, Inc.
+ *
+ * Licensed under The MIT License
+ *
+ * @author    Japan Computer Services, Inc
+ * @copyright Copyright (c) Japan Computer Services, Inc. (http://www.japacom.co.jp)
+ * @since     1.0.0
+ * @version   1.0.0
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT License
+ *
+ * -- Histories --
+ * 2017.12.31 R&D 新規作成
+ */
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -19,7 +33,7 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\FrozenTime $modified_at
  * @property int $modified_user
  */
-class Sname extends Entity
+class Sname extends AppEntity
 {
 
     /**
@@ -32,16 +46,7 @@ class Sname extends Entity
      * @var array
      */
     protected $_accessible = [
-        'nkey' => true,
-        'nid' => true,
-        'name' => true,
-        'name2' => true,
-        'sort_no' => true,
-        'remarks' => true,
-        'dsts' => true,
-        'created_at' => true,
-        'created_user' => true,
-        'modified_at' => true,
-        'modified_user' => true
+        '*' => true,
+        'id' => false
     ];
 }

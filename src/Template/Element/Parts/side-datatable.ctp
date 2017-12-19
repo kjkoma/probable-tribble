@@ -20,13 +20,13 @@
  * 主にマスター系の検索選択リストとして利用する
  *  
  * - - -
- * @param string  $title        タイトル
- * @param array   $list         一覧データ
- * @param string  $header       カラムヘッダー名
- * @param string  $itemId       キー項目の名称（デフォルト：id）
- * @param string  $itemName     表示項目の名称（デフォルト：kname）
- * @param string  $itemNameSub  括弧内表示項目の名称（デフォルト：なし）
- * @param string  $fa           一覧行の先頭表示アイコン（FontAwesome／デフォルト：caret-right）
+ * @param string        $title        タイトル
+ * @param array         $list         一覧データ
+ * @param string        $header       カラムヘッダー名
+ * @param string        $itemId       キー項目の名称（デフォルト：id）
+ * @param string        $itemName     表示項目の名称（デフォルト：kname）
+ * @param string|array  $itemNameSub  括弧内表示項目の名称（デフォルト：なし）／関連テーブルより取得する場合配列指定（例：['sname','name']）※1階層下まで
+ * @param string        $fa           一覧行の先頭表示アイコン（FontAwesome／デフォルト：caret-right）
  */
 $itemId   = isset($itemId)   ? $itemId   : "id";
 $itemName = isset($itemName) ? $itemName : "kname";
@@ -54,11 +54,17 @@ $fa       = isset($fa)       ? $fa       : "caret-right";
 
       <table id="side-datatable" class="table table-hover" width="100%">
         <thead class="hide">
-          <tr><td> <?= $header ?></td></tr>
+          <tr><th> <?= $header ?></th></tr>
         </thead>
         <tbody>
           <?php foreach($list as $item) {
-              $sub = isset($itemNameSub) ? '('.$item[$itemNameSub].')' : "";
+              $sub = "";
+              if (isset($itemNameSub) && !is_array($itemNameSub)) {
+                  $sub = '('.$item[$itemNameSub].')';
+              }
+              if (isset($itemNameSub) && is_array($itemNameSub) && count($itemNameSub) == 2) {
+                  $sub = '('.$item[$itemNameSub[0]][$itemNameSub[1]].')';
+              }
           ?>
             <tr>
               <td data-id=<?= $item[$itemId] ?> data-app-action-key="side-datatable">

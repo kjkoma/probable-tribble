@@ -62,18 +62,18 @@ class OrganizationsTable extends AppTable
             'foreignKey' => 'organization_id',
             'dependent' => true
         ]);
-        $this->hasMany('Ancestor', [ // alias
+        $this->hasMany('AncestorTree', [ // alias
             'foreignKey' => 'ancestor',
             'className'  => 'OrganizationTree',
-            'dependent' => false
+            'dependent' => true
         ]);
-        $this->hasMany('Descendant', [ // alias
+        $this->hasMany('DescendantTree', [ // alias
             'foreignKey' => 'descendant',
             'className'  => 'OrganizationTree',
-            'dependent' => false
+            'dependent' => true
         ]);
 
-        $this->_sorted   = ['Organizations.kname' => 'ASC'];
+        $this->_sorted = ['Organizations.kname' => 'ASC'];
     }
 
     /**
