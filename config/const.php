@@ -59,6 +59,18 @@ return [
                     'dest'     => '4',
                 ],
             ],
+            'Instock' => [
+                'InstockKbn' => [
+                    'new'    => '1',
+                    'repair' => '2',
+                    'back'   => '3',
+                ],
+                'InstockSts' => [
+                    'not'      => '1',
+                    'part'     => '2',
+                    'complete' => '3',
+                ],
+            ],
             'Dsts' => [
                 'invalid' => '0',
                 'valid'   => '1',

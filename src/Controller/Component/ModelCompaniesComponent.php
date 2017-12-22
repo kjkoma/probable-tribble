@@ -45,7 +45,7 @@ class ModelCompaniesComponent extends AppModelComponent
      * @param boolean $toArray true:配列で返す|false:ResultSetで返す（default）
      * @return array ソートされた全一覧（ResultSet or Array）
      */
-    public function allWithKbn()
+    public function allWithKbn($toArray = false)
     {
         $query = $this->modelTable->find('sorted')
             ->contain('Snames', function($q) {
@@ -63,7 +63,7 @@ class ModelCompaniesComponent extends AppModelComponent
      * @param boolean $toArray true:配列で返す|false:ResultSetで返す（default）
      * @return array メーカー一覧（ResultSet or Array）
      */
-    public function makers()
+    public function makers($toArray = false)
     {
         $query = $this->modelTable->find('sorted')
             ->where([

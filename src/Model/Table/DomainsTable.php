@@ -90,6 +90,10 @@ class DomainsTable extends AppTable
             'foreignKey' => 'domain_id',
             'dependent' => true
         ]);
+        $this->hasMany('KittingPatterns', [
+            'foreignKey' => 'domain_id',
+            'dependent' => true
+        ]);
         $this->hasMany('ProductModels', [
             'foreignKey' => 'domain_id',
             'dependent' => true
@@ -111,10 +115,6 @@ class DomainsTable extends AppTable
             'dependent' => true
         ]);
         $this->hasMany('Roles', [
-            'foreignKey' => 'domain_id',
-            'dependent' => true
-        ]);
-        $this->hasMany('StatusFlows', [
             'foreignKey' => 'domain_id',
             'dependent' => true
         ]);

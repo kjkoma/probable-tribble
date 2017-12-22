@@ -79,3 +79,27 @@ span.fancytree-active span.fancytree-title, span.fancytree-selected span.fancytr
     margin: 0 12px 0 6px;
 }
 
+/* smart admin widget inside buttons additional style */
+div.widget-actions {
+    padding: 0px 8px;
+    margin-top    : 10px;
+    margin-bottom : 10px;
+}
+
+div.widget-actions .widget-action {
+    display: inline-block;
+    float: right;
+    width: auto;
+    height: 32px;
+    line-height: 32px;
+    position: relative;
+    border-left: 1px solid rgba(0,0,0,.09);
+    cursor: pointer;
+    padding: 0 8px;
+    text-align: center;
+}
+
+div.widget-actions .widget-action > .btn {
+    font-size: 12px !important;
+    padding: 1px 8px !important;
+}

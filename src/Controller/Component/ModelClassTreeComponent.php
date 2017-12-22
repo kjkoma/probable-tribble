@@ -49,8 +49,8 @@ class ModelClassTreeComponent extends AppModelComponent
     {
         $list = $this->modelTable->find('sorted')
             ->where([$this->modelTable->getAlias() . '.category_id' => $categoryId])
-            ->contain(['Ancestor', 'Descendant'])
-            ->order(['Ancestor.kname' => 'ASC'])
+            ->contain(['CAncestor', 'CDescendant'])
+            ->order(['CAncestor.kname' => 'ASC'])
             ->all();
 
         return $this->makeTreeArray($list);
@@ -71,8 +71,8 @@ class ModelClassTreeComponent extends AppModelComponent
                 $this->modelTable->getAlias() . '.descendant <>' => $classificationId,
                 $this->modelTable->getAlias() . '.neighbor'      => Configure::read('WNote.DB.Neighbor.true')
             ])
-            ->contain(['Descendant'])
-            ->order(['Descendant.kname' => 'ASC'])
+            ->contain(['CDescendant'])
+            ->order(['CDescendant.kname' => 'ASC'])
             ->all();
 
         return $this->makeTreeArray($list);

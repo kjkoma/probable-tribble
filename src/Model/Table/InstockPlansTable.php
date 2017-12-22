@@ -15,29 +15,25 @@
  */
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
-use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * Classifications Model
+ * InstockPlans Model
  *
  * @property \App\Model\Table\DomainsTable|\Cake\ORM\Association\BelongsTo $Domains
- * @property \App\Model\Table\CategoriesTable|\Cake\ORM\Association\BelongsTo $Categories
- * @property \App\Model\Table\ClassificationsTable|\Cake\ORM\Association\BelongsTo $ParentClassifications
- * @property \App\Model\Table\ClassificationsTable|\Cake\ORM\Association\HasMany $ChildClassifications
- * @property \App\Model\Table\ProductsTable|\Cake\ORM\Association\HasMany $Products
+ * @property \App\Model\Table\InstockPlanDetailsTable|\Cake\ORM\Association\HasMany $InstockPlanDetails
+ * @property \App\Model\Table\InstocksTable|\Cake\ORM\Association\HasMany $Instocks
  *
- * @method \App\Model\Entity\Classification get($primaryKey, $options = [])
- * @method \App\Model\Entity\Classification newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\Classification[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Classification|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Classification patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\Classification[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\Classification findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\InstockPlan get($primaryKey, $options = [])
+ * @method \App\Model\Entity\InstockPlan newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\InstockPlan[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\InstockPlan|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\InstockPlan patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\InstockPlan[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\InstockPlan findOrCreate($search, callable $callback = null, $options = [])
  */
-class ClassificationsTable extends AppTable
+class InstockPlansTable extends AppTable
 {
 
     /**
@@ -50,7 +46,7 @@ class ClassificationsTable extends AppTable
     {
         parent::initialize($config);
 
-        $this->setTable('classifications');
+        $this->setTable('instock_plans');
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
@@ -58,31 +54,31 @@ class ClassificationsTable extends AppTable
             'foreignKey' => 'domain_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('Categories', [
-            'foreignKey' => 'category_id',
-            'joinType' => 'INNER'
+        $this->hasMany('InstockPlanDetails', [
+            'foreignKey' => 'instock_plan_id',
+            'dependent'  => true
         ]);
-        $this->hasMany('Products', [
-            'foreignKey' => 'classification_id'
+        $this->hasMany('Instocks', [
+            'foreignKey' => 'instock_plan_id'
         ]);
-        $this->hasMany('CAncestorTree', [ // alias
-            'foreignKey' => 'ancestor',
-            'className'  => 'ClassTree',
-            'dependent' => true
-        ]);
-        $this->hasMany('CDescendantTree', [ // alias
-            'foreignKey' => 'descendant',
-            'className'  => 'ClassTree',
-            'dependent' => true
-        ]);
-        $this->belongsTo('ClassAssetType', [
+        $this->belongsTo('InstockPlansKbn', [
             'className'  => 'Snames',
             'foreignKey' => 'nid',
-            'bindingKey' => 'asset_type',
-            'conditions' => ['ClassAssetType.nkey' => 'ASSET_TYPE']
+            'bindingKey' => 'instcok_kbn',
+            'conditions' => ['InstockPlanKbn.nkey' => 'INSTOCK_KBN']
+        ]);
+        $this->belongsTo('InstockPlansSts', [
+            'className'  => 'Snames',
+            'foreignKey' => 'nid',
+            'bindingKey' => 'instcok_sts',
+            'conditions' => ['InstockPlansSts.nkey' => 'INSTOCK_STS']
         ]);
 
-        $this->_sorted   = ['Classifications.kname' => 'ASC'];
+        $this->_sorted = [
+            'InstockPlans.plan_date'   => 'DESC',
+            'InstockPlans.instock_kbn' => 'ASC',
+            'InstockPlans.name'        => 'ASC'
+        ];
     }
 
     /**
@@ -94,13 +90,17 @@ class ClassificationsTable extends AppTable
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('id')
             ->allowEmpty('id', 'create');
 
         $validator
-            ->scalar('kname')
-            ->requirePresence('kname', 'create')
-            ->notEmpty('kname');
+            ->scalar('instock_kbn')
+            ->requirePresence('instock_kbn', 'create')
+            ->notEmpty('instock_kbn');
+
+        $validator
+            ->date('plan_date')
+            ->requirePresence('plan_date', 'create')
+            ->notEmpty('plan_date');
 
         $validator
             ->scalar('name')
@@ -108,9 +108,9 @@ class ClassificationsTable extends AppTable
             ->notEmpty('name');
 
         $validator
-            ->scalar('asset_type')
-            ->requirePresence('asset_type', 'create')
-            ->notEmpty('asset_type');
+            ->scalar('plan_sts')
+            ->requirePresence('plan_sts', 'create')
+            ->notEmpty('plan_sts');
 
         $validator
             ->scalar('remarks')

@@ -87,6 +87,10 @@ $(function() {
     // DatePicker設定
     $.datepicker.regional['ja'] = WNote.Util.All.datePickerConfig();
     $.datepicker.setDefaults($.datepicker.regional['ja']);
+
+    // jQuery Validator追加
+    $.validator.addMethod('dateFormat', function(value, element) { return ($.trim(value) != '') ? value.match(/^\d{4}\/\d{2}\/\d{2}$/) : true; });
+
 });
 
 /** ---------------------------------------------------------------------------
@@ -528,6 +532,7 @@ WNote.Form.changeFormActionStatus.afterChange = function(status) {}
  */
 WNote.Form.addMode = function(appFormKey) {
     if (WNote.Form.formActionStatus.Current === WNOTE.FORM_STATUS.ADD) {
+        WNote.Form.addModeExtend(); // 拡張用
         return ;
     }
 
@@ -540,7 +545,12 @@ WNote.Form.addMode = function(appFormKey) {
 
     WNote.Form.changeFormActionStatus(WNOTE.FORM_STATUS.ADD);
     WNote.Form.validateClear();
+
+    WNote.Form.addModeExtend(); // 拡張用
 }
+/** 追加モード処理拡張用（利用側にて実装） */
+WNote.Form.addModeExtend = function() {}
+
 /**
  * 編集モードに変更する
  * 
@@ -548,6 +558,7 @@ WNote.Form.addMode = function(appFormKey) {
  */
 WNote.Form.editMode = function(appFormKey) {
     if (WNote.Form.formActionStatus.Current === WNOTE.FORM_STATUS.EDIT) {
+        WNote.Form.editModeExtend(); // 拡張用
         return ;
     }
 
@@ -560,7 +571,11 @@ WNote.Form.editMode = function(appFormKey) {
 
     WNote.Form.changeFormActionStatus(WNOTE.FORM_STATUS.EDIT);
     WNote.Form.validateClear();
+
+    WNote.Form.editModeExtend(); // 拡張用
 }
+/** 編集モード処理拡張用（利用側にて実装） */
+WNote.Form.editModeExtend = function() {}
 
 /**
  * 表示モードに変更する
@@ -569,6 +584,7 @@ WNote.Form.editMode = function(appFormKey) {
  */
 WNote.Form.viewMode = function(appFormKey) {
     if (WNote.Form.formActionStatus.Current === WNOTE.FORM_STATUS.VIEW) {
+        WNote.Form.viewModeExtend(); // 拡張用
         return ;
     }
 
@@ -581,7 +597,11 @@ WNote.Form.viewMode = function(appFormKey) {
 
     WNote.Form.changeFormActionStatus(WNOTE.FORM_STATUS.VIEW);
     WNote.Form.validateClear();
+
+    WNote.Form.viewModeExtend(); // 拡張用
 }
+/** 表示モード処理拡張用（利用側にて実装） */
+WNote.Form.viewModeExtend = function() {}
 
 /**
  * 初期モードに変更する
@@ -590,6 +610,7 @@ WNote.Form.viewMode = function(appFormKey) {
  */
 WNote.Form.initMode = function(appFormKey) {
     if (WNote.Form.formActionStatus.Current === WNOTE.FORM_STATUS.INIT) {
+        WNote.Form.initModeExtend(); // 拡張用
         return ;
     }
 
@@ -602,16 +623,31 @@ WNote.Form.initMode = function(appFormKey) {
 
     WNote.Form.changeFormActionStatus(WNOTE.FORM_STATUS.INIT);
     WNote.Form.validateClear();
+
+    WNote.Form.initModeExtend(); // 拡張用
+}
+/** 初期モード処理拡張用（利用側にて実装） */
+WNote.Form.initModeExtend = function() {}
+
+/**
+ * 検証結果の表示をクリアする
+ * 
+ */
+WNote.Form.validateClear = function() {
+    if (WNote.Form.validator) {
+        WNote.Form.validator.resetForm();
+    }
 }
 
 /**
- * 指定されたオブジェクトのキーに指定されたid属性を持つフォームにオブジェクトの値を設定する
+ * 指定されたオブジェクトのキーに指定されたid属性を持つフォームにオブジェクトの値を設定する(prefix指定あり)
  * 
  * @param {object} obj オブジェクト
+ * @param {string} prefix id属性に付与するprefix
  */
-WNote.Form.setFormValues = function(obj) {
+WNote.Form.setFormValuesWithPrefix = function(obj, prefix) {
     $.each(obj, function(key, val) {
-        $('#' + key).each(function(i, e) {
+        $('#' + prefix + key).each(function(i, e) {
             if ($(e).attr('type') == 'checkbox') {
                 if ($(e).attr(WNOTE.DATA_ATTR.ID) == val) {
                     $(e).prop('checked', true);
@@ -632,6 +668,15 @@ WNote.Form.setFormValues = function(obj) {
             }
         });
     });
+}
+
+/**
+ * 指定されたオブジェクトのキーに指定されたid属性を持つフォームにオブジェクトの値を設定する
+ * 
+ * @param {object} obj オブジェクト
+ */
+WNote.Form.setFormValues = function(obj) {
+    WNote.Form.setFormValuesWithPrefix(obj, '');
 }
 
 /**
@@ -763,16 +808,6 @@ WNote.Form.validateResultSet = function(message) {
     }
 
     return validate;
-}
-
-/**
- * 検証結果の表示をクリアする
- * 
- */
-WNote.Form.validateClear = function() {
-    if (WNote.Form.validator) {
-        WNote.Form.validator.resetForm();
-    }
 }
 
 /** ---------------------------------------------------------------------------

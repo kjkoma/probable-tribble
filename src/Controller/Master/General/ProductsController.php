@@ -64,8 +64,9 @@ class ProductsController extends AppController
         $capacityUnits    = $this->SysModelSnames->byKey('CAPACITY_UNIT');
         $storageTypes     = $this->SysModelSnames->byKey('STORAGE_TYPE');
         $supportTermTypes = $this->SysModelSnames->byKey('SUPPORT_TERM_TYPE');
+        $assetTypes       = $this->SysModelSnames->byKey('ASSET_TYPE');
 
-        $this->set(compact('makers', 'psts', 'capacityUnits', 'storageTypes', 'supportTermTypes'));
+        $this->set(compact('makers', 'psts', 'capacityUnits', 'storageTypes', 'supportTermTypes', 'assetTypes'));
         $this->render();
     }
 }

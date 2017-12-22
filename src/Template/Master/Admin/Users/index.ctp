@@ -109,6 +109,15 @@ $this->Breadcrumbs->add('資産利用者', ['controller' => 'Users', 'action' =>
                                                disabled="disabled">
                                     </label>
                                 </section>
+                                <!-- 社員番号 -->
+                                <section>
+                                    <label class="input">
+                                        <input type="text" name="user.employee_no" id="employee_no" class="input-xs"
+                                               data-app-form="form-user"
+                                               placeholder="【任意】社員番号　－　最大20文字／特殊文字は利用しないでください"
+                                               disabled="disabled">
+                                    </label>
+                                </section>
                                 <!-- 補足（コメント） -->
                                 <section>
                                     <label class="textarea textarea-resizable">
@@ -138,7 +147,7 @@ $this->Breadcrumbs->add('資産利用者', ['controller' => 'Users', 'action' =>
                                         <select name="user.organization_id" id="organization_id" class="select2 form-control input-sm"
                                                data-app-form="form-user" data-placeholder="所属する資産管理組織（グループ）を入力・選択してください"
                                                disabled="disabled"
-                                               style="width=100%;"></select>
+                                               style="width:100%;"></select>
                                     </div>
                                 </section>
                             </fieldset>

@@ -62,6 +62,30 @@ class ProductModelsTable extends AppTable
         $this->belongsTo('Cpus', [
             'foreignKey' => 'cpu_id'
         ]);
+        $this->hasOne('ProductModelsMemoryUnit', [
+            'className'  => 'Snames',
+            'foreignKey' => 'nid',
+            'bindingKey' => 'memory_unit',
+            'conditions' => ['ProductModelsMemoryUnit.nkey' => 'CAPACITY_UNIT']
+        ]);
+        $this->hasOne('ProductModelsStorageType', [
+            'className'  => 'Snames',
+            'foreignKey' => 'nid',
+            'bindingKey' => 'storage_type',
+            'conditions' => ['ProductModelsStorageType.nkey' => 'STORAGE_TYPE']
+        ]);
+        $this->hasOne('ProductModelsStorageUnit', [
+            'className'  => 'Snames',
+            'foreignKey' => 'nid',
+            'bindingKey' => 'storage_unit',
+            'conditions' => ['ProductModelsStorageUnit.nkey' => 'CAPACITY_UNIT']
+        ]);
+        $this->hasOne('ProductModelsSupportTermType', [
+            'className'  => 'Snames',
+            'foreignKey' => 'nid',
+            'bindingKey' => 'support_term_type',
+            'conditions' => ['ProductModelsSupportTermType.nkey' => 'SUPPORT_TERM_TYPE']
+        ]);
 
         $this->_sorted   = [
             'ProductModels.product_id' => 'ASC',

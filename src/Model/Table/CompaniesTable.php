@@ -67,7 +67,7 @@ class CompaniesTable extends AppTable
             'conditions' => ['Snames.nkey' => 'COMPANY_KBN']
         ]);
 
-        $this->_sorted   = ['Companies.kname' => 'ASC'];
+        $this->_sorted = ['Companies.kname' => 'ASC'];
     }
 
     /**

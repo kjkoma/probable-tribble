@@ -19,21 +19,20 @@ use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
 
 /**
- * Users Model
+ * InstockDetails Model
  *
  * @property \App\Model\Table\DomainsTable|\Cake\ORM\Association\BelongsTo $Domains
- * @property \App\Model\Table\CustomersTable|\Cake\ORM\Association\BelongsTo $Customers
- * @property \App\Model\Table\OrganizationsTable|\Cake\ORM\Association\BelongsTo $Organizations
+ * @property \App\Model\Table\InstocksTable|\Cake\ORM\Association\BelongsTo $Instocks
  *
- * @method \App\Model\Entity\User get($primaryKey, $options = [])
- * @method \App\Model\Entity\User newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\User[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\User|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\User patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\User[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\User findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\InstockDetail get($primaryKey, $options = [])
+ * @method \App\Model\Entity\InstockDetail newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\InstockDetail[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\InstockDetail|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\InstockDetail patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\InstockDetail[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\InstockDetail findOrCreate($search, callable $callback = null, $options = [])
  */
-class UsersTable extends AppTable
+class InstockDetailsTable extends AppTable
 {
 
     /**
@@ -46,22 +45,24 @@ class UsersTable extends AppTable
     {
         parent::initialize($config);
 
-        $this->setTable('users');
-        $this->setDisplayField('fname');
+        $this->setTable('instock_details');
+        $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
         $this->belongsTo('Domains', [
             'foreignKey' => 'domain_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('Customers', [
-            'foreignKey' => 'customer_id'
-        ]);
-        $this->belongsTo('Organizations', [
-            'foreignKey' => 'organization_id'
+        $this->belongsTo('Instocks', [
+            'foreignKey' => 'instock_id',
+            'joinType' => 'INNER'
         ]);
 
-        $this->_sorted = ['Users.sname' => 'ASC', 'Users.fname' => 'ASC'];
+        $this->_sorted = [
+            'InstockDetails.instock_id' => 'DESC',
+            'InstockDetails.asset_no'   => 'ASC',
+            'InstockDetails.serial_no'  => 'ASC'
+        ];
     }
 
     /**
@@ -73,33 +74,17 @@ class UsersTable extends AppTable
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('id')
             ->allowEmpty('id', 'create');
 
         $validator
-            ->scalar('sname')
-            ->requirePresence('sname', 'create')
-            ->notEmpty('sname');
+            ->scalar('serial_no')
+            ->allowEmpty('serial_no');
 
         $validator
-            ->scalar('fname')
-            ->requirePresence('fname', 'create')
-            ->notEmpty('fname');
+            ->scalar('asset_no')
+            ->allowEmpty('asset_no');
 
         $validator
-            ->email('email')
-            ->allowEmpty('email');
-
-        $validator
-            ->scalar('employee_no')
-            ->allowEmpty('employee_no');
-
-        $validator
-            ->scalar('remarks')
-            ->allowEmpty('remarks');
-
-        $validator
-            ->integer('dsts')
             ->requirePresence('dsts', 'create')
             ->notEmpty('dsts');
 
@@ -126,8 +111,7 @@ class UsersTable extends AppTable
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['domain_id'], 'Domains'));
-        $rules->add($rules->existsIn(['customer_id'], 'Customers'));
-        $rules->add($rules->existsIn(['organization_id'], 'Organizations'));
+        $rules->add($rules->existsIn(['instock_id'], 'Instocks'));
 
         return $rules;
     }

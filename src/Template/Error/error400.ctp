@@ -1,38 +1,40 @@
-<?php
-use Cake\Core\Configure;
-use Cake\Error\Debugger;
+<!-- row -->
+<div class="row">
 
-$this->layout = 'error';
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
-if (Configure::read('debug')) :
-    $this->layout = 'dev_error';
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="text-center error-box">
+                    <h1 class="error-text-2 bounceInDown animated"> Error 400 <span class="particle particle--c"></span><span class="particle particle--a"></span><span class="particle particle--b"></span></h1>
+                    <h2 class="font-xl"><strong><i class="fa fa-fw fa-warning fa-lg text-warning"></i> Invalid Page Access</strong></h2>
+                    <br />
+                    <p class="lead">
+                        指定されたページへのアクセス方法が正しくありません。アドレスバーから指定ページに直接アクセスしたか、もしくは、システムの問題の可能性があります。
+                    </p>
+                    <p class="font-md">
+                        <b>... もし正規の手順でアクセスして本画面が表示される場合は管理者へお問い合わせください。</b>
+                    </p>
+                    <br><br><br>
 
-    $this->assign('title', $message);
-    $this->assign('templateName', 'error400.ctp');
+                    <div class="row">
 
-    $this->start('file');
-?>
-<?php if (!empty($error->queryString)) : ?>
-    <p class="notice">
-        <strong>SQL Query: </strong>
-        <?= h($error->queryString) ?>
-    </p>
-<?php endif; ?>
-<?php if (!empty($error->params)) : ?>
-        <strong>SQL Query Params: </strong>
-        <?php Debugger::dump($error->params) ?>
-<?php endif; ?>
-<?= $this->element('auto_table_warning') ?>
-<?php
-if (extension_loaded('xdebug')) :
-    xdebug_print_function_stack();
-endif;
+                        <div class="col-sm-12">
+                            <ul class="list-inline">
+                                <li>
+                                    &nbsp;<a href="/home" class="font-xl">ホーム画面へ移動</a>&nbsp;
+                                </li>
+                            </ul>
+                        </div>
 
-$this->end();
-endif;
-?>
-<h2><?= h($message) ?></h2>
-<p class="error">
-    <strong><?= __d('cake', 'Error') ?>: </strong>
-    <?= __d('cake', 'The requested address {0} was not found on this server.', "<strong>'{$url}'</strong>") ?>
-</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+<!-- end row -->

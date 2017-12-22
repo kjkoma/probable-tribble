@@ -99,6 +99,16 @@ $this->Breadcrumbs->add('資産分類', ['controller' => 'Classifications', 'act
                                                disabled="disabled">
                                     </label>
                                 </section>
+                                <!-- 資産タイプ -->
+                                <section>
+                                    <?= $this->element('Parts/select-snames', [
+                                        'snames'  => $assetTypes,
+                                        'name'    => 'classification.asset_type',
+                                        'id'      => 'asset_type',
+                                        'form'    => 'form-classification',
+                                        'default' => 1
+                                    ]) ?>
+                                </section>
                                 <!-- 補足（コメント） -->
                                 <section>
                                     <label class="textarea textarea-resizable">
@@ -128,7 +138,7 @@ $this->Breadcrumbs->add('資産分類', ['controller' => 'Classifications', 'act
                                         <select name="classification.parent_id" id="parent_id" class="select2 form-control input-sm"
                                                data-app-form="form-classification" data-placeholder="親となる資産分類を入力・選択してください（親が資産カテゴリの場合は空白）"
                                                disabled="disabled"
-                                               style="width=100%;"></select>
+                                               style="width:100%;"></select>
                                     </div>
                                 </section>
                             </fieldset>

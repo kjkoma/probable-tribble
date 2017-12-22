@@ -26,6 +26,11 @@ const MYPAGE = {
 MyPage.selectProduct = {
     product: {}
 };
+MyPage.Tab = {
+    current: 'product-contents',
+    product: 'product-contents',
+    model  : 'model-contents'
+};
 
 /** ---------------------------------------------------------------------------
  *  初期処理
@@ -43,58 +48,107 @@ $(function() {
         })
     });
 
-    /** 各種操作イベント登録 */
-    WNote.registerEvent('click', 'edit'   , MyPage.editController);
-    WNote.registerEvent('click', 'add'    , MyPage.addController);
-    WNote.registerEvent('click', 'cancel' , MyPage.cancelController);
-    WNote.registerEvent('click', 'save'   , MyPage.saveController);
-    WNote.registerEvent('click', 'delete' , MyPage.deleteController);
+    /** タブ切替イベント登録 */
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
+        var id = $(event.target).attr(WNOTE.DATA_ATTR.KEY);
+        if (id == MyPage.Tab.product) {
+            MyPage.Tab.current = MyPage.Tab.product;
+            MyPage.showProductHandler(event);
+            MyPage.hideModelHandler(event);
+        } else {
+            MyPage.Tab.current = MyPage.Tab.model;
+            MyPage.hideProductHandler(event);
+            MyPage.showModelHandler(event);
+        }
+    });
 
-    WNote.registerEvent('click', 'product-contents', MyPage.tabProduct);
-    WNote.registerEvent('click', 'model-contents'  , MyPage.tabModel);
+    /** 各種操作イベント登録 */
+    WNote.registerEvent('click', 'edit'   , MyPage.edit);
+    WNote.registerEvent('click', 'add'    , MyPage.add);
+    WNote.registerEvent('click', 'cancel' , MyPage.cancel);
+    WNote.registerEvent('click', 'save'   , MyPage.save);
+    WNote.registerEvent('click', 'delete' , MyPage.delete);
 
 });
 
 /** ---------------------------------------------------------------------------
- *  イベント処理（各種操作実行時の処理振り分け）
+ *  イベント処理（モード処理拡張）
  *  -------------------------------------------------------------------------*/
+/** 表示モード処理拡張用（実装） */
+WNote.Form.viewModeExtend = function() {
+    // モデルタブ表示
+    var a = $('[' + WNOTE.DATA_ATTR.KEY + '="' + MyPage.Tab.model + '"]');
+    if (a.hasClass("hide")) {
+        a.removeClass("hide");
+    }
 
-
-MyPage.editController = function(event) {
-    MyPage.edit();
+    // 追加ボタンを非表示
+    WNote.Util.addClassByDataAttr('add-actions', 'hidden');
 }
 
-MyPage.addController = function(event) {
-    MyPage.add();
-}
+/** 初期モード処理拡張用（実装） */
+WNote.Form.initModeExtend = function() {
+    // 製品タブへ移動
+    var a = $('[' + WNOTE.DATA_ATTR.KEY + '="' + MyPage.Tab.product + '"]');
+    a.click();
 
-MyPage.cancelController = function(event) {
-    MyPage.cancel();
-}
+    // モデルタブ非表示
+    a = $('[' + WNOTE.DATA_ATTR.KEY + '="' + MyPage.Tab.model + '"]');
+    if (!a.hasClass("hide")) {
+        a.addClass("hide");
+    }
 
-MyPage.saveController = function(event) {
-    MyPage.save();
-}
-
-MyPage.deleteController = function(event) {
-    MyPage.delete();
+    // 追加ボタンの表示／非表示
+    WNote.Util.addClassByDataAttr('add-actions', 'hidden');
+    if (WNote.Tree.active().data.type == WNOTE.TREE.TYPES.BRANCH) {
+        WNote.Util.removeClassByDataAttr('add-actions', 'hidden');
+    }
 }
 
 /** ---------------------------------------------------------------------------
  *  イベント処理（タブ切替）
  *  -------------------------------------------------------------------------*/
-MyPage.tabProduct = function(event) {
-console.log($(event).parent());
+/**
+ * 製品タブ内コンテンツの表示イベント処理
+ */
+MyPage.showProductHandler = function(event) {}
+/**
+ * 製品タブ内コンテンツの非表示イベント処理
+ */
+MyPage.hideProductHandler = function(event) {
+    if (WNote.Form.formActionStatus.Current == WNOTE.FORM_STATUS.ADD ||
+            WNote.Form.formActionStatus.Current == WNOTE.FORM_STATUS.EDIT) {
+        MyPage.cancel();
+    }
 }
-MyPage.tabModel = function(event) {
-}
+/**
+ * モデルタブ内コンテンツの表示イベント処理(利用側で実装)
+ */
+MyPage.showModelHandler = function(event) {}
 
+/**
+ * モデルタブ内コンテンツの非表示イベント処理(利用側で実装)
+ */
+MyPage.hideModelHandler = function(event) {}
 
 /** ---------------------------------------------------------------------------
- *  イベント処理（分類選択）
+ *  イベント処理（分類／製品選択）
  *  -------------------------------------------------------------------------*/
 /**
- * ツリー（Element/Parts/side-tree-classifications）用選択イベントのハンドラの実装(製品選択時)
+ * ツリー（Element/Parts/side-tree-products）用選択イベントのハンドラの実装(カテゴリ選択時)
+ */
+WNote.Tree.Product.nodeActivateRootHandler = function(node) {
+    // 表示状態のキャンセル
+    WNote.Form.formActionStatus.Before = WNOTE.FORM_STATUS.INIT;
+    MyPage.cancel();
+}
+/**
+ * ツリー（Element/Parts/side-tree-products）用選択イベントのハンドラの実装(分類選択時)
+ */
+WNote.Tree.Product.nodeActivateBranchHandler = WNote.Tree.Product.nodeActivateRootHandler;
+
+/**
+ * ツリー（Element/Parts/side-tree-products）用選択イベントのハンドラの実装(製品選択時)
  */
 WNote.Tree.Product.nodeActivateValueHandler = function(node) {
     // 製品の取得
@@ -138,7 +192,7 @@ MyPage.setFormValues = function() {
 }
 
 /**
- * 資産管理組織を設定する
+ * 分類を設定する
  * 
  */
 MyPage.setExtendValues = function() {
@@ -343,7 +397,7 @@ WNote.log(data); // debug
 }
 
 /**
- * 資産管理組織データを削除する
+ * 製品データを削除する
  *
  */
 MyPage.deleteProduct = function() {

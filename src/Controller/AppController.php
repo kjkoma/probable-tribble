@@ -17,6 +17,7 @@ namespace App\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Event\Event;
+use Cake\Network\Exception\BadRequestException;
 
 /**
  * Application Controller
@@ -192,6 +193,34 @@ class AppController extends Controller
         $this->loadComponent($modelComponent, [
             'appUser' => $this->AppUser,
         ]);
+    }
+
+    /**
+     * リクエストデータをチェックする
+     *
+     * - - -
+     * @param string $key リクエストデータよりデータを取得するキー
+     * @param array  $allowActions 許可するアクション（['post', 'get']など）/ 未指定：全許可
+     * @param mixed リクエストデータ/不正時はfalseを返す
+     */
+    protected function validateParameter($key, $allowActions = null)
+    {
+        if (!is_null($allowActions)) {
+            $match = false;
+            foreach($allowActions as $action) {
+                $match = $this->request->is($action);
+                if ($match) break;
+            }
+            if (!$match) {
+                throw new BadRequestException(__('指定されたページへのアクセスが不正です。'));
+            }
+        }
+
+        $data = $this->request->getData();
+        if (!$data || !array_key_exists($key, $data)) {
+                throw new BadRequestException(__('指定されたページへのアクセスが不正です。'));
+        }
+        return $data;
     }
 
 }

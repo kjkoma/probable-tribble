@@ -57,12 +57,12 @@ class ClassTreeTable extends AppTable
         $this->belongsTo('Categories', [
             'foreignKey' => 'category_id'
         ]);
-        $this->belongsTo('Ancestor', [ // alias
+        $this->belongsTo('CAncestor', [ // alias
             'foreignKey'   => 'ancestor',
             'className'    => 'Classifications',
             'propertyName' => 'classification'
         ]);
-        $this->belongsTo('Descendant', [ // alias
+        $this->belongsTo('CDescendant', [ // alias
             'foreignKey'   => 'descendant',
             'className'    => 'Classifications',
             'propertyName' => 'classification'

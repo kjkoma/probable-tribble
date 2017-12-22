@@ -75,6 +75,25 @@ Router::scope('/', function (RouteBuilder $routes) {
 
     /* Api Routes */
     Router::prefix('api', function (RouteBuilder $routes) {
+        $routes->prefix('instock', function (RouteBuilder $routes) {
+                $routes->fallbacks(DashedRoute::class);
+        });
+        $routes->prefix('picking', function (RouteBuilder $routes) {
+                $routes->fallbacks(DashedRoute::class);
+        });
+        $routes->prefix('stock', function (RouteBuilder $routes) {
+                $routes->fallbacks(DashedRoute::class);
+        });
+        $routes->prefix('stocktake', function (RouteBuilder $routes) {
+                $routes->fallbacks(DashedRoute::class);
+        });
+        $routes->prefix('asset', function (RouteBuilder $routes) {
+                $routes->fallbacks(DashedRoute::class);
+        });
+        $routes->prefix('rental', function (RouteBuilder $routes) {
+                $routes->fallbacks(DashedRoute::class);
+        });
+
         $routes->prefix('master', function (RouteBuilder $routes) {
             $routes->prefix('system', function (RouteBuilder $routes) {
                 $routes->fallbacks(DashedRoute::class);
@@ -87,6 +106,32 @@ Router::scope('/', function (RouteBuilder $routes) {
             });
         });
     });
+
+    /* Instock Routes */
+    Router::prefix('instock', function (RouteBuilder $routes) {
+        $routes->fallbacks(DashedRoute::class);
+    });
+    /* Picking Routes */
+    Router::prefix('picking', function (RouteBuilder $routes) {
+        $routes->fallbacks(DashedRoute::class);
+    });
+    /* Stock Routes */
+    Router::prefix('stock', function (RouteBuilder $routes) {
+        $routes->fallbacks(DashedRoute::class);
+    });
+    /* StockTake Routes */
+    Router::prefix('stocktake', function (RouteBuilder $routes) {
+        $routes->fallbacks(DashedRoute::class);
+    });
+    /* Asset Routes */
+    Router::prefix('asset', function (RouteBuilder $routes) {
+        $routes->fallbacks(DashedRoute::class);
+    });
+    /* Rental Routes */
+    Router::prefix('rental', function (RouteBuilder $routes) {
+        $routes->fallbacks(DashedRoute::class);
+    });
+
 
     /* Master Routes */
     Router::prefix('master', function (RouteBuilder $routes) {

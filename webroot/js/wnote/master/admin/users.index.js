@@ -255,6 +255,10 @@ MyPage.saveValidate = function(saveType, data) {
     options.rules['user.email']    = { maxlength: 255 };
     options.messages['user.name'] = { maxlength: '資産管理組織名は最大40文字で入力してください。', email: 'Emailアドレスの形式が違います。' };
 
+    // employee_no
+    options.rules['user.employee_no']    = { maxlength: 20 };
+    options.messages['user.employee_no'] = { maxlength: '社員番号は最大20文字で入力してください。' };
+
     // remarks
     options.rules['user.remarks']    = { maxlength: 512 };
     options.messages['user.remarks'] = { maxlength: '備考は最大512文字で入力してください。' };

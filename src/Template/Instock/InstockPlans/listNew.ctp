@@ -13,34 +13,77 @@
  * -- Histories --
  * 2017.12.31 R&D 新規作成
  */
-$this->assign('title', '資産管理グループ');
+$this->assign('title', '入庫予定（新規）');
 $this->assign('onlyDomainAdmin', true);
 $this->Breadcrumbs->add('Home', ['prefix' => false, 'controller' => 'Home', 'action' => 'home']);
 $this->Breadcrumbs->add('マスタ（管理）', '#');
-$this->Breadcrumbs->add('資産管理グループ', ['controller' => 'Organizations', 'action' => 'index']);
+$this->Breadcrumbs->add('入庫予定（新規）', ['controller' => 'InstockPlans', 'action' => 'listNew']);
 
 ?>
 
 <!-- widget grid -->
 <section id="widget-grid">
 
+    <!-- ********************************** -->
+    <!-- Category Details                       -->
+    <!-- ********************************** -->
+
+    <!-- list widget grid row -->
+    <div class="row">
+        <!-- DETAIL list widget -->
+        <article class="col-sm-12 sortable-grid ui-sortable">
+
+            <!-- widget ID -->
+            <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-list"
+                 data-widget-deletebutton="false"
+                 data-widget-editbutton="false"
+                 data-widget-colorbutton="false"
+                 data-widget-togglebutton="false"
+                 data-widget-sortable="false">
+
+                <!-- DETAILS widget header -->
+                <header role="heading">
+                    <span class="widget-icon"> <i class="fa fa-lg fa-building"></i> </span>
+                    <h2>入庫予定（新規）一覧</h2>
+                </header>
+
+                <!-- content -->
+                <div role="content">
+
+                    <table class="table table-striped table-bordered table-hover" id="model-datatable">
+                        <thead>
+                            <tr>
+                                <th>予定日</th>
+                                <th>状況</th>
+                                <th>件名</th>
+                                <th>備考</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+
+                    <!-- End content -->
+                </div>
+
+                <!-- End widget ID -->
+            </div>
+
+            <!-- End DETAILS list widget -->
+        </article>
+
+        <!-- End list widget grid row -->
+    </div>
+
     <!-- widget grid row -->
     <div class="row">
 
         <!-- ********************************** -->
-        <!-- Organization List                  -->
-        <!-- ********************************** -->
-        <?= $this->element('Parts/side-tree-organizations', [
-            'title'     => '資産管理グループ',
-            'customers' => $customers,
-        ]) ?>
-
-        <!-- ********************************** -->
-        <!-- Organization Details               -->
+        <!-- Instock Plan Details               -->
         <!-- ********************************** -->
 
         <!-- DETAIL widget -->
-        <article class="col-sm-8 sortable-grid ui-sortable">
+        <article class="col-sm-12 sortable-grid ui-sortable">
 
             <!-- widget ID -->
             <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-1"
@@ -53,7 +96,7 @@ $this->Breadcrumbs->add('資産管理グループ', ['controller' => 'Organizati
                 <!-- DETAILS widget header -->
                 <header role="heading">
                     <span class="widget-icon"> <i class="fa fa-lg fa-building"></i> </span>
-                    <h2>資産管理グループ詳細</h2>
+                    <h2>入庫予定内容</h2>
                     <div class="widget-toolbar hidden" role="menu" data-app-action-key="view-actions">
                         <a href="javascript:void(0);" class="btn btn-success" data-app-action-key="edit">編集</a>
                     </div>
@@ -76,67 +119,51 @@ $this->Breadcrumbs->add('資産管理グループ', ['controller' => 'Organizati
                     <div class="widget-body">
 
                         <!-- form -->
-                        <?= $this->Form->create(null, ['id' => 'form-organization', 'type' => 'post', 'class' => "smart-form"]) ?>
+                        <?= $this->Form->create(null, ['id' => 'form-plan', 'type' => 'post', 'class' => "smart-form"]) ?>
 
                             <header>
-                                基本情報
+                                概要
                             </header>
 
                             <fieldset>
-                                <!-- 表示名 -->
+                                <!-- 入庫予定日 -->
                                 <section>
                                     <label class="input">
-                                        <input type="text" name="organization.kname" id="kname" class="input-xs"
-                                               data-app-form="form-organization"
-                                               placeholder="表示名　－　最大14文字／識別キーとなるので重複しないようにしてください／特殊文字は利用しないでください"
+                                        <i class="icon-append fa fa-calendar"></i>
+                                        <input type="text" name="plan.plan_date" id="plan_date" class="input-sm datepicker"
+                                               data-dateformat="yy/mm/dd"
+                                               data-app-form="form-plan"
+                                               placeholder="入庫予定日　－　yyyy/mm/dd形式で入力してください（例：2017/10/09）"
                                                disabled="disabled">
                                     </label>
                                 </section>
-                                <!-- 資産管理会社名 -->
+                                <!-- 件名 -->
                                 <section>
                                     <label class="input">
-                                        <input type="text" name="organization.name" id="name" class="input-xs"
-                                               data-app-form="form-organization" placeholder="資産管理組織名　－　最大40文字"
+                                        <input type="text" name="plan.name" id="name" class="input-xs"
+                                               data-app-form="form-plan" placeholder="件名　－　最大60文字"
                                                disabled="disabled">
                                     </label>
                                 </section>
                                 <!-- 補足（コメント） -->
                                 <section>
                                     <label class="textarea textarea-resizable">
-                                        <textarea name="organization.remarks" id="remarks" row="3" class="custom-scroll"
-                                                  data-app-form="form-organization" placeholder="【任意】補足（コメント）"
+                                        <textarea name="plan.remarks" id="remarks" row="3" class="custom-scroll"
+                                                  data-app-form="form-plan" placeholder="【任意】補足（コメント）"
                                                   disabled="disabled"></textarea>
                                     </label>
-                                </section>
-                                <!-- 利用可否 -->
-                                <section>
-                                    <?= $this->element('Parts/select-dsts2', [
-                                        'name' => 'organization.dsts',
-                                        'id'   => 'dsts',
-                                        'form' => 'form-organization',
-                                    ]) ?>
                                 </section>
                             </fieldset>
 
                             <header>
-                                親グループ
+                                入庫予定内容
                             </header>
 
                             <fieldset>
-                                <!-- 親グループ -->
-                                <section>
-                                    <div class="form-group">
-                                        <select name="organization.parent_id" id="parent_id" class="select2 form-control input-sm"
-                                               data-app-form="form-organization" data-placeholder="親となる資産管理組織（グループ）を入力・選択してください（親が資産管理会社の場合は空白）"
-                                               disabled="disabled"
-                                               style="width:100%;"></select>
-                                    </div>
-                                </section>
                             </fieldset>
 
                         <!-- End form -->
-                        <input type="hidden" name="organization.id" id="id" data-app-form="form-organization">
-                        <input type="hidden" name="organization.customer_id" id="customer_id" data-app-form="form-organization">
+                        <input type="hidden" name="plan.id" id="id" data-app-form="form-plan">
                         <?= $this->Form->end() ?>
                         </form>
 
@@ -160,6 +187,5 @@ $this->Breadcrumbs->add('資産管理グループ', ['controller' => 'Organizati
 
 
 <!-- load script -->
-<?php $this->Html->script('wnote/wnote.tree.organizations.js', ['block' => true]); ?>
-<?php $this->Html->script('wnote/master/admin/organizations.index.js', ['block' => true]); ?>
+<?php $this->Html->script('wnote/master/admin/categories.index.js', ['block' => true]); ?>
 

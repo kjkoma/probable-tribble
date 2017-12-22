@@ -15,29 +15,23 @@
  */
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
-use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * Classifications Model
+ * KittingPatterns Model
  *
  * @property \App\Model\Table\DomainsTable|\Cake\ORM\Association\BelongsTo $Domains
- * @property \App\Model\Table\CategoriesTable|\Cake\ORM\Association\BelongsTo $Categories
- * @property \App\Model\Table\ClassificationsTable|\Cake\ORM\Association\BelongsTo $ParentClassifications
- * @property \App\Model\Table\ClassificationsTable|\Cake\ORM\Association\HasMany $ChildClassifications
- * @property \App\Model\Table\ProductsTable|\Cake\ORM\Association\HasMany $Products
  *
- * @method \App\Model\Entity\Classification get($primaryKey, $options = [])
- * @method \App\Model\Entity\Classification newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\Classification[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Classification|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Classification patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\Classification[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\Classification findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\KittingPattern get($primaryKey, $options = [])
+ * @method \App\Model\Entity\KittingPattern newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\KittingPattern[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\KittingPattern|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\KittingPattern patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\KittingPattern[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\KittingPattern findOrCreate($search, callable $callback = null, $options = [])
  */
-class ClassificationsTable extends AppTable
+class KittingPatternsTable extends AppTable
 {
 
     /**
@@ -50,39 +44,41 @@ class ClassificationsTable extends AppTable
     {
         parent::initialize($config);
 
-        $this->setTable('classifications');
-        $this->setDisplayField('name');
+        $this->setTable('kitting_patterns');
+        $this->setDisplayField('kname');
         $this->setPrimaryKey('id');
 
         $this->belongsTo('Domains', [
             'foreignKey' => 'domain_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('Categories', [
-            'foreignKey' => 'category_id',
-            'joinType' => 'INNER'
-        ]);
-        $this->hasMany('Products', [
-            'foreignKey' => 'classification_id'
-        ]);
-        $this->hasMany('CAncestorTree', [ // alias
-            'foreignKey' => 'ancestor',
-            'className'  => 'ClassTree',
-            'dependent' => true
-        ]);
-        $this->hasMany('CDescendantTree', [ // alias
-            'foreignKey' => 'descendant',
-            'className'  => 'ClassTree',
-            'dependent' => true
-        ]);
-        $this->belongsTo('ClassAssetType', [
+
+        $this->belongsTo('KittingPatternsKbn', [
             'className'  => 'Snames',
             'foreignKey' => 'nid',
-            'bindingKey' => 'asset_type',
-            'conditions' => ['ClassAssetType.nkey' => 'ASSET_TYPE']
+            'bindingKey' => 'memory_unit',
+            'conditions' => ['KittingPatternsKbn.nkey' => 'PATTERN_KBN']
         ]);
 
-        $this->_sorted   = ['Classifications.kname' => 'ASC'];
+        $this->belongsTo('KittingPatternsType', [
+            'className'  => 'Snames',
+            'foreignKey' => 'nid',
+            'bindingKey' => 'memory_unit',
+            'conditions' => ['KittingPatternsType.nkey' => 'PATTERN_TYPE']
+        ]);
+        $this->belongsTo('KittingPatternsReuseKbn', [
+            'className'  => 'Snames',
+            'foreignKey' => 'nid',
+            'bindingKey' => 'memory_unit',
+            'conditions' => ['KittingPatternsReuseKbn.nkey' => 'REUSE_KBN']
+        ]);
+
+        $this->_sorted   = [
+            'KittingPatterns.pattern_kbn'  => 'ASC',
+            'KittingPatterns.pattern_type' => 'ASC',
+            'KittingPatterns.reuse_kbn'    => 'ASC',
+            'KittingPatterns.kname'        => 'ASC'
+        ];
     }
 
     /**
@@ -103,14 +99,19 @@ class ClassificationsTable extends AppTable
             ->notEmpty('kname');
 
         $validator
-            ->scalar('name')
-            ->requirePresence('name', 'create')
-            ->notEmpty('name');
+            ->scalar('pattern_kbn')
+            ->requirePresence('pattern_kbn', 'create')
+            ->notEmpty('pattern_kbn');
 
         $validator
-            ->scalar('asset_type')
-            ->requirePresence('asset_type', 'create')
-            ->notEmpty('asset_type');
+            ->scalar('pattern_type')
+            ->requirePresence('pattern_type', 'create')
+            ->notEmpty('pattern_type');
+
+        $validator
+            ->scalar('reuse_kbn')
+            ->requirePresence('reuse_kbn', 'create')
+            ->notEmpty('reuse_kbn');
 
         $validator
             ->scalar('remarks')

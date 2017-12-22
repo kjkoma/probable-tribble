@@ -34,6 +34,7 @@ class ClassificationsController extends AppController
     {
         parent::initialize();
         $this->_loadComponent('ModelCategories');
+        $this->_loadComponent('SysModelSnames');
     }
 
     /**
@@ -56,8 +57,9 @@ class ClassificationsController extends AppController
     public function index()
     {
         $categories = $this->ModelCategories->valid();
+        $assetTypes = $this->SysModelSnames->byKey('ASSET_TYPE');
 
-        $this->set(compact('categories'));
+        $this->set(compact('categories', 'assetTypes'));
         $this->render();
     }
 }

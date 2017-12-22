@@ -161,4 +161,23 @@ class ApiCpusController extends ApiController
         $this->setResponse(true, 'your request is succeed', ['cpu' => $deleteCpu['data']]);
     }
 
+    /**
+     * CPU一覧を検索する
+     *
+     */
+    public function findList()
+    {
+        $data = $this->request->getData();
+        if (!$data || !array_key_exists('term', $data) || !$this->request->is('post')) {
+            $this->setResponse(true, 'your request is succeed but no parameter found', ['cpus' => []]);
+            return;
+        }
+
+        // CPU一覧を取得する
+        $cpus  = $this->ModelCpus->find2List($data['term']);
+
+        // レスポンスメッセージの作成
+        $this->setResponse(true, 'your request is succeed', ['cpus' => $cpus]);
+    }
+
 }

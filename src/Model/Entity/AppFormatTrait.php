@@ -153,4 +153,20 @@ trait AppFormatTrait
 
         return $this->__dateFormat($this->_properties['sales_end']);
     }
+
+    /**
+     * 製造日日を取得する
+     *  
+     * - - -
+     * @param string $value    文字列
+     * @return string トリム後の文字列
+     */
+    public function _getMakedDate()
+    {
+        if (!isset($this->_properties['maked_date'])) {
+            return null;
+        }
+
+        return $this->__dateFormat($this->_properties['maked_date']);
+    }
 }

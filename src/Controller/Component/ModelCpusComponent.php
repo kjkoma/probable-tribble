@@ -51,4 +51,32 @@ class ModelCpusComponent extends AppModelComponent
         return ($toArray) ? $query->toArray() : $query->all();
     }
 
+    /**
+     * CPUを検索する（kname or name）
+     *  
+     * - - -
+     * @param string $search 検索文字列
+     * @return array CPU一覧（select2用id/textペア）
+     */
+    public function find2List($search)
+    {
+        $query = $this->modelTable->find('valid')
+            ->andWhere(function($exp) use ($search) {
+                return $exp->or_([
+                    'kname like ' => '%' . $search . '%',
+                    'name like ' => '%' . $search . '%',
+                ]);
+            });
+        $list = $query->all();
+
+        $cpus = [];
+        foreach($list as $item) {
+            array_push($cpus, [
+                'id'   => $item['id'],
+                'text' => $item['kname']
+            ]);
+        }
+
+        return $cpus;
+    }
 }

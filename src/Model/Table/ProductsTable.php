@@ -69,6 +69,13 @@ class ProductsTable extends AppTable
             'dependent'  => true
         ]);
 
+        $this->belongsTo('ProductAssetType', [
+            'className'  => 'Snames',
+            'foreignKey' => 'nid',
+            'bindingKey' => 'asset_type',
+            'conditions' => ['ProductAssetType.nkey' => 'ASSET_TYPE']
+        ]);
+
         $this->_sorted   = [
             'Products.maker_id'          => 'ASC',
             'Products.classification_id' => 'ASC',
@@ -109,6 +116,11 @@ class ProductsTable extends AppTable
         $validator
             ->date('sales_end')
             ->allowEmpty('sales_end');
+
+        $validator
+            ->scalar('asset_type')
+            ->requirePresence('asset_type', 'create')
+            ->notEmpty('asset_type');
 
         $validator
             ->scalar('remarks')

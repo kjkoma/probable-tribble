@@ -78,28 +78,18 @@ class ApiProductsController extends ApiController
         $product = $data['product'];
         $product['domain_id'] = $this->AppUser->current();
 
-        // トランザクション開始
-        $this->ModelProducts->begin();
-
         try {
-            // 分類を保存
+            // 製品を保存
             $newProduct = $this->ModelProducts->add($product);
             $this->AppError->result($newProduct);
 
             // エラー判定
             if ($this->AppError->has()) {
-                // ロールバック
-                $this->ModelProducts->rollback();
                 $this->setResponseError('your request is failure.', $this->AppError->errors());
                 return;
             }
 
-            // コミット
-            $this->ModelProducts->commit();
-
         } catch(Exception $e) {
-            // ロールバック
-            $this->ModelProducts->rollback();
             $this->setError('保存時に予期せぬエラーが発生しました。管理者へお問い合わせください。', 'UNEXPECTED_EXCEPTION', $e);
             return;
         }
@@ -119,28 +109,18 @@ class ApiProductsController extends ApiController
 
         $product  = $data['product'];
 
-        // トランザクション開始
-        $this->ModelProducts->begin();
-
         try {
-            // 分類を保存
+            // 製品を保存
             $updateProduct = $this->ModelProducts->save($product);
             $this->AppError->result($updateProduct);
 
             // エラー判定
             if ($this->AppError->has()) {
-                // ロールバック
-                $this->ModelProducts->rollback();
                 $this->setResponseError('your request is failure.', $this->AppError->errors());
                 return;
             }
 
-            // コミット
-            $this->ModelProducts->commit();
-
         } catch(Exception $e) {
-            // ロールバック
-            $this->ModelProducts->rollback();
             $this->setError('保存時に予期せぬエラーが発生しました。管理者へお問い合わせください。', 'UNEXPECTED_EXCEPTION', $e);
             return;
         }
