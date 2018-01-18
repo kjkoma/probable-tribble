@@ -47,7 +47,7 @@ $blank    = isset($blank)    ? $blank    : true;
             data-app-form="<?= $form ?>" data-app-form-default="<?= $default ?>"
             <?= $attr ?> <?= $disabled_attr ?>>
         <?php if ($blank) { ?>
-            <option value=""></option>
+            <option value="">-- メーカー選択 --</option>
         <?php } ?>
         <?php foreach($makers as $maker) { ?>
             <option value="<?= h($maker['id']) ?>"><?= h($maker['kname']) ?></option>

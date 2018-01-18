@@ -63,19 +63,25 @@ class InstockPlansTable extends AppTable
         ]);
         $this->belongsTo('InstockPlansKbn', [
             'className'  => 'Snames',
-            'foreignKey' => 'nid',
-            'bindingKey' => 'instcok_kbn',
-            'conditions' => ['InstockPlanKbn.nkey' => 'INSTOCK_KBN']
+            'foreignKey' => 'instock_kbn',
+            'bindingKey' => 'nid',
+            'conditions' => ['InstockPlansKbn.nkey' => 'INSTOCK_KBN']
         ]);
         $this->belongsTo('InstockPlansSts', [
             'className'  => 'Snames',
-            'foreignKey' => 'nid',
-            'bindingKey' => 'instcok_sts',
+            'foreignKey' => 'plan_sts',
+            'bindingKey' => 'nid',
             'conditions' => ['InstockPlansSts.nkey' => 'INSTOCK_STS']
+        ]);
+        $this->belongsTo('InstockPlansKbn', [
+            'className'  => 'Snames',
+            'foreignKey' => 'instock_kbn',
+            'bindingKey' => 'nid',
+            'conditions' => ['InstockPlansKbn.nkey' => 'INSTOCK_KBN']
         ]);
 
         $this->_sorted = [
-            'InstockPlans.plan_date'   => 'DESC',
+            'InstockPlans.plan_date'   => 'ASC',
             'InstockPlans.instock_kbn' => 'ASC',
             'InstockPlans.name'        => 'ASC'
         ];

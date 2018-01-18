@@ -26,7 +26,7 @@
         <span id="logo"> <img src="/img/wnote-logo.png" alt="WarehouseNote"> </span>
 
         <!-- NOTIFICATION -->
-        <?= $this->element('Common/header-notification') ?>
+        <?php // $this->element('Common/header-notification') ?>
 
     </div>
     <!-- End logo-group -->

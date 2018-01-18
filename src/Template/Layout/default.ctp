@@ -85,8 +85,8 @@
 </div>
 
 <!-- IMPORTANT: jQuery + jQueryUI -->
-<?= $this->Html->script('libs/jquery-2.1.1.min.js') ?>
-<?= $this->Html->script('libs/jquery-ui-1.10.3.min.js') ?>
+<?= $this->Html->script('libs/jquery-3.2.1.min.js') ?>
+<?= $this->Html->script('libs/jquery-ui.min.js') ?>
 
 <!-- IMPORTANT: APP CONFIG -->
 <?= $this->Html->script('app.config.js') ?>
@@ -110,7 +110,7 @@
 <?= $this->Html->script('plugin/masked-input/jquery.maskedinput.min.js') ?>
 
 <!-- JQUERY SELECT2 INPUT -->
-<?= $this->Html->script('plugin/select2/select2.min.js') ?>
+<?= $this->Html->script('plugin/select2/select2.full.min.js') ?>
 
 <!-- JQUERY UI + Bootstrap Slider -->
 <?= $this->Html->script('plugin/bootstrap-slider/bootstrap-slider.min.js') ?>
@@ -133,6 +133,9 @@
 
 <!-- WNote JS FILE -->
 <?= $this->Html->script('wnote.js') ?>
+
+<!-- WNote Select2 JS FILE -->
+<?= $this->Html->script('wnote/wnote.select2.js') ?>
 
 <!-- Pages JS FILE -->
 <?= $this->fetch('script') ?>

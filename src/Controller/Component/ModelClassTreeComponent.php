@@ -225,7 +225,7 @@ class ModelClassTreeComponent extends AppModelComponent
             'descendant' => $tree['id']
         ];
 
-        if (!empty($parentId)) {
+        if (!is_null($parentId) && $parentId !== '') {
             // 最上位以外への登録の場合、先祖データに自身を追加する
             $ancestors = $this->ancestor($parentId, true);
             foreach($ancestors as $ancestor) {
@@ -272,7 +272,7 @@ class ModelClassTreeComponent extends AppModelComponent
         }
 
         // 変更後のカテゴリーIDを設定
-        if (empty($tree['parent_id'])) {
+        if (is_null($tree['parent_id']) || $tree['parent_id'] === '') {
             // 変更先の親がルートの場合
             $myself->set('category_id', $tree['category_id']);
             $result = $this->save($myself->toArray());
@@ -282,7 +282,7 @@ class ModelClassTreeComponent extends AppModelComponent
         }
 
         // 変更後の先祖を登録
-        if (!empty($tree['parent_id'])) {
+        if (!is_null($tree['parent_id']) && $tree['parent_id'] !== '') {
             $result = $this->addAncestor($classificationId, $tree['parent_id']);
         }
 
@@ -390,7 +390,7 @@ class ModelClassTreeComponent extends AppModelComponent
         $myself = $this->myself($tree['id']);
 
         // カテゴリの変更
-        if (!$result && !empty($myself['category_id']) && !empty($tree['category_id'])) {
+        if (!$result && !is_null($myself['category_id']) && $myself['category_id'] !== '' && !is_null($tree['category_id']) && $tree['category_id'] !== '') {
             if ($myself['category_id'] != $tree['category_id']) {
                 $result = true;
             }
@@ -398,10 +398,10 @@ class ModelClassTreeComponent extends AppModelComponent
 
         // 親分類の変更
         $myparent = (!$result) ? $this->myparent($tree['id']) : [];
-        if (!$result && count($myparent) == 0 && !empty($tree['parent_id'])) {
+        if (!$result && count($myparent) == 0 && !is_null($tree['parent_id']) && $tree['parent_id'] !== '') {
             $result = true;
         }
-        if (!$result && count($myparent) > 0 && empty($tree['parent_id'])) {
+        if (!$result && count($myparent) > 0 && (is_null($tree['parent_id']) || $tree['parent_id'] === '')) {
             $result = true;
         }
         if (!$result && count($myparent) > 0 && $myparent['ancestor'] != $tree['parent_id']) {

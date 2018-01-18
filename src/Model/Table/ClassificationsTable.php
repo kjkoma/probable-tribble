@@ -108,6 +108,11 @@ class ClassificationsTable extends AppTable
             ->notEmpty('name');
 
         $validator
+            ->integer('category_id')
+            ->requirePresence('category_id', 'create')
+            ->notEmpty('category_id');
+
+        $validator
             ->scalar('asset_type')
             ->requirePresence('asset_type', 'create')
             ->notEmpty('asset_type');
@@ -143,6 +148,7 @@ class ClassificationsTable extends AppTable
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['domain_id'], 'Domains'));
+        $rules->add($rules->existsIn(['category_id'], 'Categories'));
 
         return $rules;
     }

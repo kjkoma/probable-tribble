@@ -116,7 +116,7 @@ $this->Breadcrumbs->add('仕入先／メーカー', ['controller' => 'Companies'
                             <!-- 補足（コメント） -->
                             <section>
                                 <label class="textarea textarea-resizable">
-                                    <textarea name="company.remarks" id="remarks" row="3" class="custom-scroll"
+                                    <textarea name="company.remarks" id="remarks" rows="3" class="custom-scroll"
                                               data-app-form="form-company"
                                               placeholder="【任意】補足（コメント）"
                                               disabled="disabled"></textarea>

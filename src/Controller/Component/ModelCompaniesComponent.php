@@ -76,4 +76,23 @@ class ModelCompaniesComponent extends AppModelComponent
         return ($toArray) ? $query->toArray() : $query->all();
     }
 
+    /**
+     * 配送業者一覧を取得する
+     *  
+     * - - -
+     * @param boolean $toArray true:配列で返す|false:ResultSetで返す（default）
+     * @return array 配送業者一覧（ResultSet or Array）
+     */
+    public function delivers($toArray = false)
+    {
+        $query = $this->modelTable->find('sorted')
+            ->where([
+                'company_kbn IN' => [
+                    Configure::read('WNote.DB.Companies.CompanyKbn.delivery')
+                ]
+            ]);
+
+        return ($toArray) ? $query->toArray() : $query->all();
+    }
+
 }

@@ -55,21 +55,21 @@ class KittingPatternsTable extends AppTable
 
         $this->belongsTo('KittingPatternsKbn', [
             'className'  => 'Snames',
-            'foreignKey' => 'nid',
-            'bindingKey' => 'memory_unit',
+            'foreignKey' => 'pattern_kbn',
+            'bindingKey' => 'nid',
             'conditions' => ['KittingPatternsKbn.nkey' => 'PATTERN_KBN']
         ]);
 
         $this->belongsTo('KittingPatternsType', [
             'className'  => 'Snames',
-            'foreignKey' => 'nid',
-            'bindingKey' => 'memory_unit',
+            'foreignKey' => 'pattern_type',
+            'bindingKey' => 'nid',
             'conditions' => ['KittingPatternsType.nkey' => 'PATTERN_TYPE']
         ]);
         $this->belongsTo('KittingPatternsReuseKbn', [
             'className'  => 'Snames',
-            'foreignKey' => 'nid',
-            'bindingKey' => 'memory_unit',
+            'foreignKey' => 'reuse_kbn',
+            'bindingKey' => 'nid',
             'conditions' => ['KittingPatternsReuseKbn.nkey' => 'REUSE_KBN']
         ]);
 

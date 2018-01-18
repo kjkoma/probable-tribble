@@ -87,4 +87,42 @@ class ModelUsersComponent extends AppModelComponent
         return $result;
     }
 
+    /**
+     * ユーザーを検索する（kname or name）
+     *  
+     * - - -
+     * @param string $search 検索文字列
+     * @param string $organizationId 組織ID
+     * @return array 製品一覧（select2用id/textペア）
+     */
+    public function find2List($search, $organizationId = null)
+    {
+        $query = $this->modelTable->find('valid');
+
+        if (!is_null($search) && $search !== '') {
+            $query->andWhere(function($exp) use ($search) {
+                return $exp->or_([
+                    'sname like ' => '%' . $search . '%',
+                    'fname like ' => '%' . $search . '%',
+                ]);
+            });
+        }
+
+        if (!is_null($organizationId) && $organizationId !== '') {
+            $query->andWhere([
+                'organization_id' => $organizationId
+            ]);
+        }
+        $list = $query->all();
+
+        $products = [];
+        foreach($list as $item) {
+            array_push($products, [
+                'id'   => $item['id'],
+                'text' => $item['sname'] . ' ' . $item['fname']
+            ]);
+        }
+
+        return $products;
+    }
 }

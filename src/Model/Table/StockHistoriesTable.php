@@ -63,9 +63,6 @@ class StockHistoriesTable extends AppTable
         $this->belongsTo('Instocks', [
             'foreignKey' => 'instock_id'
         ]);
-        $this->belongsTo('Pickings', [
-            'foreignKey' => 'picking_id'
-        ]);
         $this->belongsTo('Stocktakes', [
             'foreignKey' => 'stocktake_id'
         ]);
@@ -145,7 +142,6 @@ class StockHistoriesTable extends AppTable
         $rules->add($rules->existsIn(['domain_id'], 'Domains'));
         $rules->add($rules->existsIn(['asset_id'], 'Assets'));
         $rules->add($rules->existsIn(['instock_id'], 'Instocks'));
-        $rules->add($rules->existsIn(['picking_id'], 'Pickings'));
         $rules->add($rules->existsIn(['stocktake_id'], 'Stocktakes'));
 
         return $rules;

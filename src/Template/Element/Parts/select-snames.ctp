@@ -25,19 +25,26 @@
  * @param boolean $disabled     disabled属性（デフォルト:true（disabled属性設定））
  * @param string  $class        クラス名（追加する場合）
  * @param string  $default      デフォルト値（指定する場合）
+ * @param boolean $blank        ブランクオプション有無（デフォルト:false）
+ * @param boolean $placeholder  ブランク時の表示名称
  */
-$name     = isset($name)     ? $name     : "";
-$id       = isset($id)       ? $id       : "";
-$form     = isset($form)     ? $form     : "";
-$disabled = isset($disabled) ? $disabled : true;
-$class    = isset($class)    ? $class    : "";
-$default  = isset($default)  ? $default  : $this->App->conf('WNote.DB.Companies.CompanyKbn.all');
-$disabled_attr = ($disabled) ? 'disabled="disabled"' : '';
+$name        = isset($name)        ? $name        : "";
+$id          = isset($id)          ? $id          : "";
+$form        = isset($form)        ? $form        : "";
+$disabled    = isset($disabled)    ? $disabled    : true;
+$class       = isset($class)       ? $class       : "";
+$default     = isset($default)     ? $default     : "";
+$disabled_attr = ($disabled)       ? 'disabled="disabled"' : '';
+$blank       = isset($blank)       ? $blank       : false;
+$placeholder = isset($placeholder) ? $placeholder : "";
 ?>
 <label class="select">
     <select name="<?= $name ?>" id="<?= $id ?>" class="input-sm <?= $class ?>"
             data-app-form="<?= $form ?>" data-app-form-default="<?= $default ?>"
             <?= $disabled_attr ?>>
+        <?php if ($blank) { ?>
+            <option value=""><?= $placeholder ?></option>
+        <?php } ?>
         <?php foreach($snames as $sname) { ?>
             <option value="<?= h($sname['nid']) ?>"><?= h($sname['name2']) ?></option>
         <?php } ?>

@@ -144,6 +144,14 @@ class ApiClassificationsController extends ApiController
             if ($this->ModelClassTree->isEdit($classification)) {
                 $updateClassTree = ($this->AppError->has()) ? null : $this->ModelClassTree->editTree($classification);
                 $this->AppError->result($updateClassTree);
+
+                // 配下の分類のカテゴリを更新
+                if (!$this->AppError->has() && empty($classification['parent_id'])) {
+                    $tree     = $this->ModelClassTree->descendant($classification['id']);
+                    $children = $this->ModelClassifications->descendant($tree);
+                    $updateChildren = $this->ModelClassifications->saveCategory($classification['category_id'], $children);
+                    $this->AppError->result($updateChildren);
+                }
             }
 
             // エラー判定
@@ -216,7 +224,7 @@ class ApiClassificationsController extends ApiController
     }
 
     /**
-     * 指定された識別子（kname）がユニークかどうかを取得する
+     * 指定された識別子（kname）がユニークかどうかを検証する
      *
      */
     public function validateKname()
@@ -226,6 +234,24 @@ class ApiClassificationsController extends ApiController
 
         // 識別子のユニーク性をチェック
         $validate = $this->ModelClassifications->validateKname($data['kname'], $data['id']);
+
+        // レスポンスメッセージの作成
+        $this->setResponse(true, 'your request is succeed', ['validate' => $validate]);
+    }
+
+    /**
+     * 指定された分類とカテゴリの関係に妥当性があるかどうかを検証する
+     *
+     */
+    public function validateClassificationAndCategory()
+    {
+        $data = $this->validateParameter('classification_id', ['post']);
+        if (!$data) return;
+
+        $categoryId = (array_key_exists('category_id', $data) && !empty($data['category_id'])) ? $data['category_id'] : '';
+
+        // 指定された分類IDとカテゴリIDのデータが存在するかどうかをチェック
+        $validate = $this->ModelClassifications->validateClassificationAndCategory($data['classification_id'], $categoryId);
 
         // レスポンスメッセージの作成
         $this->setResponse(true, 'your request is succeed', ['validate' => $validate]);
@@ -304,7 +330,7 @@ class ApiClassificationsController extends ApiController
 
 
     /**
-     * 分類一覧を検索する
+     * 分類一覧（配下の分類含む）を検索する
      *
      */
     public function findList()
@@ -323,4 +349,24 @@ class ApiClassificationsController extends ApiController
         $this->setResponse(true, 'your request is succeed', ['classifications' => $classifications]);
     }
 
+    /**
+     * 分類一覧（カテゴリ指定）を検索する
+     *
+     */
+    public function findListByCategory()
+    {
+        $data = $this->request->getData();
+        if (!$data || !array_key_exists('term', $data) || !$this->request->is('post')) {
+            $this->setResponse(true, 'your request is succeed but no parameter found', ['classifications' => []]);
+            return;
+        }
+
+        $categoryId = (array_key_exists('category_id', $data) && !empty($data['category_id'])) ? $data['category'] : '';
+
+        // 配下分類を取得する
+        $classifications  = $this->ModelClassifications->find2ListWithCategory($data['term'], $categoryId);
+
+        // レスポンスメッセージの作成
+        $this->setResponse(true, 'your request is succeed', ['classifications' => $classifications]);
+    }
 }

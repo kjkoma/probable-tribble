@@ -57,6 +57,9 @@ class InstockDetailsTable extends AppTable
             'foreignKey' => 'instock_id',
             'joinType' => 'INNER'
         ]);
+        $this->belongsTo('Assets', [
+            'foreignKey' => 'asset_id'
+        ]);
 
         $this->_sorted = [
             'InstockDetails.instock_id' => 'DESC',
@@ -75,6 +78,10 @@ class InstockDetailsTable extends AppTable
     {
         $validator
             ->allowEmpty('id', 'create');
+
+        $validator
+            ->scalar('serial_no')
+            ->allowEmpty('serial_no');
 
         $validator
             ->scalar('serial_no')
@@ -112,6 +119,7 @@ class InstockDetailsTable extends AppTable
     {
         $rules->add($rules->existsIn(['domain_id'], 'Domains'));
         $rules->add($rules->existsIn(['instock_id'], 'Instocks'));
+        $rules->add($rules->existsIn(['asset_id'], 'Assets'));
 
         return $rules;
     }

@@ -82,4 +82,63 @@ class ModelProductModelsComponent extends AppModelComponent
         return $table;
     }
 
+    /**
+     * モデルを検索する（kname or name）
+     *  
+     * - - -
+     * @param string $search 検索文字列
+     * @param string $productId 製品ID
+     * @return array モデル一覧（select2用id/textペア）
+     */
+    public function find2List($search, $productId = null)
+    {
+        $query = $this->modelTable->find('valid');
+
+        if (!is_null($search) && $search !== '' && $search != '*') {
+            $query->andWhere(function($exp) use ($search) {
+                return $exp->or_([
+                    'kname like ' => '%' . $search . '%',
+                    'name like ' => '%' . $search . '%',
+                ]);
+            });
+        }
+
+        if (!is_null($productId) && $productId !== '') {
+            $query->andWhere([
+                'product_id' => $productId
+            ]);
+        }
+        $list = $query->all();
+
+        $models = [];
+        foreach($list as $item) {
+            array_push($models, [
+                'id'   => $item['id'],
+                'text' => $item['kname']
+            ]);
+        }
+
+        return $models;
+    }
+
+    /**
+     * 指定されたモデルIDと製品IDのデータが存在するかどうかを検証する
+     *  
+     * - - -
+     * @param integer $modelId モデルID
+     * @param integer $productId 製品ID
+     * @return boolean true:正常/false:異常（指定されたモデルと製品に関連性がない）
+     */
+    public function validateModelAndProduct($modelId, $productId)
+    {
+        $count = $this->modelTable->find('valid')
+            ->where([
+                'id' => $modelId,
+                'product_id' => $productId
+            ])
+            ->count();
+
+        return ($count == 0) ? false : true;
+    }
+
 }

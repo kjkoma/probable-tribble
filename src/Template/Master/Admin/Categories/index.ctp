@@ -103,7 +103,7 @@ $this->Breadcrumbs->add('資産カテゴリ', ['controller' => 'Categories', 'ac
                                 <!-- 補足（コメント） -->
                                 <section>
                                     <label class="textarea textarea-resizable">
-                                        <textarea name="category.remarks" id="remarks" row="3" class="custom-scroll"
+                                        <textarea name="category.remarks" id="remarks" rows="3" class="custom-scroll"
                                                   data-app-form="form-category" placeholder="【任意】補足（コメント）"
                                                   disabled="disabled"></textarea>
                                     </label>
@@ -121,7 +121,6 @@ $this->Breadcrumbs->add('資産カテゴリ', ['controller' => 'Categories', 'ac
                         <!-- End form -->
                         <input type="hidden" name="category.id" id="id" data-app-form="form-category">
                         <?= $this->Form->end() ?>
-                        </form>
 
                         <!-- End DETAILS widget body -->
                     </div>

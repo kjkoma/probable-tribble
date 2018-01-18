@@ -66,4 +66,23 @@ class SysModelSnamesComponent extends AppComponent
         return $query->first();
     }
 
+    /**
+     * 指定したキーのキー／値ペアの一覧を取得する
+     *  
+     * - - -
+     * @param string $key nkeyの値
+     * @param boolean $toArray true:配列で返す|false:ResultSetで返す（default）
+     * @return array 名称ー一覧
+     */
+    public function listByKey($key, $toArray = false)
+    {
+        $snames = $this->modelTable->find('values', ['nkey' => $key])->all();
+        $array = [];
+        foreach($snames as $sname) {
+            $array[] = [ $sname['nid'] => $sname['name'] ];
+        }
+
+        return $array;
+    }
+
 }

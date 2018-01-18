@@ -27,6 +27,7 @@
  * @param string  $default      デフォルト値（指定する場合）
  * @param string  $attr         その他属性
  * @param boolean $labeled      ラベル要素の出力有無（デフォルト:true）
+ * @param boolean $blank        ブランクオプション有無（デフォルト:true）
  */
 $name     = isset($name)     ? $name     : "";
 $id       = isset($id)       ? $id       : "";
@@ -37,6 +38,7 @@ $default  = isset($default)  ? $default  : "-1";
 $attr     = isset($attr)     ? $attr     : "";
 $disabled_attr = ($disabled) ? 'disabled="disabled"' : '';
 $labeled  = isset($labeled)  ? $labeled  : true;
+$blank    = isset($blank)    ? $blank    : true;
 ?>
 <?php if ($labeled) { ?>
 <label class="select">
@@ -44,6 +46,9 @@ $labeled  = isset($labeled)  ? $labeled  : true;
     <select name="<?= $name ?>" id="<?= $id ?>" class="input-sm <?= $class ?>"
             data-app-form="<?= $form ?>" data-app-form-default="<?= $default ?>"
             <?= $attr ?> <?= $disabled_attr ?>>
+        <?php if ($blank) { ?>
+            <option value="">-- カテゴリ選択 --</option>
+        <?php } ?>
         <?php foreach($categories as $category) { ?>
             <option value="<?= h($category['id']) ?>"><?= h($category['kname']) ?></option>
         <?php } ?>

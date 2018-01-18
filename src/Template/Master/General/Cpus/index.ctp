@@ -144,7 +144,7 @@ $this->Breadcrumbs->add('CPU', ['controller' => 'Cpus', 'action' => 'index']);
                             <!-- 補足（コメント） -->
                             <section>
                                 <label class="textarea textarea-resizable">
-                                    <textarea name="cpu.remarks" id="remarks" row="3" class="custom-scroll"
+                                    <textarea name="cpu.remarks" id="remarks" rows="3" class="custom-scroll"
                                               data-app-form="form-cpu"
                                               placeholder="【任意】補足（コメント）"
                                               disabled="disabled"></textarea>

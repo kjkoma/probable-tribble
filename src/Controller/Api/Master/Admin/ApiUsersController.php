@@ -208,4 +208,25 @@ class ApiUsersController extends ApiController
         $this->setResponse(true, 'your request is succeed', ['user' => $deleteUser['data']]);
     }
 
+    /**
+     * ユーザー一覧を検索する
+     *
+     */
+    public function findList()
+    {
+        $data = $this->request->getData();
+        if (!$data || !array_key_exists('term', $data) || !$this->request->is('post')) {
+            $this->setResponse(true, 'your request is succeed but no parameter found', ['users' => []]);
+            return;
+        }
+
+        // ユーザーを取得する（組織指定がある場合は組織で絞り込む）
+        $organizationId = array_key_exists('organization_id', $data) ? $data['organization_id'] : null;
+        $users  = $this->ModelUsers->find2List($data['term'], $organizationId);
+
+        // レスポンスメッセージの作成
+        $this->setResponse(true, 'your request is succeed', ['users' => $users]);
+    }
+
+
 }

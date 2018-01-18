@@ -82,6 +82,7 @@ class AppTable extends Table
                             ],
                     ],
             ]);
+        $this->addBehavior('NullUpdate');
 
         if (array_key_exists('appUser', $config)) {
             $this->_appUser = $config['appUser'];
@@ -149,7 +150,7 @@ class AppTable extends Table
             $query->select($this->_selected);
         }
 
-        $query->where(['dsts' => Configure::read('WNote.DB.Dsts.valid')]);
+        $query->where([$this->getAlias() . '.dsts' => Configure::read('WNote.DB.Dsts.valid')]);
 
         if (count($this->_sorted) > 0) {
             $query->order($this->_sorted);
@@ -159,62 +160,16 @@ class AppTable extends Table
     }
 
     /**
-     * ソートされた使用中、且つ、有効なデータを取得する
-     *  
-     * 有効なデータはstart_date、end_dateの比較において判定する
+     * 使用中のデータを取得する
+     * 
      * - - -
      * @param \Cake\ORM\Query $query クエリオブジェクト
-     * @param array $options { 'target': yyyy-mm-dd（比較日付） }
+     * @param array $options なし
      * @return \Cake\ORM\Query 実行可能なクエリオブジェクト
      */
-    public function findValidTerm(Query $query, array $options)
+    public function findValidAll(Query $query, array $options)
     {
-        $target = Time::now()->format('Y-m-d');
-        $target = isset($options['target']) ? $options['target'] : $target;
-
-        if (count($this->_selected) > 0) {
-            $query->select($this->_selected);
-        }
-
-        $query->where([
-                'use_flg' => Configure::read('Doman.DB.UseFlg.usage'),
-                'start_date <=' => $target,
-                'end_date >=' => $target,
-            ]);
-
-        if (count($this->_sorted) > 0) {
-            $query->order($this->_sorted);
-        }
-
-        return $query;
-    }
-
-    /**
-     * ソートされた有効なデータを取得する
-     *  
-     * 有効なデータはstart_date、end_dateの比較において判定する
-     * - - -
-     * @param \Cake\ORM\Query $query クエリオブジェクト
-     * @param array $options { 'target': yyyy-mm-dd（比較日付） }
-     * @return \Cake\ORM\Query 実行可能なクエリオブジェクト
-     */
-    public function findValidTermAll(Query $query, array $options)
-    {
-        $target = Time::now()->format('Y-m-d');
-        $target = isset($options['target']) ? $options['target'] : $target;
-
-        if (count($this->_selected) > 0) {
-            $query->select($this->_selected);
-        }
-
-        $query->where([
-                'start_date <=' => $target,
-                'end_date >=' => $target,
-            ]);
-
-        if (count($this->_sorted) > 0) {
-            $query->order($this->_sorted);
-        }
+        $query->where([$this->getAlias() . '.dsts' => Configure::read('WNote.DB.Dsts.valid')]);
 
         return $query;
     }

@@ -219,4 +219,5 @@ if (Configure::read('debug')) {
 }
 
 Plugin::load('ADmad/JwtAuth');
+Plugin::load('CsvView');
 Plugin::load('DebugKit');

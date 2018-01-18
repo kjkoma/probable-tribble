@@ -98,4 +98,40 @@ class SysModelSusersComponent extends AppComponent
         return $this->validateUnique('email', $email, $suser_id);
     }
 
+    /**
+     * ユーザーを検索する（kname or name）
+     *   ※全ユーザー検索の「*」は不可
+     * - - -
+     * @param string $search 検索文字列
+     * @return array ユーザー一覧（select2用id/textペア）
+     */
+    public function find2List($search)
+    {
+        $query = $this->modelTable->find('valid');
+
+        if (!is_null($search) && $search !== '') {
+            $query->andWhere(function($exp) use ($search) {
+                return $exp->or_([
+                    'kname like ' => '%' . $search . '%',
+                    'sname like ' => '%' . $search . '%',
+                    'fname like ' => '%' . $search . '%',
+                ]);
+            });
+        } else {
+            $query->where(['1 = 0']); // 検索不可
+        }
+
+        $list = $query->all();
+
+        $suser = [];
+        foreach($list as $item) {
+            array_push($suser, [
+                'id'   => $item['id'],
+                'text' => $item['kname']
+            ]);
+        }
+
+        return $suser;
+    }
+
 }

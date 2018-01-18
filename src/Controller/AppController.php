@@ -188,7 +188,7 @@ class AppController extends Controller
      * - - -
      * @param string $modelComponent モデル用コンポーネントの名前
      */
-    protected function _loadComponent($modelComponent)
+    public function _loadComponent($modelComponent)
     {
         $this->loadComponent($modelComponent, [
             'appUser' => $this->AppUser,
@@ -199,11 +199,11 @@ class AppController extends Controller
      * リクエストデータをチェックする
      *
      * - - -
-     * @param string $key リクエストデータよりデータを取得するキー
+     * @param string $keys リクエストデータよりデータを取得するキー
      * @param array  $allowActions 許可するアクション（['post', 'get']など）/ 未指定：全許可
      * @param mixed リクエストデータ/不正時はfalseを返す
      */
-    protected function validateParameter($key, $allowActions = null)
+    protected function validateParameter($keys, $allowActions = null)
     {
         if (!is_null($allowActions)) {
             $match = false;
@@ -217,9 +217,13 @@ class AppController extends Controller
         }
 
         $data = $this->request->getData();
-        if (!$data || !array_key_exists($key, $data)) {
+        $keys = is_array($keys) ? $keys : [$keys];
+        foreach($keys as $key) {
+            if (!$data || !array_key_exists($key, $data)) {
                 throw new BadRequestException(__('指定されたページへのアクセスが不正です。'));
+            }
         }
+
         return $data;
     }
 

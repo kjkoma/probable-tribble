@@ -71,8 +71,8 @@ class ProductsTable extends AppTable
 
         $this->belongsTo('ProductAssetType', [
             'className'  => 'Snames',
-            'foreignKey' => 'nid',
-            'bindingKey' => 'asset_type',
+            'foreignKey' => 'asset_type',
+            'bindingKey' => 'nid',
             'conditions' => ['ProductAssetType.nkey' => 'ASSET_TYPE']
         ]);
 

@@ -180,7 +180,7 @@ $this->Breadcrumbs->add('製品／モデル', ['controller' => 'Products', 'acti
                                         <!-- 補足（コメント） -->
                                         <section>
                                             <label class="textarea textarea-resizable">
-                                                <textarea name="product.remarks" id="remarks" row="3" class="custom-scroll"
+                                                <textarea name="product.remarks" id="remarks" rows="3" class="custom-scroll"
                                                           data-app-form="form-product" placeholder="【任意】補足（コメント）"
                                                           disabled="disabled"></textarea>
                                             </label>
@@ -214,7 +214,6 @@ $this->Breadcrumbs->add('製品／モデル', ['controller' => 'Products', 'acti
                                 <!-- End form -->
                                 <input type="hidden" name="product.id" id="id" data-app-form="form-product">
                                 <?= $this->Form->end() ?>
-                                </form>
 
                                 <!-- End product tab contents -->
                             </div>
@@ -428,7 +427,7 @@ $this->Breadcrumbs->add('製品／モデル', ['controller' => 'Products', 'acti
                                     <!-- 補足（コメント） -->
                                     <section>
                                         <label class="textarea textarea-resizable">
-                                            <textarea name="model.remarks" id="model_remarks" row="3" class="custom-scroll"
+                                            <textarea name="model.remarks" id="model_remarks" rows="3" class="custom-scroll"
                                                       data-app-form="form-model" placeholder="【任意】補足（コメント）"
                                                       disabled="disabled"></textarea>
                                         </label>
@@ -447,9 +446,8 @@ $this->Breadcrumbs->add('製品／モデル', ['controller' => 'Products', 'acti
                                 <input type="hidden" name="model.product_id" id="model_product_id" data-app-form="form-model">
                                 <input type="hidden" name="model.id" id="model_id" data-app-form="form-model">
                                 <?= $this->Form->end() ?>
-                                </form>
 
-                                <!-- End product tab contents -->
+                                <!-- End model tab contents -->
                             </div>
 
                             <!-- End tab contents -->
@@ -473,11 +471,9 @@ $this->Breadcrumbs->add('製品／モデル', ['controller' => 'Products', 'acti
     <!-- End widget grid-->
 </section>
 
-
 <!-- load script -->
 <?= $this->element('Common/load-datatable') ?>
 <?php $this->Html->script('wnote/libs/wnote.lib.form.js', ['block' => true]); ?>
 <?php $this->Html->script('wnote/wnote.tree.products.js', ['block' => true]); ?>
 <?php $this->Html->script('wnote/master/general/products.index.js', ['block' => true]); ?>
-<?php $this->Html->script('wnote/master/general/products.models.js', ['block' => true]); ?>
-
+<?php $this->Html->script('wnote/master/general/products.index.models.js', ['block' => true]); ?>

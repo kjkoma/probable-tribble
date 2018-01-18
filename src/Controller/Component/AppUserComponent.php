@@ -249,11 +249,11 @@ class AppUserComponent extends AppComponent
             return false;
         }
 
-        if (is_null($this->current()) || empty($this->current())) {
+        if (is_null($this->current()) || $this->current() === '') {
             return false;
         }
 
-        if (is_null($this->roleKname()) || empty($this->roleKname())) {
+        if (is_null($this->roleKname()) || $this->roleKname() === '') {
             return false;
         }
 
@@ -363,7 +363,7 @@ class AppUserComponent extends AppComponent
     {
         // 指定されたドメインが存在しない場合、権限がない場合は変更しない
         if (!$domainId
-            || empty($domainId)
+            || $domainId === ''
             || !preg_match('/^[0-9]+$/', $domainId)
             || !$this->hasDomain($domainId))
         {

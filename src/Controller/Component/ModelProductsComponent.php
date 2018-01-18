@@ -86,4 +86,63 @@ class ModelProductsComponent extends AppModelComponent
         return $result;
     }
 
+    /**
+     * 製品を検索する（kname or name）
+     *  
+     * - - -
+     * @param string $search 検索文字列
+     * @param string $classificationId 分類ID
+     * @return array 製品一覧（select2用id/textペア）
+     */
+    public function find2List($search, $classificationId = null)
+    {
+        $query = $this->modelTable->find('valid');
+
+        if (!is_null($search) && $search !== '' && $search != '*') {
+            $query->andWhere(function($exp) use ($search) {
+                return $exp->or_([
+                    'kname like ' => '%' . $search . '%',
+                    'name like ' => '%' . $search . '%',
+                ]);
+            });
+        }
+
+        if (!is_null($classificationId) && $classificationId !== '') {
+            $query->andWhere([
+                'classification_id' => $classificationId
+            ]);
+        }
+        $list = $query->all();
+
+        $products = [];
+        foreach($list as $item) {
+            array_push($products, [
+                'id'   => $item['id'],
+                'text' => $item['kname']
+            ]);
+        }
+
+        return $products;
+    }
+
+    /**
+     * 指定された製品IDと分類IDのデータが存在するかどうかを検証する
+     *  
+     * - - -
+     * @param integer $productId 製品ID
+     * @param integer $classificationId 分類ID
+     * @return boolean true:正常/false:異常（指定された製品と分類に関連性がない）
+     */
+    public function validateProductAndClassification($productId, $classificationId)
+    {
+        $count = $this->modelTable->find('valid')
+            ->where([
+                'id' => $productId,
+                'classification_id' => $classificationId
+            ])
+            ->count();
+
+        return ($count == 0) ? false : true;
+    }
+
 }

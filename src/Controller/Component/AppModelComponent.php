@@ -64,6 +64,10 @@ class AppModelComponent extends AppComponent
      */
     public function createConfig(array $config)
     {
+        if (!array_key_exists('appUser', $config)) {
+            $config['appUser'] = $this->getController()->AppUser;
+        }
+
         $config = ($config) ? $config : [];
         $modelConfig = array_key_exists('modelConfig', $config) ? $config['modelConfig'] : [];
         $modelConfig['appUser'] = $config['appUser'];

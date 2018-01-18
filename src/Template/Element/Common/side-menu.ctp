@@ -54,18 +54,26 @@
             <!-- 入庫 -->
             <?php if ($this->AppUser->allowSapp($this->App->conf('WNote.DB.Sapps.Kname.instock'))) { ?>
             <li class="">
-                <a href="#"><i class="fa fa-lg fa-fw fa-archive txt-color-blue"></i> <span
-                            class="menu-item-parent">入庫</span></a>
+                <a href="#">
+                    <i class="fa fa-lg fa-fw fa-gear txt-color-blue"></i> <span class="menu-item-parent">入庫</span>
+                </a>
                 <ul>
-                    <li class=""><a href="layouts.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-calendar"></i>
-                            <span class="menu-item-parent">入庫予定登録</span></a></li>
-                    <li class=""><a href="skins.html" title="Dashboard"><i
-                                    class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span
-                                    class="menu-item-parent">入庫登録</span></a></li>
-                    <li class=""><a href="skins.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-list"></i> <span
-                                    class="menu-item-parent">入庫一覧</span></a></li>
-                    <li class=""><a href="skins.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-list-alt"></i> <span
-                                    class="menu-item-parent">未入庫一覧</span></a></li>
+                    <li class=""><a href="/instock/instock-plans/list-new" title="入庫予定登録"><i
+                                    class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">入庫予定登録</span>
+                        </a>
+                    </li>
+                    <li class=""><a href="/instock/instock-plans/list" title="入庫予定一覧"><i
+                                    class="fa fa-lg fa-fw fa-list"></i> <span class="menu-item-parent">入庫予定一覧</span>
+                        </a>
+                    </li>
+                    <li class=""><a href="/instock/instocks/index" title="入庫"><i
+                                    class="fa fa-lg fa-fw fa-cubes"></i> <span class="menu-item-parent">入庫</span>
+                        </a>
+                    </li>
+                    <li class=""><a href="/instock/instocks/search" title="入庫検索"><i
+                                    class="fa fa-lg fa-fw fa-search"></i> <span class="menu-item-parent">入庫検索</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             <?php } ?>
@@ -76,14 +84,22 @@
                 <a href="#"><i class="fa fa-lg fa-fw fa-truck txt-color-blue"></i> <span
                             class="menu-item-parent">出庫</span></a>
                 <ul>
-                    <li class=""><a href="layouts.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-gear"></i> <span
-                                    class="menu-item-parent">準備中・・・</span></a></li>
-                    <li class=""><a href="skins.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-picture-o"></i>
-                            <span class="menu-item-parent">準備中・・・</span></a></li>
-                    <li class=""><a href="skins.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-picture-o"></i>
-                            <span class="menu-item-parent">準備中・・・</span></a></li>
-                    <li class=""><a href="skins.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-picture-o"></i>
-                            <span class="menu-item-parent">準備中・・・</span></a></li>
+                    <li class=""><a href="/picking/picking-plans/entry" title="出庫依頼登録"><i
+                                    class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">出庫依頼登録</span>
+                        </a>
+                    </li>
+                    <li class=""><a href="/picking/picking-plans/list" title="出庫予定一覧"><i
+                                    class="fa fa-lg fa-fw fa-list"></i> <span class="menu-item-parent">出庫予定一覧</span>
+                        </a>
+                    </li>
+                    <li class=""><a href="/picking/pickings/index" title="出庫"><i
+                                    class="fa fa-lg fa-fw fa-cubes"></i> <span class="menu-item-parent">出庫</span>
+                        </a>
+                    </li>
+                    <li class=""><a href="/picking/pickings/search" title="出庫検索"><i
+                                    class="fa fa-lg fa-fw fa-search"></i> <span class="menu-item-parent">出庫検索</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             <?php } ?>
@@ -94,14 +110,22 @@
                 <a href="#"><i class="fa fa-lg fa-fw fa-briefcase txt-color-blue"></i> <span
                             class="menu-item-parent">在庫</span></a>
                 <ul>
-                    <li class=""><a href="layouts.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-gear"></i> <span
-                                    class="menu-item-parent">準備中・・・</span></a></li>
-                    <li class=""><a href="skins.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-picture-o"></i>
-                            <span class="menu-item-parent">準備中・・・</span></a></li>
-                    <li class=""><a href="skins.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-picture-o"></i>
-                            <span class="menu-item-parent">準備中・・・</span></a></li>
-                    <li class=""><a href="skins.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-picture-o"></i>
-                            <span class="menu-item-parent">準備中・・・</span></a></li>
+                    <li class=""><a href="/stock/stocks/search" title="在庫検索"><i
+                                    class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">在庫検索</span>
+                        </a>
+                    </li>
+                    <li class=""><a href="/stock/stocks/summary" title="在庫集計"><i
+                                    class="fa fa-lg fa-fw fa-list"></i> <span class="menu-item-parent">在庫集計</span>
+                        </a>
+                    </li>
+                    <li class=""><a href="/abrogate/abrogates/entry" title="廃棄登録"><i
+                                    class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">廃棄登録</span>
+                        </a>
+                    </li>
+                    <li class=""><a href="/abrogate/abrogates/search" title="廃棄検索"><i
+                                    class="fa fa-lg fa-fw fa-search"></i> <span class="menu-item-parent">廃棄検索</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             <?php } ?>
@@ -112,14 +136,14 @@
                 <a href="#"><i class="fa fa-lg fa-fw fa-pencil txt-color-blue"></i> <span
                             class="menu-item-parent">棚卸</span></a>
                 <ul>
-                    <li class=""><a href="layouts.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-gear"></i> <span
-                                    class="menu-item-parent">準備中・・・</span></a></li>
-                    <li class=""><a href="skins.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-picture-o"></i>
-                            <span class="menu-item-parent">準備中・・・</span></a></li>
-                    <li class=""><a href="skins.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-picture-o"></i>
-                            <span class="menu-item-parent">準備中・・・</span></a></li>
-                    <li class=""><a href="skins.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-picture-o"></i>
-                            <span class="menu-item-parent">準備中・・・</span></a></li>
+                    <li class=""><a href="/stocktake/stocktakes/entry" title="棚卸登録"><i
+                                    class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">棚卸登録</span>
+                        </a>
+                    </li>
+                    <li class=""><a href="/stocktake/stocktakes/list" title="棚卸一覧"><i
+                                    class="fa fa-lg fa-fw fa-list"></i> <span class="menu-item-parent">棚卸一覧</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             <?php } ?>
@@ -130,14 +154,32 @@
                 <a href="#"><i class="fa fa-lg fa-fw fa-suitcase txt-color-blue"></i> <span
                             class="menu-item-parent">資産</span></a>
                 <ul>
-                    <li class=""><a href="layouts.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-gear"></i> <span
-                                    class="menu-item-parent">準備中・・・</span></a></li>
-                    <li class=""><a href="skins.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-picture-o"></i>
-                            <span class="menu-item-parent">準備中・・・</span></a></li>
-                    <li class=""><a href="skins.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-picture-o"></i>
-                            <span class="menu-item-parent">準備中・・・</span></a></li>
-                    <li class=""><a href="skins.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-picture-o"></i>
-                            <span class="menu-item-parent">準備中・・・</span></a></li>
+                    <li class=""><a href="/asset/assets/search" title="資産検索"><i
+                                    class="fa fa-lg fa-fw fa-search"></i> <span class="menu-item-parent">資産検索</span>
+                        </a>
+                    </li>
+                    <li class=""><a href="/asset/assets/summary" title="資産集計"><i
+                                    class="fa fa-lg fa-fw fa-list"></i> <span class="menu-item-parent">資産集計</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <?php } ?>
+
+            <!-- 修理・交換 -->
+            <?php if ($this->AppUser->allowSapp($this->App->conf('WNote.DB.Sapps.Kname.recycle'))) { ?>
+            <li class="">
+                <a href="#"><i class="fa fa-lg fa-fw fa-recycle txt-color-blue"></i> <span
+                            class="menu-item-parent">修理・交換</span></a>
+                <ul>
+                    <li class=""><a href="/repair/repairs/list" title="修理一覧"><i
+                                    class="fa fa-lg fa-fw fa-list"></i> <span class="menu-item-parent">修理一覧</span>
+                        </a>
+                    </li>
+                    <li class=""><a href="/exchange/exchanges/list" title="交換一覧"><i
+                                    class="fa fa-lg fa-fw fa-list"></i> <span class="menu-item-parent">交換一覧</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             <?php } ?>
@@ -147,14 +189,22 @@
             <li class="">
                 <a href="#"><i class="fa fa-lg fa-fw fa-share-alt txt-color-blue"></i> <span class="menu-item-parent">貸出・返却</span></a>
                 <ul>
-                    <li class=""><a href="layouts.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-mail-forward"></i>
-                            <span class="menu-item-parent">貸出</span></a></li>
-                    <li class=""><a href="skins.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-mail-forward"></i>
-                            <span class="menu-item-parent">貸出（依頼）</span></a></li>
-                    <li class=""><a href="skins.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-reply"></i> <span
-                                    class="menu-item-parent">返却</span></a></li>
-                    <li class=""><a href="skins.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-reply"></i> <span
-                                    class="menu-item-parent">返却（依頼）</span></a></li>
+                    <li class=""><a href="/rental/rentals/entry" title="貸出依頼登録"><i
+                                    class="fa fa-lg fa-fw fa-mail-forward"></i> <span class="menu-item-parent">貸出依頼登録</span>
+                        </a>
+                    </li>
+                    <li class=""><a href="/rental/rentals/search" title="貸出検索"><i
+                                    class="fa fa-lg fa-fw fa-search"></i> <span class="menu-item-parent">貸出検索</span>
+                        </a>
+                    </li>
+                    <li class=""><a href="/back/backs/entry" title="返却依頼登録"><i
+                                    class="fa fa-lg fa-fw fa-reply"></i> <span class="menu-item-parent">返却依頼登録</span>
+                        </a>
+                    </li>
+                    <li class=""><a href="/back/backs/search" title="返却検索"><i
+                                    class="fa fa-lg fa-fw fa-search"></i> <span class="menu-item-parent">返却検索</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             <?php } ?>
@@ -261,28 +311,6 @@
 <!-- SHORTCUT AREA : With large tiles (activated via clicking user name tag) -->
 <div id="shortcut">
     <ul>
-        <li>
-            <a href="inbox.html" class="jarvismetro-tile big-cubes bg-color-blue"> <span class="iconbox"> <i
-                            class="fa fa-envelope fa-4x"></i> <span>Mail <span class="label pull-right bg-color-darken">14</span></span> </span>
-            </a>
-        </li>
-        <li>
-            <a href="calendar.html" class="jarvismetro-tile big-cubes bg-color-orangeDark"> <span class="iconbox"> <i
-                            class="fa fa-calendar fa-4x"></i> <span>Calendar</span> </span> </a>
-        </li>
-        <li>
-            <a href="gmap-xml.html" class="jarvismetro-tile big-cubes bg-color-purple"> <span class="iconbox"> <i
-                            class="fa fa-map-marker fa-4x"></i> <span>Maps</span> </span> </a>
-        </li>
-        <li>
-            <a href="invoice.html" class="jarvismetro-tile big-cubes bg-color-blueDark"> <span class="iconbox"> <i
-                            class="fa fa-book fa-4x"></i> <span>Invoice <span class="label pull-right bg-color-darken">99</span></span> </span>
-            </a>
-        </li>
-        <li>
-            <a href="gallery.html" class="jarvismetro-tile big-cubes bg-color-greenLight"> <span class="iconbox"> <i
-                            class="fa fa-picture-o fa-4x"></i> <span>Gallery </span> </span> </a>
-        </li>
         <li>
             <a href="profile.html" class="jarvismetro-tile big-cubes selected bg-color-pinkDark"> <span class="iconbox"> <i
                             class="fa fa-user fa-4x"></i> <span>My Profile </span> </span> </a>

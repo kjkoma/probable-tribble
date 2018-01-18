@@ -224,6 +224,7 @@ return [
             'persistent' => false,
             // 'host' => '54.213.141.12',
             'host' => '192.168.4.40',
+            // 'host' => '192.168.2.39',
             //'host' => '192.168.11.10',
             /**
              * CakePHP will use the default DB port based on the driver selected
@@ -290,6 +291,7 @@ return [
             'persistent' => false,
             //'host' => '54.213.141.12',
             'host' => '192.168.4.40',
+            //'host' => '192.168.2.39',
             //'host' => '192.168.11.10',
             //'port' => 'non_standard_port_number',
             'username' => 'wnoteadmin',

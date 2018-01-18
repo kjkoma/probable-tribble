@@ -61,8 +61,14 @@ class InstockPlanDetailsTable extends AppTable
             'foreignKey' => 'instock_plan_id',
             'joinType' => 'INNER'
         ]);
+        $this->hasMany('Instocks', [
+            'foreignKey' => 'instock_plan_detail_id'
+        ]);
         $this->belongsTo('Assets', [
             'foreignKey' => 'asset_id'
+        ]);
+        $this->hasOne('AssetBacks', [
+            'foreignKey' => 'instock_plan_detail_id'
         ]);
         $this->belongsTo('Classifications', [
             'foreignKey' => 'classification_id'
@@ -72,6 +78,18 @@ class InstockPlanDetailsTable extends AppTable
         ]);
         $this->belongsTo('ProductModels', [
             'foreignKey' => 'product_model_id'
+        ]);
+        $this->belongsTo('InstockPlanDetailsSts', [
+            'className'  => 'Snames',
+            'foreignKey' => 'detail_sts',
+            'bindingKey' => 'nid',
+            'conditions' => ['InstockPlanDetailsSts.nkey' => 'INSTOCK_STS']
+        ]);
+        $this->belongsTo('InstockPlanDetailsAssetType', [
+            'className'  => 'Snames',
+            'foreignKey' => 'asset_type',
+            'bindingKey' => 'nid',
+            'conditions' => ['InstockPlanDetailsSts.nkey' => 'ASSET_TYPE']
         ]);
 
         $this->_sorted = [
@@ -108,6 +126,11 @@ class InstockPlanDetailsTable extends AppTable
             ->scalar('detail_sts')
             ->requirePresence('detail_sts', 'create')
             ->notEmpty('detail_sts');
+
+        $validator
+            ->scalar('asset_type')
+            ->requirePresence('asset_type', 'create')
+            ->notEmpty('asset_type');
 
         $validator
             ->scalar('remarks')

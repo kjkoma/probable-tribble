@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="text-center error-box">
-                    <h1 class="error-text-2 bounceInDown animated"> Error 400 <span class="particle particle--c"></span><span class="particle particle--a"></span><span class="particle particle--b"></span></h1>
+                    <h1 class="error-logo bounceInDown animated"> Error 400 <span class="particle particle--c"></span><span class="particle particle--a"></span><span class="particle particle--b"></span></h1>
                     <h2 class="font-xl"><strong><i class="fa fa-fw fa-warning fa-lg text-warning"></i> Invalid Page Access</strong></h2>
                     <br />
                     <p class="lead">

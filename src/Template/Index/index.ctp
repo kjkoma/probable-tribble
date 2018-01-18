@@ -154,8 +154,8 @@
 </div> <!-- main -->
 
 <? // Include Scripts ?>
-<?= $this->Html->script('libs/jquery-2.1.1.min.js') ?>
-<?= $this->Html->script('libs/jquery-ui-1.10.3.min.js') ?>
+<?= $this->Html->script('libs/jquery-3.2.1.min.js') ?>
+<?= $this->Html->script('libs/jquery-ui.min.js') ?>
 <?= $this->Html->script('app.config.js') ?>
 <?= $this->Html->script('bootstrap/bootstrap.min.js') ?>
 <?= $this->Html->script('plugin/jquery-validate/jquery.validate.min.js') ?>

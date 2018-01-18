@@ -143,7 +143,7 @@ $this->Breadcrumbs->add('ユーザー', ['controller' => 'Susers', 'action' => '
                             <!-- 補足（コメント） -->
                             <section>
                                 <label class="textarea textarea-resizable">
-                                    <textarea name="suser.remarks" id="remarks" row="3" class="custom-scroll"
+                                    <textarea name="suser.remarks" id="remarks" rows="3" class="custom-scroll"
                                               data-app-form="form-suser"
                                               placeholder="【任意】補足（コメント）"
                                               disabled="disabled"></textarea>

@@ -125,7 +125,8 @@ class ApiController extends Controller
      */
     public function beforeRender(Event $event)
     {
-        $this->response->withCharset('UTF-8');
+        $this->response = $this->response->withCharset('UTF-8');
+        $this->response = $this->response->withCharset('UTF-8');
         $this->set(self::PAYLOAD_DATA , $this->_datas);
         $this->set(self::PAYLOAD_ERROR, $this->_errors);
         $this->set('_serialize', [self::PAYLOAD_DATA, self::PAYLOAD_ERROR]);
@@ -185,6 +186,7 @@ class ApiController extends Controller
     public function setResponseError($message, $errors)
     {
         $this->log('=S= APP_ERROR : ' . __($message));
+        $this->log('=== CONTROLLER : ' . $this->name . ' : ' . $this->request->action);
         $this->log($errors);
         $this->log('=E= APP_ERROR');
 
@@ -222,7 +224,7 @@ class ApiController extends Controller
      * - - -
      * @param string $modelComponent モデル用コンポーネントの名前
      */
-    protected function _loadComponent($modelComponent)
+    public function _loadComponent($modelComponent)
     {
         $this->loadComponent($modelComponent, [
             'appUser' => $this->AppUser,
@@ -233,11 +235,11 @@ class ApiController extends Controller
      * リクエストデータをチェックする
      *
      * - - -
-     * @param string $key リクエストデータよりデータを取得するキー
+     * @param string|array $keys リクエストデータよりデータを取得するキー
      * @param array  $allowActions 許可するアクション（['post', 'get']など）/ 未指定：全許可
      * @param mixed リクエストデータ/不正時はfalseを返す
      */
-    protected function validateParameter($key, $allowActions = null)
+    protected function validateParameter($keys, $allowActions = null)
     {
         if (!is_null($allowActions)) {
             $match = false;
@@ -252,10 +254,14 @@ class ApiController extends Controller
         }
 
         $data = $this->request->getData();
-        if (!$data || !array_key_exists($key, $data)) {
-            $this->setError('パラメータが不足しています。', 'MISSING_PARAMETERS', $data);
-            return false;
+        $keys = is_array($keys) ? $keys : [$keys];
+        foreach($keys as $key) {
+            if (!$data || !array_key_exists($key, $data)) {
+                $this->setError('パラメータが不足しています。', 'MISSING_PARAMETERS', $data);
+                return false;
+            }
         }
+
         return $data;
     }
 }

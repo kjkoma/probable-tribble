@@ -61,7 +61,9 @@ class InstocksTable extends AppTable
         ]);
         $this->belongsTo('InstockPlans', [
             'foreignKey' => 'instock_plan_id',
-            'joinType' => 'INNER'
+        ]);
+        $this->belongsTo('InstockPlanDetails', [
+            'foreignKey' => 'instock_plan_detail_id',
         ]);
         $this->belongsTo('InstockSusers', [
             'foreignKey' => 'instock_suser_id',
@@ -84,11 +86,17 @@ class InstocksTable extends AppTable
         $this->hasMany('StockHistories', [
             'foreignKey' => 'instock_id'
         ]);
-        $this->belongsTo('InstockKbn', [
+        $this->belongsTo('InstocksInstockKbn', [
             'className'  => 'Snames',
-            'foreignKey' => 'nid',
-            'bindingKey' => 'instcok_kbn',
-            'conditions' => ['InstockKbn.nkey' => 'INSTOCK_KBN']
+            'foreignKey' => 'instock_kbn',
+            'bindingKey' => 'nid',
+            'conditions' => ['InstocksInstockKbn.nkey' => 'INSTOCK_KBN']
+        ]);
+        $this->belongsTo('InstocksAssetType', [
+            'className'  => 'Snames',
+            'foreignKey' => 'asset_type',
+            'bindingKey' => 'nid',
+            'conditions' => ['InstocksAssetType.nkey' => 'ASSET_TYPE']
         ]);
 
         $this->_sorted = [
@@ -115,6 +123,11 @@ class InstocksTable extends AppTable
             ->scalar('instock_kbn')
             ->requirePresence('instock_kbn', 'create')
             ->notEmpty('instock_kbn');
+
+        $validator
+            ->scalar('asset_type')
+            ->requirePresence('asset_type', 'create')
+            ->notEmpty('asset_type');
 
         $validator
             ->date('instock_date')
@@ -162,8 +175,9 @@ class InstocksTable extends AppTable
     {
         $rules->add($rules->existsIn(['domain_id'], 'Domains'));
         $rules->add($rules->existsIn(['instock_plan_id'], 'InstockPlans'));
-        $rules->add($rules->existsIn(['instock_suser_id'], 'Susers'));
-        $rules->add($rules->existsIn(['confirm_suser_id'], 'Susers'));
+        $rules->add($rules->existsIn(['instock_plan_detail_id'], 'InstockPlanDetails'));
+        $rules->add($rules->existsIn(['instock_suser_id'], 'InstockSusers'));
+        $rules->add($rules->existsIn(['confirm_suser_id'], 'ConfirmSusers'));
         $rules->add($rules->existsIn(['delivery_company_id'], 'Companies'));
 
         return $rules;

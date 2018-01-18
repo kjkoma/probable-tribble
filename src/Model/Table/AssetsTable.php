@@ -26,7 +26,6 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\MakersTable|\Cake\ORM\Association\BelongsTo $Makers
  * @property \App\Model\Table\ProductsTable|\Cake\ORM\Association\BelongsTo $Products
  * @property \App\Model\Table\ProductModelsTable|\Cake\ORM\Association\BelongsTo $ProductModels
- * @property \App\Model\Table\OrganizationsTable|\Cake\ORM\Association\BelongsTo $Organizations
  * @property \App\Model\Table\AssetAttributesTable|\Cake\ORM\Association\HasMany $AssetAttributes
  * @property \App\Model\Table\AssetUsersTable|\Cake\ORM\Association\HasMany $AssetUsers
  * @property \App\Model\Table\InstockPlanDetailsTable|\Cake\ORM\Association\HasMany $InstockPlanDetails
@@ -67,33 +66,71 @@ class AssetsTable extends AppTable
             'joinType' => 'INNER'
         ]);
         $this->belongsTo('Companies', [
-            'foreignKey' => 'maker_id'
+            'foreignKey' => 'maker_id',
+            'joinType' => 'INNER'
         ]);
         $this->belongsTo('Products', [
-            'foreignKey' => 'product_id'
+            'foreignKey' => 'product_id',
+            'joinType' => 'INNER'
         ]);
         $this->belongsTo('ProductModels', [
             'foreignKey' => 'product_model_id'
         ]);
-        $this->belongsTo('Organizations', [
-            'foreignKey' => 'organization_id'
-        ]);
-        $this->hasMany('AssetAttributes', [
+        $this->hasOne('AssetAttributes', [
             'foreignKey' => 'asset_id',
             'dependent'  => true,
         ]);
         $this->hasMany('AssetUsers', [
-            'foreignKey' => 'asset_id'
-            'dependent'  => true,
+            'foreignKey' => 'asset_id',
+            'dependent'  => true
         ]);
         $this->hasMany('InstockPlanDetails', [
+            'foreignKey' => 'asset_id'
+        ]);
+        $this->hasMany('InstockDetails', [
             'foreignKey' => 'asset_id'
         ]);
         $this->hasMany('StockHistories', [
             'foreignKey' => 'asset_id'
         ]);
-        $this->hasMany('Stocks', [
-            'foreignKey' => 'asset_id'
+        $this->hasOne('Stocks', [
+            'foreignKey' => 'asset_id',
+            'joinType' => 'INNER'
+        ]);
+        $this->belongsTo('Users', [
+            'foreignKey' => 'current_user_id'
+        ]);
+        $this->belongsTo('AssetTypeName', [
+            'className'  => 'Snames',
+            'foreignKey' => 'asset_type',
+            'bindingKey' => 'nid',
+            'conditions' => ['AssetTypeName.nkey' => 'ASSET_TYPE']
+        ]);
+        $this->belongsTo('AssetStsName', [
+            'className'  => 'Snames',
+            'foreignKey' => 'asset_sts',
+            'bindingKey' => 'nid',
+            'conditions' => ['AssetStsName.nkey' => 'ASSET_STS']
+        ]);
+        $this->belongsTo('AssetSubStsName', [
+            'className'  => 'Snames',
+            'foreignKey' => 'asset_sub_sts',
+            'bindingKey' => 'nid',
+            'conditions' => ['AssetSubStsName.nkey' => 'ASSET_SUB_STS']
+        ]);
+        $this->belongsTo('AssetCreatedSuser', [
+            'className'  => 'Snames',
+            'foreignKey' => 'asset_sub_sts',
+            'bindingKey' => 'nid',
+            'conditions' => ['AssetSubStsName.nkey' => 'ASSET_SUB_STS']
+        ]);
+        $this->belongsTo('AssetCreatedSuser', [
+            'className'  => 'Susers',
+            'foreignKey' => 'created_user'
+        ]);
+        $this->belongsTo('AssetModifiedSuser', [
+            'className'  => 'Susers',
+            'foreignKey' => 'modified_user'
         ]);
 
         $this->_sorted = [
@@ -190,7 +227,6 @@ class AssetsTable extends AppTable
         $rules->add($rules->existsIn(['maker_id'], 'Companies'));
         $rules->add($rules->existsIn(['product_id'], 'Products'));
         $rules->add($rules->existsIn(['product_model_id'], 'ProductModels'));
-        $rules->add($rules->existsIn(['organization_id'], 'Organizations'));
 
         return $rules;
     }

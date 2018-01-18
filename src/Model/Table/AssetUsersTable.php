@@ -74,12 +74,6 @@ class AssetUsersTable extends AppTable
         $this->belongsTo('Instocks', [
             'foreignKey' => 'instock_id'
         ]);
-        $this->belongsTo('Repairs', [
-            'foreignKey' => 'repair_id'
-        ]);
-        $this->belongsTo('Rentals', [
-            'foreignKey' => 'rental_id'
-        ]);
 
         $this->_sorted = [
             'AssetUsers.asset_id' => 'ASC',
@@ -145,8 +139,6 @@ class AssetUsersTable extends AppTable
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['picking_id'], 'Pickings'));
         $rules->add($rules->existsIn(['instock_id'], 'Instocks'));
-        $rules->add($rules->existsIn(['repair_id'], 'Repairs'));
-        $rules->add($rules->existsIn(['rental_id'], 'Rentals'));
 
         return $rules;
     }

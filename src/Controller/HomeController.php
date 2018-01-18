@@ -34,6 +34,13 @@ class HomeController extends AppController
     public function initialize()
     {
         parent::initialize();
+        $this->_loadComponent('ModelInstocks');
+        $this->_loadComponent('ModelInstockPlans');
+        $this->_loadComponent('ModelPickings');
+        $this->_loadComponent('ModelPickingPlans');
+        $this->_loadComponent('ModelAssets');
+        $this->_loadComponent('ModelStocks');
+        $this->_loadComponent('ModelRepairs');
     }
 
     /**
@@ -55,6 +62,43 @@ class HomeController extends AppController
      */
     public function home()
     {
+        // 資産数(※PC)
+        $assetCount       = $this->ModelAssets->countPc();
+        // 在庫数(※PC)
+        $stockCount       = $this->ModelStocks->countPc();
+        // 修理数(※PC)
+        $repairCount      = $this->ModelRepairs->countRepairs();
+
+        // 入庫
+        $instockPlans     = $this->ModelInstockPlans->listToday();
+        $instockCount     = $this->ModelInstocks->countToday();
+        $instockPlanCount         = 0;
+        $instockPlansInstockCount = 0;
+        foreach ($instockPlans as $instockPlan) {
+            $instockPlanCount         = $instockPlanCount + intVal($instockPlan['instock_plan_details'][0]['sum_plan_count']);
+            $instockPlansInstockCount = $instockPlansInstockCount + intVal($instockPlan['instocks'][0]['sum_instock_count']);
+        }
+        $instockPlanRate  = ($instockPlanCount === 0) ? 0 : round(($instockPlansInstockCount/$instockPlanCount),2) * 100;
+
+        // 出庫
+        $pickingRequests  = $this->ModelPickingPlans->requestToday();
+        $pickingPlans     = $this->ModelPickingPlans->listToday();
+        $pickingCount     = $this->ModelPickings->countToday();
+        $pickingRequestCount      = count($pickingRequests);
+        $pickingPlanCount         = 0;
+        $pickingPlansPickingCount = 0;
+        foreach ($pickingPlans as $pickingPlan) {
+            $pickingPlanCount         = $pickingPlanCount + intVal($pickingPlan['picking_plan_details'][0]['sum_plan_count']);
+            $pickingPlansPickingCount = $pickingPlansPickingCount + intVal($pickingPlan['pickings'][0]['sum_picking_count']);
+        }
+
+        $pickingPlanRate  = ($pickingPlanCount === 0) ? 0 : round(($pickingPlansPickingCount/$pickingPlanCount),2) * 100;
+
+        $this->set(compact(
+            'assetCount', 'stockCount', 'repairCount', 'instockPlans', 'instockCount', 'instockPlanCount', 'instockPlansInstockCount', 'instockPlanRate',
+            'pickingPlans', 'pickingCount', 'pickingRequestCount', 'pickingPlanCount', 'pickingPlansPickingCount', 'pickingPlanRate'
+        ));
+
         $this->render();
     }
 

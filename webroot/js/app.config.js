@@ -203,7 +203,7 @@
  *  日本語                         ['ja-JP']
  *  Lingua latīna     ['la']
  */
-	voice_command_lang = 'ja-JP',
+	voice_command_lang = 'en-US',
 /*
  * 	Use localstorage to remember on/off (best used with HTML Version
  * 	when going from one page to the next)

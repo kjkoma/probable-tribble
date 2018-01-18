@@ -189,4 +189,46 @@ class ApiProductModelsController extends ApiController
         $this->setResponse(true, 'your request is succeed', ['models' => $models]);
     }
 
+    /**
+     * モデル一覧を検索する
+     *
+     */
+    public function findList()
+    {
+        $data = $this->request->getData();
+        if (!$data || !array_key_exists('term', $data) || !$this->request->is('post')) {
+            $this->setResponse(true, 'your request is succeed but no parameter found', ['models' => []]);
+            return;
+        }
+
+        // モデルを取得する（製品指定がある場合は製品で絞り込む）
+        $productId = array_key_exists('product_id', $data) ? $data['product_id'] : null;
+        $models  = $this->ModelProductModels->find2List($data['term'], $productId);
+
+        // レスポンスメッセージの作成
+        $this->setResponse(true, 'your request is succeed', ['models' => $models]);
+    }
+
+
+    /**************************************************************************/
+    /** 検証用メソッド                                                        */
+    /**************************************************************************/
+    /**
+     * 指定されたモデルと製品の関係に妥当性があるかどうかを検証する
+     *
+     */
+    public function validateModelAndProduct()
+    {
+        $data = $this->validateParameter('model_id', ['post']);
+        if (!$data) return;
+
+        $productId = (array_key_exists('product_id', $data) && !empty($data['product_id'])) ? $data['product_id'] : '';
+
+        // 指定されたモデルIDと製品IDのデータが存在するかどうかをチェック
+        $validate = $this->ModelProductModels->validateModelAndProduct($data['model_id'], $productId);
+
+        // レスポンスメッセージの作成
+        $this->setResponse(true, 'your request is succeed', ['validate' => $validate]);
+    }
+
 }

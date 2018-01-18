@@ -199,6 +199,25 @@ class ApiSusersController extends ApiController
     }
 
     /**
+     * ユーザー一覧を検索する（select2選択用）
+     *
+     */
+    public function findList()
+    {
+        $data = $this->request->getData();
+        if (!$data || !array_key_exists('term', $data) || !$this->request->is('post')) {
+            $this->setResponse(true, 'your request is succeed but no parameter found', ['susers' => []]);
+            return;
+        }
+
+        // ユーザーを検索する
+        $susers = $this->SysModelSusers->find2List($data['term']);
+
+        // レスポンスメッセージの作成
+        $this->setResponse(true, 'your request is succeed', ['susers' => $susers]);
+    }
+
+    /**
      * 指定された識別子（email）がユニークかどうかを取得する
      *
      */

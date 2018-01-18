@@ -20,26 +20,40 @@ body.smart-style-6 #logo-group>span#logo:before {
     color: #c1c1d7 !important;
 }
 
+/* error log style */
+.error-logo {
+    text-align: center;
+    font-size: 700%;
+    font-weight: bold;
+    font-weight: 100;
+    color: #333;
+    line-height: 1;
+    letter-spacing: -.05em;
+    background-image: -webkit-linear-gradient(92deg,#333,#ed1c24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 /* api loading style */
 #api-loading {
-  display: table;
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background-color: #fff;
-  opacity: 0.8;
-  z-index: 999999;
+    display: table;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    opacity: 0.8;
+    z-index: 999999;
 }
  
 #api-loading .api-loading-message {
-  color: #000000;
-  display: table-cell;
-  text-align: center;
-  vertical-align: middle;
-  padding-top: 140px;
-  background: url("/img/api-loading.gif") center center no-repeat;
+    color: #000000;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    padding-top: 140px;
+    background: url("/img/api-loading.gif") center center no-repeat;
 }
 
 /* tree menu additional style */
@@ -79,7 +93,16 @@ span.fancytree-active span.fancytree-title, span.fancytree-selected span.fancytr
     margin: 0 12px 0 6px;
 }
 
-/* smart admin widget inside buttons additional style */
+.select2-selection {
+    padding-left: 4px !important;
+}
+
+/* smart admin override style */
+.smart-style-5 .table-hover>tbody>tr:hover, .smart-style-5 .table-striped>tbody>tr.selected:nth-child(odd) {
+    background-color: rgba(0,102,255,0.6) !important;
+}
+
+/* smart admin additional style */
 div.widget-actions {
     padding: 0px 8px;
     margin-top    : 10px;
@@ -103,3 +126,23 @@ div.widget-actions .widget-action > .btn {
     font-size: 12px !important;
     padding: 1px 8px !important;
 }
+
+.widget-body fieldset .dataTables_wrapper > .row {
+    display: table-row-group !important;
+}
+
+.smart-form .state-error .select2 {
+    background: #fff0f0;
+    border-color: #A90329;
+}
+.smart-style-5 .smart-form .state-error .select2 {
+    background: rgba(255, 8, 8, 0.2) !important;
+    border-color: rgb(169, 3, 41) !important;
+}
+
+/* datatable additional style */
+table.dataTable tr.selected {
+    background-color: rgba(0,102,255,0.6) !important;
+}
+
+

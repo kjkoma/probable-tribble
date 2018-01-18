@@ -112,7 +112,7 @@ $this->Breadcrumbs->add('資産分類', ['controller' => 'Classifications', 'act
                                 <!-- 補足（コメント） -->
                                 <section>
                                     <label class="textarea textarea-resizable">
-                                        <textarea name="classification.remarks" id="remarks" row="3" class="custom-scroll"
+                                        <textarea name="classification.remarks" id="remarks" rows="3" class="custom-scroll"
                                                   data-app-form="form-classification" placeholder="【任意】補足（コメント）"
                                                   disabled="disabled"></textarea>
                                     </label>
@@ -162,7 +162,6 @@ $this->Breadcrumbs->add('資産分類', ['controller' => 'Classifications', 'act
                         <!-- End form -->
                         <input type="hidden" name="classification.id" id="id" data-app-form="form-classification">
                         <?= $this->Form->end() ?>
-                        </form>
 
                         <!-- End DETAILS widget body -->
                     </div>

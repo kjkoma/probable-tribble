@@ -102,7 +102,7 @@ $this->Breadcrumbs->add('ドメイン', ['controller' => 'Domains', 'action' => 
                             <!-- 補足（コメント） -->
                             <section>
                                 <label class="textarea textarea-resizable">
-                                    <textarea name="domain.remarks" id="remarks" row="3" class="custom-scroll"
+                                    <textarea name="domain.remarks" id="remarks" rows="3" class="custom-scroll"
                                               data-app-form="form-domain" placeholder="【任意】補足（コメント）"
                                               disabled="disabled"></textarea>
                                 </label>

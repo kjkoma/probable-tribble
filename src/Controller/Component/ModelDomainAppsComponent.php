@@ -110,7 +110,7 @@ class ModelDomainAppsComponent extends AppModelComponent
 
         $result = ['result' => true];
         foreach($domainApps as $sappId) {
-            $result = $this->add(['domain_id' => $domainId, 'sapp_id' => $sappId]);
+            $result = parent::add(['domain_id' => $domainId, 'sapp_id' => $sappId]);
             if (!$result['result']) {
                 return $result;
             }

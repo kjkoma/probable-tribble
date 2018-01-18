@@ -48,6 +48,7 @@ return [
                     'stocktake' => 'STOCKTAKE',
                     'asset'     => 'ASSET',
                     'rental'    => 'RENTAL',
+                    'recycle'   => 'RECYCLE'
                 ],
             ],
             'Companies' => [
@@ -59,17 +60,97 @@ return [
                     'dest'     => '4',
                 ],
             ],
+            'Categories' => [
+                'pc' => ['1'],
+            ],
+            'Assets' => [
+                'AssetType' => [
+                    'asset' => 1,
+                    'count' => 2
+                ],
+                'AssetSts' => [
+                    'new'      => 1,
+                    'stock'    => 2,
+                    'use'      => 3,
+                    'rental'   => 4,
+                    'repair'   => 5,
+                    'abrogate' => 6,
+                    'lost'     => 7,
+                ],
+                'AssetSubSts' => [
+                    'other'    => 99,
+                ],
+                'AssetUseageType' => [
+                    'normal' => 1,
+                    'rental' => 2,
+                ],
+                'AssetUseageSts' => [
+                    'use'    => 1,
+                    'end'    => 2,
+                ],
+            ],
             'Instock' => [
                 'InstockKbn' => [
-                    'new'    => '1',
-                    'repair' => '2',
-                    'back'   => '3',
+                    'new'      => '1',
+                    'repair'   => '2',
+                    'exchange' => '3',
+                    'back'     => '4',
+                    'rental'   => '5',
                 ],
                 'InstockSts' => [
-                    'not'      => '1',
-                    'part'     => '2',
-                    'complete' => '3',
+                    'not'       => '1',
+                    'part'      => '2',
+                    'complete'  => '3',
+                    'cancelfix' => '8',
+                    'cancel'    => '9'
                 ],
+                'InstockType' => [
+                    'new'   => '1',
+                    'asset' => '2',
+                ]
+            ],
+            'Picking' => [
+                'PickingKbn' => [
+                    'new'        => '1',
+                    'repair'     => '2',
+                    'exchange'   => '3',
+                    'rental'     => '4'
+                ],
+                'PickingSts' => [
+                    'not'        => '1',
+                    'work'       => '2',
+                    'before'     => '3',
+                    'complete'   => '4',
+                    'cancelfix'  => '8',
+                    'cancel'     => '9',
+                ],
+                'PickingType' => [
+                    'asset' => '2',
+                ]
+            ],
+            'Repair' => [
+                'RepairKbn' => [
+                    'stock'  => '1',
+                    'useage' => '2'
+                ],
+                'RepairSts' => [
+                    'instock_plan' => '1',
+                    'instock'  => '2',
+                    'repair'   => '3',
+                    'picking'  => '4',
+                    'stock'    => '5',
+                    'abrogate' => '6',
+                ],
+            ],
+            'HistType' => [
+                'instock'   => '1',
+                'picking'   => '2',
+                'stocktake' => '3',
+            ],
+            'ReasonKbn' => [
+                'instock'   => '1',
+                'picking'   => '2',
+                'stocktake' => '3',
             ],
             'Dsts' => [
                 'invalid' => '0',
@@ -80,6 +161,9 @@ return [
                 'false' => '0',
                 'true'  => '1',
             ],
+        ],
+        'ListLimit' => [ // 一覧表示制限数
+            'maxcount' => 500,
         ],
         'Session'  => [
             'Auth' => [

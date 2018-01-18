@@ -43,6 +43,11 @@ use Cake\Routing\Route\DashedRoute;
  */
 Router::defaultRouteClass(DashedRoute::class);
 
+if ( isset($_SERVER['HTTP_X_FORWARDED_PORT']) &&
+        443 == $_SERVER['HTTP_X_FORWARDED_PORT'] ) {
+ Router::fullbaseUrl( 'https://'.$_SERVER['HTTP_HOST'] );
+}
+
 Router::scope('/', function (RouteBuilder $routes) {
     /**
      * Here, we are connecting '/' (base path) to a controller called 'Pages',
@@ -90,8 +95,20 @@ Router::scope('/', function (RouteBuilder $routes) {
         $routes->prefix('asset', function (RouteBuilder $routes) {
                 $routes->fallbacks(DashedRoute::class);
         });
+        $routes->prefix('repair', function (RouteBuilder $routes) {
+            $routes->fallbacks(DashedRoute::class);
+        });
+        $routes->prefix('exchange', function (RouteBuilder $routes) {
+            $routes->fallbacks(DashedRoute::class);
+        });
         $routes->prefix('rental', function (RouteBuilder $routes) {
                 $routes->fallbacks(DashedRoute::class);
+        });
+        $routes->prefix('back', function (RouteBuilder $routes) {
+            $routes->fallbacks(DashedRoute::class);
+        });
+        $routes->prefix('abrogate', function (RouteBuilder $routes) {
+            $routes->fallbacks(DashedRoute::class);
         });
 
         $routes->prefix('master', function (RouteBuilder $routes) {
@@ -127,8 +144,24 @@ Router::scope('/', function (RouteBuilder $routes) {
     Router::prefix('asset', function (RouteBuilder $routes) {
         $routes->fallbacks(DashedRoute::class);
     });
+    /* Repair Routes */
+    Router::prefix('repair', function (RouteBuilder $routes) {
+        $routes->fallbacks(DashedRoute::class);
+    });
+    /* Exchange Routes */
+    Router::prefix('exchange', function (RouteBuilder $routes) {
+        $routes->fallbacks(DashedRoute::class);
+    });
     /* Rental Routes */
     Router::prefix('rental', function (RouteBuilder $routes) {
+        $routes->fallbacks(DashedRoute::class);
+    });
+    /* Back Routes */
+    Router::prefix('back', function (RouteBuilder $routes) {
+        $routes->fallbacks(DashedRoute::class);
+    });
+    /* Abrogate Routes */
+    Router::prefix('abrogate', function (RouteBuilder $routes) {
         $routes->fallbacks(DashedRoute::class);
     });
 

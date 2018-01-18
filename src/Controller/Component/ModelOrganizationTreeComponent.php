@@ -201,7 +201,7 @@ class ModelOrganizationTreeComponent extends AppModelComponent
             'descendant' => $tree['id']
         ];
 
-        if (!empty($parentId)) {
+        if (!is_null($parentId) && $parentId !== '') {
             // 最上位以外への登録の場合、先祖データに自身を追加する
             $ancestors = $this->ancestor($parentId, true);
             foreach($ancestors as $ancestor) {
@@ -248,7 +248,7 @@ class ModelOrganizationTreeComponent extends AppModelComponent
         }
 
         // 変更後の資産管理会社IDを設定
-        if (empty($tree['parent_id'])) {
+        if (is_null($tree['parent_id']) || $tree['parent_id'] === '') {
             // 変更先の親がルートの場合
             $myself->set('customer_id', $tree['customer_id']);
             $result = $this->save($myself->toArray());
@@ -258,7 +258,7 @@ class ModelOrganizationTreeComponent extends AppModelComponent
         }
 
         // 変更後の先祖を登録
-        if (!empty($tree['parent_id'])) {
+        if (!is_null($tree['parent_id']) && $tree['parent_id'] !== '') {
             $result = $this->addAncestor($organizationId, $tree['parent_id']);
         }
 
@@ -366,10 +366,10 @@ class ModelOrganizationTreeComponent extends AppModelComponent
         $myparent = $this->myparent($tree['id']);
 
         // 親組織の変更
-        if (!$result && count($myparent) == 0 && !empty($tree['parent_id'])) {
+        if (!$result && count($myparent) == 0 && !is_null($tree['parent_id']) && $tree['parent_id'] !== '') {
             $result = true;
         }
-        if (!$result && count($myparent) > 0 && empty($tree['parent_id'])) {
+        if (!$result && count($myparent) > 0 && (is_null($tree['parent_id']) || $tree['parent_id'] === '')) {
             $result = true;
         }
         if (!$result && count($myparent) > 0 && $myparent['ancestor'] != $tree['parent_id']) {

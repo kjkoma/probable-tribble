@@ -103,7 +103,7 @@ $this->Breadcrumbs->add('資産管理会社', ['controller' => 'Customers', 'act
                                 <!-- 補足（コメント） -->
                                 <section>
                                     <label class="textarea textarea-resizable">
-                                        <textarea name="customer.remarks" id="remarks" row="3" class="custom-scroll"
+                                        <textarea name="customer.remarks" id="remarks" rows="3" class="custom-scroll"
                                                   data-app-form="form-customer" placeholder="【任意】補足（コメント）"
                                                   disabled="disabled"></textarea>
                                     </label>
@@ -121,7 +121,6 @@ $this->Breadcrumbs->add('資産管理会社', ['controller' => 'Customers', 'act
                         <!-- End customer form -->
                         <input type="hidden" name="customer.id" id="id" data-app-form="form-customer">
                         <?= $this->Form->end() ?>
-                        </form>
 
                         <!-- End CUSTOMER DETAILS widget body -->
                     </div>

@@ -34,9 +34,10 @@ const WNOTE = {
     },
     // data属性キー
     DATA_ATTR : {
-        ID   : "data-id",
-        KEY  : "data-app-action-key",
-        ROW  : "data-app-row",
+        ID      : "data-id",
+        KEY     : "data-app-action-key",
+        ROW     : "data-app-row",
+        ROW_KEY : "data-app-row-action-key",
         FORM : {
             KEY     : "data-app-form",
             NAME    : "data-app-name",
@@ -89,8 +90,14 @@ $(function() {
     $.datepicker.setDefaults($.datepicker.regional['ja']);
 
     // jQuery Validator追加
-    $.validator.addMethod('dateFormat', function(value, element) { return ($.trim(value) != '') ? value.match(/^\d{4}\/\d{2}\/\d{2}$/) : true; });
+    $.validator.addMethod('dateFormat', function(value, element) { return this.optional(element) || (($.trim(value) != '') ? value.match(/^\d{4}\/\d{2}\/\d{2}$/) : true); });
 
+    // Enter Key 押下防止 (テキストエリアとSubmitボタンのみ許可)
+    $(document).on("keypress", ":input:not(textarea):not([type=submit])", function(event) {
+        if (event.keyCode == 13) {
+            event.preventDefault();
+        }
+    });
 });
 
 /** ---------------------------------------------------------------------------
@@ -657,8 +664,8 @@ WNote.Form.setFormValuesWithPrefix = function(obj, prefix) {
                     $(e).prop('checked', true);
                 }
             } else if ($(e).hasClass('select2')) {
-                var text_key = key.split('_');
-                text_key = (text_key.length > 1) ? text_key[0] + '_text' : text_key + '_text';
+                var text_key = key.split('_'); // "product_model_id" より "product_model_text"というtextのキーを作成する
+                text_key = (text_key.length > 1) ? key.slice(0, (text_key[text_key.length -1].length)*-1-1) + '_text' : text_key + '_text';
                 if (obj[text_key]) {
                     var option = new Option(obj[text_key], val, true, true);
                     $(e).append(option).trigger('change');
@@ -752,6 +759,40 @@ WNote.Form.setTableFormValues = function(appActionKey, obj, key, row) {
 
     $(obj).each(function(i, e) {
         WNote.Form.setTableFormValue(appActionKey, e, key, row);
+    });
+}
+
+/**
+ * 指定されたオブジェクトのキーに指定されたid属性を持つテキストにオブジェクトの値を設定する(prefix指定あり)
+ * 
+ * @param {object} obj オブジェクト
+ * @param {string} prefix id属性に付与するprefix
+ */
+WNote.Form.setTextsWithPrefix = function(obj, prefix) {
+    $.each(obj, function(key, val) {
+        $('#' + prefix + key).each(function(i, e) {
+            $(e).text(val);
+        });
+    });
+}
+
+/**
+ * 指定されたオブジェクトのキーに指定されたid属性を持つテキストにオブジェクトの値を設定する
+ * 
+ * @param {object} obj オブジェクト
+ */
+WNote.Form.setTexts = function(obj) {
+    WNote.Form.setTextsWithPrefix(obj, '');
+}
+
+/**
+ * 指定された"data-app-form"属性を持つフォームの値をクリアする
+ * 
+ * @param {string} appFormKey "data-app-form"属性に指定したキー名（例：form-domain）
+ */
+WNote.Form.clearTexts = function(appFormKey) {
+    $('[' + WNOTE.DATA_ATTR.FORM.KEY + '="' + appFormKey + '"]').each(function(i, e) {
+        $(e).text('');
     });
 }
 
@@ -987,6 +1028,31 @@ WNote.Util.removeAttrByFormAttr = function(key, removeAttr) {
     WNote.Util.removeAttrByAttr(WNOTE.DATA_ATTR.FORM.KEY, key, removeAttr);
 }
 
+/**
+ * 指定されたフォームIDに指定されたオブジェクトのフォーム要素を作成する
+ * (ダウンロード用)
+ * 
+ * @param {string} selector IDセレクタ（#は指定不要）
+ * @param {object} obj 設定するキーと値を持つオブジェクト
+ * @param {string} objName オブジェクト名（例：cond['name']のような要素を作成する場合、'cond'を指定する）
+ */
+WNote.Util.createFormElements = function(selector, objName, obj) {
+    selector = '#' + selector;
+
+    // フォーム内の要素（input要素のみ）を削除する
+    $(selector + ' input').empty();
+
+    // 指定されたオブジェクト名のinput要素を作成する
+    var form = $(selector);
+    Object.keys(obj).forEach(function(key) {
+        $('<input>').attr({
+            type  : 'hidden',
+            name  : objName + '[' + key + ']',
+            value : obj[key]
+        }).appendTo(selector);
+    });
+}
+
 /** ---------------------------------------------------------------------------
  *  ユーティリティ（固有）
  *  -------------------------------------------------------------------------*/
@@ -1076,6 +1142,7 @@ WNote.Util.Validate.ValidatorOptions = function() {
         errorElement  : 'em',
         highlight     : WNote.Util.Validate.HighlightHandler,
         unhighlight   : WNote.Util.Validate.UnhighlightHandler,
+        ignore        : ':hidden:not(.select2-hidden-accessible)',
         rules         : {},
         messages      : {},
         errorPlacement: WNote.Util.Validate.ErrorPlacementHandler,
@@ -1122,6 +1189,9 @@ WNote.Util.Validate.ErrorPlacementHandler = function(error, element) {
 /** ---------------------------------------------------------------------------
  *  ユーティリティ（その他）
  *  -------------------------------------------------------------------------*/
+/**
+ * DatePickerのコンフィグを取得する
+ */
 WNote.Util.All.datePickerConfig = function() {
     return {
         closeText: '閉じる',
@@ -1142,4 +1212,54 @@ WNote.Util.All.datePickerConfig = function() {
         showMonthAfterYear: true,
         yearSuffix: '年'};
 }
+
+/**
+ * 配列になっているオブジェクトをオブジェクトとしてマージする
+ *   ex) param  : [{1: 'xx'}, {2: 'yy'}]
+ *       return : {1: 'xx', 2: 'yy'}
+ * @param {array} ary 配列オブジェクト
+ * @return {object} マージしたオブジェクト
+ */
+WNote.Util.All.a2o = function(ary) {
+    var obj = {};
+    $(ary).each(function(i, val) {
+        Object.assign(obj, val);
+    });
+
+    return obj;
+}
+
+/**
+ * データテーブルの行選択ハイライトを行う
+ * 
+ * @param {object} selectedRow 選択行の$(this)オブジェクト(datatableのclickイベントハンドラー内のthis)
+ * @param {object} table       datatableオブジェクト
+ */
+WNote.Util.All.highlightDataTableRow = function(selectedRow, table) {
+    if (!selectedRow.hasClass('selected')) {
+        table.$('tr.selected').removeClass('selected');
+        selectedRow.addClass('selected');
+    }
+}
+
+/**
+ * データテーブルの行選択ハイライトを解除する
+ * 
+ * @param {object} table datatableオブジェクト
+ */
+WNote.Util.All.unHighlightDataTableRow = function(table) {
+    table.$('tr.selected').removeClass('selected');
+}
+
+/**
+ * 英数字の全角を半角に変換する
+ * 
+ * @param {string} str 文字列
+ */
+WNote.Util.All.zen2Han = function(str) {
+    return str.replace(/[Ａ-Ｚａ-ｚ０-９]/g,function(s){
+          return String.fromCharCode(s.charCodeAt(0)-0xFEE0);
+    });
+}
+
 

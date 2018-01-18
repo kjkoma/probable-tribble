@@ -170,4 +170,45 @@ class ApiProductsController extends ApiController
         $this->setResponse(true, 'your request is succeed', ['product' => $deleteProduct['data']]);
     }
 
+    /**
+     * 製品一覧を検索する
+     *
+     */
+    public function findList()
+    {
+        $data = $this->request->getData();
+        if (!$data || !array_key_exists('term', $data) || !$this->request->is('post')) {
+            $this->setResponse(true, 'your request is succeed but no parameter found', ['products' => []]);
+            return;
+        }
+
+        // 製品を取得する（分類指定がある場合は分類で絞り込む）
+        $classificationId = array_key_exists('classification_id', $data) ? $data['classification_id'] : null;
+        $products  = $this->ModelProducts->find2List($data['term'], $classificationId);
+
+        // レスポンスメッセージの作成
+        $this->setResponse(true, 'your request is succeed', ['products' => $products]);
+    }
+
+
+    /**************************************************************************/
+    /** 検証用メソッド                                                        */
+    /**************************************************************************/
+    /**
+     * 指定された製品と分類の関係に妥当性があるかどうかを検証する
+     *
+     */
+    public function validateProductAndClassification()
+    {
+        $data = $this->validateParameter('product_id', ['post']);
+        if (!$data) return;
+
+        $classificationId = (array_key_exists('classification_id', $data) && !empty($data['classification_id'])) ? $data['classification_id'] : '';
+
+        // 指定された製品IDと分類IDのデータが存在するかどうかをチェック
+        $validate = $this->ModelProducts->validateProductAndClassification($data['product_id'], $classificationId);
+
+        // レスポンスメッセージの作成
+        $this->setResponse(true, 'your request is succeed', ['validate' => $validate]);
+    }
 }

@@ -16,9 +16,11 @@
 namespace App\Controller\Component;
 
 use App\Model\Entity\AppConvertTrait;
+use Cake\Core\Configure;
 use Cake\Controller\Component;
 use Cake\Datasource\ConnectionManager;
 use Cake\ORM\TableRegistry;
+use Cake\I18n\Time;
 
 /**
  * 本アプリケーション（システム）のコンポーネントの親となるコンポーネント
@@ -136,6 +138,10 @@ class AppComponent extends Component
     {
         if (!$init) {
             TableRegistry::remove($modelName);
+        }
+
+        if (TableRegistry::exists($modelName)) {
+            return TableRegistry::get($modelName);
         }
 
         return TableRegistry::get($modelName, $modelConfig);
@@ -283,6 +289,10 @@ class AppComponent extends Component
         $entity['created_user']  = $this->user();
         $entity['modified_user'] = $this->user();
 
+        if (is_null($entity['dsts']) || $entity['dsts'] === '') {
+            $entity['dsts'] = Configure::read('WNote.DB.Dsts.valid');
+        }
+
         $result = $this->modelTable->save($entity);
         if (!$result || $entity->errors()) {
             return $this->_result(false, false, $entity->errors());
@@ -302,16 +312,17 @@ class AppComponent extends Component
     public function save($data, $options = [])
     {
         if (!array_key_exists('id', $data)) {
-            return $this->_invalid('保存データが指定されていません。');
+            return $this->_invalid(['message' => '保存データが指定されていません。', 'data' => $data]);
         }
 
         if ($this->modelTable->find('all', $options)->where(['id' => $data['id']])->count() == 0) {
-            return $this->_invalid('指定されたデータが存在しません。');
+            return $this->_invalid(['message' => '指定されたデータが存在しません。', 'data' => $data]);
         }
 
         $entity = $this->modelTable->get($data['id'], $options);
         $entity = $this->modelTable->patchEntity($entity, $data);
         $entity['modified_user'] = $this->user();
+        $entity['modified_at']   = Time::now()->i18nFormat('yyyy-MM-dd HH:mm:ss');
 
         $result = $this->modelTable->save($entity);
         if (!$result || $entity->errors()) {
@@ -332,11 +343,11 @@ class AppComponent extends Component
     public function delete($key, $options = [])
     {
         if (!$key) {
-            return $this->_invalid('削除データが指定されていません。');
+            return $this->_invalid(['message' => '削除データが指定されていません。', 'key' => $key]);
         }
 
         if ($this->modelTable->find('all', $options)->where(['id' => $key])->count() == 0) {
-            return $this->_invalid('指定されたデータが存在しません。');
+            return $this->_invalid(['message' => '指定されたデータが存在しません。', 'key' => $key]);
         }
 
         $entity = $this->modelTable->get($key, $options);
@@ -374,7 +385,7 @@ class AppComponent extends Component
     public function validateUnique($field, $data, $id = null)
     {
         $condition = [$field => $data];
-        if ($id && !empty($id)) {
+        if ($id && $id !== '') {
             $condition['id <> '] = $id;
         }
 
@@ -397,4 +408,38 @@ class AppComponent extends Component
         return $this->validateUnique($field, $data, $id);
     }
 
+    /**
+     * 検索条件のパラメータ有無判定を行う
+     *  
+     * - - -
+     * @param string $fieldName フィールド名
+     * @param array $condition 検索条件配列
+     * @return boolean true:パラメータ指定あり|false:パラメータ指定なし
+     */
+    public function hasSearchParams($fieldName, $condition)
+    {
+        if (!array_key_exists($fieldName, $condition)) {
+            return false;
+        }
+
+        if (is_null($condition[$fieldName])) {
+            return false;
+        }
+
+        if ($condition[$fieldName] === '') {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 本日の日付を取得する
+     *  
+     * - - -
+     * @return string 本日日付(yyyy/mm/dd)
+     */
+    public function today() {
+        return Time::now()->i18nFormat('yyyy-MM-dd');
+    }
 }

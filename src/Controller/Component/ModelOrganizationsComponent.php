@@ -57,13 +57,16 @@ class ModelOrganizationsComponent extends AppModelComponent
             }
         }
 
-        $query = $this->modelTable->find('valid')
-            ->andWhere(function($exp) use ($search) {
+        $query = $this->modelTable->find('valid');
+        if (!is_null($search) && $search !== '' && $search != '*') {
+            $query->andWhere(function($exp) use ($search) {
                 return $exp->or_([
                     'kname like ' => '%' . $search . '%',
                     'name like ' => '%' . $search . '%',
                 ]);
             });
+        }
+
         if (count($descendant) > 0) {
             $query->where(function($exp) use ($descendant) {
                 return $exp->notIn('id', $descendant);

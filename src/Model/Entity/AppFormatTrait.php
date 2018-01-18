@@ -59,114 +59,210 @@ trait AppFormatTrait
     }
 
     /**
-     * データ作成日を取得する
+     * 日を標準フォーマットでフォーマットする（プロパティ用）
      *  
      * - - -
-     * @param string $value    文字列
-     * @return string トリム後の文字列
+     * @param string property_name プロパティ名
+     * @return string フォーマット後の文字列
      */
-    public function _getCreated()
+    private function __dateFormatProperty($property_name)
     {
-        if (!isset($this->_properties['created'])) {
+        if (!isset($this->_properties[$property_name])) {
             return null;
         }
 
-        return $this->__datetimeFormat($this->_properties['created']);
+        return $this->__dateFormat($this->_properties[$property_name]);
+    }
+
+    /**
+     * 日時を標準フォーマットでフォーマットする（プロパティ用）
+     *  
+     * - - -
+     * @param string property_name プロパティ名
+     * @return string フォーマット後の文字列
+     */
+    private function __datetimeFormatProperty($property_name)
+    {
+        if (!isset($this->_properties[$property_name])) {
+            return null;
+        }
+
+        return $this->__datetimeFormat($this->_properties[$property_name]);
+    }
+
+    /**
+     * データ作成日を取得する
+     *  
+     * - - -
+     * @return string フォーマット後の文字列
+     */
+    public function _getCreatedAt()
+    {
+        return $this->__datetimeFormatProperty('created_at');
     }
 
     /**
      * データ更新日を取得する
      *  
      * - - -
-     * @param string $value    文字列
-     * @return string トリム後の文字列
+     * @return string フォーマット後の文字列
      */
-    public function _getModified()
+    public function _getModifiedAt()
     {
-        if (!isset($this->_properties['modified'])) {
-            return null;
-        }
-
-        return $this->__datetimeFormat($this->_properties['modified']);
+        return $this->__datetimeFormatProperty('modified_at');
     }
 
     /**
      * 開始日を取得する
      *  
      * - - -
-     * @param string $value    文字列
-     * @return string トリム後の文字列
+     * @return string フォーマット後の文字列
      */
     public function _getStartDate()
     {
-        if (!isset($this->_properties['start_date'])) {
-            return null;
-        }
-
-        return $this->__dateFormat($this->_properties['start_date']);
+        return $this->__dateFormatProperty('start_date');
     }
 
     /**
      * 終了日を取得する
      *  
      * - - -
-     * @param string $value    文字列
-     * @return string トリム後の文字列
+     * @return string フォーマット後の文字列
      */
     public function _getEndDate()
     {
-        if (!isset($this->_properties['end_date'])) {
-            return null;
-        }
-
-        return $this->__dateFormat($this->_properties['end_date']);
+        return $this->__dateFormatProperty('end_date');
     }
 
     /**
      * 販売開始日を取得する
      *  
      * - - -
-     * @param string $value    文字列
-     * @return string トリム後の文字列
+     * @return string フォーマット後の文字列
      */
     public function _getSalesStart()
     {
-        if (!isset($this->_properties['sales_start'])) {
-            return null;
-        }
-
-        return $this->__dateFormat($this->_properties['sales_start']);
+        return $this->__dateFormatProperty('sales_start');
     }
 
     /**
      * 販売終了日を取得する
      *  
      * - - -
-     * @param string $value    文字列
-     * @return string トリム後の文字列
+     * @return string フォーマット後の文字列
      */
     public function _getSalesEnd()
     {
-        if (!isset($this->_properties['sales_end'])) {
-            return null;
-        }
-
-        return $this->__dateFormat($this->_properties['sales_end']);
+        return $this->__dateFormatProperty('sales_end');
     }
 
     /**
-     * 製造日日を取得する
+     * 製造日を取得する
      *  
      * - - -
-     * @param string $value    文字列
-     * @return string トリム後の文字列
+     * @return string フォーマット後の文字列
      */
     public function _getMakedDate()
     {
-        if (!isset($this->_properties['maked_date'])) {
-            return null;
-        }
+        return $this->__dateFormatProperty('maked_date');
+    }
 
-        return $this->__dateFormat($this->_properties['maked_date']);
+    /**
+     * 予定日を取得する
+     *  
+     * - - -
+     * @return string フォーマット後の文字列
+     */
+    public function _getPlanDate()
+    {
+        return $this->__dateFormatProperty('plan_date');
+    }
+
+    /**
+     * 入庫日を取得する
+     *  
+     * - - -
+     * @return string フォーマット後の文字列
+     */
+    public function _getInstockDate()
+    {
+        return $this->__dateFormatProperty('instock_date');
+    }
+
+    /**
+     * 出庫日を取得する
+     *  
+     * - - -
+     * @return string フォーマット後の文字列
+     */
+    public function _getPickingDate()
+    {
+        return $this->__dateFormatProperty('picking_date');
+    }
+
+    /**
+     * サポート期限日を取得する
+     *  
+     * - - -
+     * @return string フォーマット後の文字列
+     */
+    public function _getSupportLimitDate()
+    {
+        return $this->__dateFormatProperty('support_limit_date');
+    }
+
+    /**
+     * 依頼日を取得する
+     *  
+     * - - -
+     * @return string フォーマット後の文字列
+     */
+    public function _getReqDate()
+    {
+        return $this->__dateFormatProperty('req_date');
+    }
+
+    /**
+     * 到着希望日を取得する
+     *  
+     * - - -
+     * @return string フォーマット後の文字列
+     */
+    public function _getArvDate()
+    {
+        return $this->__dateFormatProperty('arv_date');
+    }
+
+    /**
+     * 受付日を取得する
+     *  
+     * - - -
+     * @return string フォーマット後の文字列
+     */
+    public function _getRcvDate()
+    {
+        return $this->__dateFormatProperty('rcv_date');
+    }
+
+    /**
+     * 初回入庫日を取得する
+     *
+     * - - -
+     * @return string フォーマット後の文字列
+     */
+    public function _getFirstInstockDate()
+    {
+        return $this->__dateFormatProperty('first_instock_date');
+    }
+
+    /**
+     * 初回出荷日（計上日）を取得する
+     *
+     * - - -
+     * @return string フォーマット後の文字列
+     */
+    public function _geAccountDate()
+    {
+        return $this->__dateFormatProperty('account_date');
     }
 }

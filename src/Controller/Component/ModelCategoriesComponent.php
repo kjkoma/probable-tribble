@@ -36,4 +36,21 @@ class ModelCategoriesComponent extends AppModelComponent
         parent::initialize($config);
     }
 
+    /**
+     * 選択リスト用の一覧を取得する
+     *  
+     * - - -
+     * @return array 選択リスト用の一覧
+     */
+    public function selectList($toArray = false)
+    {
+        $categories = $this->modelTable->find('valid')->all();
+        $array = [];
+        foreach($categories as $category) {
+            $array[] = [ $category['id'] => $category['kname'] ];
+        }
+
+        return $array;
+    }
+
 }
