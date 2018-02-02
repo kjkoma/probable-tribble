@@ -1137,7 +1137,7 @@ WNote.Util.dotS2AWithValue = function(obj, keys, val) {
  * @return {object} jquery validatorの基本オプション
  */
 WNote.Util.Validate.ValidatorOptions = function() {
-    return {
+    return $.extend(true, {}, {
         errorClass    : 'invalid',
         errorElement  : 'em',
         highlight     : WNote.Util.Validate.HighlightHandler,
@@ -1151,7 +1151,7 @@ WNote.Util.Validate.ValidatorOptions = function() {
         onkeyup       : false,
         onfocusout    : false,
         onclick       : false
-    };
+    });
 }
 
 /**
@@ -1249,6 +1249,51 @@ WNote.Util.All.highlightDataTableRow = function(selectedRow, table) {
  */
 WNote.Util.All.unHighlightDataTableRow = function(table) {
     table.$('tr.selected').removeClass('selected');
+}
+
+/**
+ * データテーブルの行選択ハイライトのスイッチを行う
+ * 
+ * @param {object} selectedRow 選択行の$(this)オブジェクト(datatableのclickイベントハンドラー内のthis)
+ * @param {object} table       datatableオブジェクト
+ */
+WNote.Util.All.switchHighlightDataTableRow = function(selectedRow, table) {
+    if (selectedRow.hasClass('selected')) {
+        selectedRow.removeClass('selected');
+    } else {
+        selectedRow.addClass('selected');
+    }
+}
+
+/**
+ * Nestable Listの行選択ハイライトを行う
+ * 
+ * @param {object} target 選択行のevent.targetオブジェクト
+ */
+WNote.Util.All.highlightNestableListRow = function(target) {
+    var li = $(target);
+    if ($(target).prop("tagName") == "DIV") {
+        li = $(event.target).parent();
+    }
+    if ($(target).prop("tagName") == "SPAN") {
+        li = $(event.target).parent().parent();
+    }
+
+    if (!li.hasClass('selected')) {
+        WNote.Util.All.unHighlightNestableListRow();
+        li.addClass('selected');
+        li.children('div').append('<em class="label pull-right label-info">選択中</em>');
+    }
+}
+
+/**
+ * Nestable Listの行選択ハイライトを解除する
+ * 
+ */
+WNote.Util.All.unHighlightNestableListRow = function() {
+    $('div#nestable>ol>li.selected>div>em').remove();
+    $('div#nestable>ol>li.selected').removeClass('selected');
+
 }
 
 /**

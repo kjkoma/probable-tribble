@@ -34,6 +34,7 @@ class ApiStocksController extends ApiController
     {
         parent::initialize();
         $this->_loadComponent('ModelStocks');
+        $this->_loadComponent('ModelStockHistories');
         $this->_loadComponent('ModelAssets');
     }
 
@@ -88,6 +89,35 @@ class ApiStocksController extends ApiController
 
         // レスポンスメッセージの作成
         $this->setResponse(true, 'your request is success', ['stocks' => $stocks]);
+    }
+
+    /**
+     * 資産IDより在庫情報と在庫履歴一覧を取得する
+     *
+     */
+    public function stockAndHistories()
+    {
+        $data = $this->validateParameter('asset_id', ['post']);
+        if (!$data) return;
+
+        // 在庫を取得
+        $stock = $this->ModelStocks->stock($data['asset_id'], true);
+        $stock['modified_user_name'] = $stock['stocks_modified_suser_name']['kname'];
+
+        // 在庫履歴を取得
+        $histories = $this->ModelStockHistories->histories($data['asset_id']);
+
+        // 一覧表示用に編集する
+        foreach($histories as $history) {
+            $history['history_type_name'] = $history['stock_histories_hist_type_name']['name'];
+            $history['reason_kbn_name']   = $history['stock_histories_reason_kbn_name']['name'];
+            $history['instock_date']      = $history['instock']['instock_date'];
+            $history['picking_date']      = $history['picking']['picking_date'];
+            $history['stocktake_date']    = $history['stocktake']['stocktake_date'];
+        }
+
+        // レスポンスメッセージの作成
+        $this->setResponse(true, 'your request is success', ['stock' => $stock, 'histories' => $histories]);
     }
 
     /**************************************************************************/

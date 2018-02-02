@@ -59,6 +59,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/logout'   , ['controller' => 'Auth'  , 'action' => 'logout' ]);
     $routes->connect('/home'     , ['controller' => 'Home'  , 'action' => 'home' ]);
     $routes->connect('/home/cd'  , ['controller' => 'Home'  , 'action' => 'changeDomain' ]);
+    $routes->connect('/search'   , ['controller' => 'Home'  , 'action' => 'search' ]);
 
     /**
      * Connect catchall routes for all controllers.
@@ -105,9 +106,6 @@ Router::scope('/', function (RouteBuilder $routes) {
                 $routes->fallbacks(DashedRoute::class);
         });
         $routes->prefix('back', function (RouteBuilder $routes) {
-            $routes->fallbacks(DashedRoute::class);
-        });
-        $routes->prefix('abrogate', function (RouteBuilder $routes) {
             $routes->fallbacks(DashedRoute::class);
         });
 
@@ -158,10 +156,6 @@ Router::scope('/', function (RouteBuilder $routes) {
     });
     /* Back Routes */
     Router::prefix('back', function (RouteBuilder $routes) {
-        $routes->fallbacks(DashedRoute::class);
-    });
-    /* Abrogate Routes */
-    Router::prefix('abrogate', function (RouteBuilder $routes) {
         $routes->fallbacks(DashedRoute::class);
     });
 

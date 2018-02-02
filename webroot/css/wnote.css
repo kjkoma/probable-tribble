@@ -102,6 +102,10 @@ span.fancytree-active span.fancytree-title, span.fancytree-selected span.fancytr
     background-color: rgba(0,102,255,0.6) !important;
 }
 
+.well[class*=" bg-"], .well[class^=bg-] {
+    border-width: 0px !important;
+}
+
 /* smart admin additional style */
 div.widget-actions {
     padding: 0px 8px;
@@ -142,7 +146,15 @@ div.widget-actions .widget-action > .btn {
 
 /* datatable additional style */
 table.dataTable tr.selected {
+    color: #ffffff;
     background-color: rgba(0,102,255,0.6) !important;
 }
 
+/* nestable additional style */
+div#nestable>ol>li.selected>div {
+    background-color: rgba(0,102,255,0.6) !important;
+}
+div#nestable>ol>li.selected>div>span {
+    color: #ffffff !important;
+}
 

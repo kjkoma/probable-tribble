@@ -28,7 +28,7 @@ use Cake\ORM\Query;
 class ModelAssetsComponent extends AppModelComponent
 {
     /** @var array $components 利用コンポーネント */
-    public $components = ['ModelAssetUsers', 'ModelProducts', 'ModelProductModels'];
+    public $components = ['ModelAssetUsers', 'ModelCompanies', 'ModelProducts', 'ModelProductModels'];
 
     /**
      * 本クラスの初期化処理を行う
@@ -122,14 +122,39 @@ class ModelAssetsComponent extends AppModelComponent
     }
 
     /**
+     * 資産情報を検索する
+     *  
+     * - - -
+     * 
+     * @param array $criteria 検索条件(シリアル or 資産管理 or PC名)
+     * @param boolean $toArray true:配列で返す|false:ResultSetで返す（default）
+     * @return array 資産一覧（ResultSet or Array）
+     */
+    public function searchCriteria($criteria, $toArray = false)
+    {
+        $query = $this->_makeSearchQuery([], true);
+        $query->andWhere([
+            'OR' => [
+                ['Assets.serial_no'  => $criteria],
+                ['Assets.asset_no'   => $criteria],
+                ['Assets.kname LIKE' => '%' . $criteria . '%'],
+            ]
+        ])
+        ->limit(Configure::read('WNote.DB.ListLimit.maxcount'));
+
+        return ($toArray) ? $query->toArray() : $query->all();
+    }
+
+    /**
      * (Private)資産情報を検索するクエリを作成する
      *  
      * - - -
      * 
-     * @param \Cake\ORM\Query クエリビルダ
+     * @param array $cond 検索条件
+     * @param boolean $isSearchAll 未指定時に検索するかどうか(デフォルト：false)
      * @return \Cake\ORM\Query クエリビルダ
      */
-    private function _makeSearchQuery($cond)
+    private function _makeSearchQuery($cond, $isSearchAll = false)
     {
         $query = $this->modelTable->find('validAll')
             ->order([
@@ -180,11 +205,11 @@ class ModelAssetsComponent extends AppModelComponent
             $hasCondition = true;
         }
         if ($this->hasSearchParams('serial_no', $cond)) {
-            $query->andWhere(['Assets.serial_no' => $cond['serial_no']]);
+            $query->andWhere(['Assets.serial_no LIKE' => '%' . $cond['serial_no'] . '%']);
             $hasCondition = true;
         }
         if ($this->hasSearchParams('asset_no', $cond)) {
-            $query->andWhere(['Assets.asset_no' => $cond['asset_no']]);
+            $query->andWhere(['Assets.asset_no LIKE' => '%' . $cond['asset_no'] . '%']);
             $hasCondition = true;
         }
         if ($this->hasSearchParams('first_instock_date_from', $cond)) {
@@ -232,7 +257,7 @@ class ModelAssetsComponent extends AppModelComponent
             $hasCondition = true;
         }
 
-        if (!$hasCondition) {
+        if (!$hasCondition && !$isSearchAll) {
             $query->andWhere(['1=0']); // 検索結果を取得しない
         }
 
@@ -296,6 +321,10 @@ class ModelAssetsComponent extends AppModelComponent
             ->contain(['AssetSubStsName' => function($q) {
                 return $q
                     ->select(['id', 'nkey', 'nid', 'name']);
+            }])
+            ->contain(['AssetAbrogateSuser' => function($q) {
+                return $q
+                    ->select(['id', 'kname']);
             }])
             ->contain(['AssetCreatedSuser' => function($q) {
                 return $q
@@ -403,7 +432,7 @@ class ModelAssetsComponent extends AppModelComponent
     }
 
     /**
-     * デフォルトの資産名を取得する（製品名＋モデル名）
+     * デフォルトの資産名を取得する（メーカー名 + 製品名 ＋ モデル名）
      *  
      * - - -
      * 
@@ -425,7 +454,57 @@ class ModelAssetsComponent extends AppModelComponent
             $name  = $name . ' ' . $model['kname'];
         }
 
+        // メーカー名
+        $maker = $this->ModelCompanies->get($product['maker_id']);
+        $name = $maker['kname'] . ' ' . $name;
+
         return $name;
+    }
+
+    /**
+     * 画面入力より資産を登録する
+     *  
+     * - - -
+     * 
+     * @param array $entry 画面入力情報
+     * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
+     */
+    public function addEntry($entry)
+    {
+        // メーカーID取得
+        $product = $this->ModelProducts->get($entry['product_id']);
+
+        // 資産登録情報
+        $asset = $entry;
+        $asset['domain_id']          = $this->current();
+        $asset['asset_type']         = $product['asset_type'];
+        $asset['classification_id']  = $product['classification_id'];
+        $asset['maker_id']           = $product['maker_id'];
+        $asset['kname']              = (strlen(trim($entry['kname'])) === 0) ? $this->defaultAssetName($entry['product_id'], $entry['product_model_id']) : trim($entry['kname']);
+
+        return parent::add($asset);
+    }
+
+    /**
+     * 画面入力より資産を登録する
+     *  
+     * - - -
+     * 
+     * @param array $entry 画面入力情報
+     * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
+     */
+    public function editEntry($entry)
+    {
+        // メーカーID取得
+        $product = $this->ModelProducts->get($entry['product_id']);
+
+        // 資産登録情報
+        $asset = $entry;
+        $asset['classification_id'] = $product['classification_id'];
+        $asset['maker_id']          = $product['maker_id'];
+        $asset['kname']             = (strlen(trim($entry['kname'])) === 0) ? $this->defaultAssetName($entry['product_id'], $entry['product_model_id']) : trim($entry['kname']);
+
+        return parent::save($asset);
     }
 
     /**

@@ -34,6 +34,8 @@ class ApiAssetsController extends ApiController
     {
         parent::initialize();
         $this->_loadComponent('ModelAssets');
+        $this->_loadComponent('ModelAssetAttributes');
+        $this->_loadComponent('ModelStocks');
     }
 
     /**
@@ -52,11 +54,15 @@ class ApiAssetsController extends ApiController
         $asset['asset_type_name']     = $asset['asset_type_name']['name'];
         $asset['category_name']       = $asset['classification']['category']['kname'];
         $asset['classification_name'] = $asset['classification']['kname'];
+        $asset['classification_text'] = $asset['classification_name'];
         $asset['maker_name']          = $asset['company']['kname'];
         $asset['product_name']        = $asset['product']['kname'];
+        $asset['product_text']        = $asset['product_name'];
         $asset['product_model_name']  = ($asset['product_model']) ? $asset['product_model']['kname'] : '';
+        $asset['product_model_text']  = $asset['product_model_name'];
         $asset['asset_sts_name']      = $asset['asset_sts_name']['name'];
         $asset['asset_sub_sts_name']  = $asset['asset_sub_sts_name']['name'];
+        $asset['abrogate_suser_name'] = $asset['asset_abrogate_suser']['kname'];
         $asset['created_user_name']   = $asset['asset_created_suser']['kname'];
         $asset['modified_user_name']  = $asset['asset_modified_suser']['kname'];
 
@@ -98,6 +104,87 @@ class ApiAssetsController extends ApiController
 
         // レスポンスメッセージの作成
         $this->setResponse(true, 'your request is success', ['assets' => $list]);
+    }
+
+    /**
+     * 送信された資産データを追加する(資産属性含む)
+     *
+     */
+    public function addWithAttr()
+    {
+        $data = $this->validateParameter(['asset', 'attr'], ['post']);
+        if (!$data) return;
+
+        // トランザクション開始
+        $this->ModelAssets->begin();
+
+        try {
+            // 資産を保存
+            $newAsset = $this->ModelAssets->addEntry($data['asset']);
+            $this->AppError->result($newAsset);
+
+            // 資産属性を保存
+            if (!$this->AppError->has()) {
+                $newAttribute = $this->ModelAssetAttributes->addEntry($newAsset['data'], $data['attr']);
+                $this->AppError->result($newAttribute);
+            }
+
+            // 在庫を追加
+            if (!$this->AppError->has()) {
+                $newStock = $this->ModelStocks->addEntry($newAsset['data']);
+                $this->AppError->result($newStock);
+            }
+
+            // エラー判定
+            if ($this->AppError->has()) {
+                // ロールバック
+                $this->ModelAssets->rollback();
+                $this->setResponseError('your request is failure.', $this->AppError->errors());
+                return;
+            }
+
+            // コミット
+            $this->ModelAssets->commit();
+
+        } catch(Exception $e) {
+            // ロールバック
+            $this->ModelAssets->rollback();
+            $this->setError('保存時に予期せぬエラーが発生しました。管理者へお問い合わせください。', 'UNEXPECTED_EXCEPTION', $e);
+            return;
+        }
+
+        // レスポンスメッセージの作成
+        $this->setResponse(true, 'your request is success', ['asset' => $newAsset['data']]);
+    }
+
+
+    /**
+     * 送信された資産データを編集する
+     *
+     */
+    public function edit()
+    {
+        $data = $this->validateParameter('asset', ['post']);
+        if (!$data) return;
+
+        try {
+            // 資産を保存
+            $updateAsset = $this->ModelAssets->editEntry($data['asset']);
+            $this->AppError->result($updateAsset);
+
+            // エラー判定
+            if ($this->AppError->has()) {
+                $this->setResponseError('your request is failure.', $this->AppError->errors());
+                return;
+            }
+
+        } catch(Exception $e) {
+            $this->setError('保存時に予期せぬエラーが発生しました。管理者へお問い合わせください。', 'UNEXPECTED_EXCEPTION', $e);
+            return;
+        }
+
+        // レスポンスメッセージの作成
+        $this->setResponse(true, 'your request is success', ['asset' => $updateAsset['data']]);
     }
 
     /**************************************************************************/
@@ -145,5 +232,46 @@ class ApiAssetsController extends ApiController
         $this->setResponse(true, 'your request is succeed', ['validate' => $validate]);
     }
 
+    /**
+     * 指定されたシリアル番号の重複を検証する(製品・モデル単位)
+     *
+     */
+    public function validateDuplicateSerialNo()
+    {
+        $data = $this->validateParameter(['product_id', 'product_model_id', 'serial_no'], ['post']);
+        if (!$data) return;
+
+        $validate = true;
+
+        // 重複チェック
+        $asset = $this->ModelAssets->bySerialNo($data['serial_no'], $data['product_id'], $data['product_model_id']);
+        if ($asset && count($asset) > 0) {
+            $validate = false;
+        }
+
+        // レスポンスメッセージの作成
+        $this->setResponse(true, 'your request is succeed', ['validate' => $validate]);
+    }
+
+    /**
+     * 指定された数量管理資産の重複を検証する
+     *
+     */
+    public function validateDuplicateCountAsset()
+    {
+        $data = $this->validateParameter(['product_id', 'product_model_id'], ['post']);
+        if (!$data) return;
+
+        $validate = true;
+
+        // 重複チェック
+        $asset = $this->ModelAssets->assetCountType($data['product_id'], $data['product_model_id']);
+        if ($asset && count($asset) > 0) {
+            $validate = false;
+        }
+
+        // レスポンスメッセージの作成
+        $this->setResponse(true, 'your request is succeed', ['validate' => $validate]);
+    }
 }
 

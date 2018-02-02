@@ -24,13 +24,15 @@
  * @param array   $list         一覧データ
  * @param string  $itemId       キー項目の名称（デフォルト：id）
  * @param string  $itemName     表示項目の名称（デフォルト：kname）
+ * @param string  $colSize      カラムサイズ（例：col-sm4 col-lg-2）
  */
 $itemId   = isset($itemId)   ? $itemId   : "id";
 $itemName = isset($itemName) ? $itemName : "kname";
+$colSize  = isset($colSize)  ? $colSize  : "col-sm-4";
 ?>
 
 <!-- widget -->
-<article class="col-sm-4 sortable-grid ui-sortable">
+<article class="<?= $colSize ?> sortable-grid ui-sortable">
 
   <!-- widget ID -->
   <div class="jarviswidget jarviswidget-color-blueDark" id="wid-side-list"

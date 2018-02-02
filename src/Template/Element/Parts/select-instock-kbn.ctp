@@ -31,7 +31,7 @@
 $name     = isset($name)     ? $name     : "";
 $id       = isset($id)       ? $id       : "";
 $form     = isset($form)     ? $form     : "";
-$action   = isset($form)     ? $action   : "";
+$action   = isset($action)   ? $action   : "";
 $disabled = isset($disabled) ? $disabled : true;
 $class    = isset($class)    ? $class    : "";
 $default  = isset($default)  ? $default  : "";

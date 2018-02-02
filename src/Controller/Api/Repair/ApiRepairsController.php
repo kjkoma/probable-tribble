@@ -37,6 +37,29 @@ class ApiRepairsController extends ApiController
     }
 
     /**
+     * 資産IDより修理履歴一覧を取得する
+     *
+     */
+    public function listByAssetId()
+    {
+        $data = $this->validateParameter('asset_id', ['post']);
+        if (!$data) return;
+
+        // 修理一覧を取得
+        $repairs = $this->ModelRepairs->listByAssetId($data['asset_id']);
+
+        // 一覧用に編集する
+        foreach($repairs as $repair) {
+            $repair['repair_kbn_name']  = $repair['repair_repair_kbn']['name'];
+            $repair['repair_sts_name']  = $repair['repair_st']['name'];
+            $repair['trouble_kbn_name'] = $repair['repairs_trouble_kbn']['name'];
+        }
+
+        // レスポンスメッセージの作成
+        $this->setResponse(true, 'your request is success', ['repairs' => $repairs]);
+    }
+
+    /**
      * 修理一覧を表示する
      *
      */

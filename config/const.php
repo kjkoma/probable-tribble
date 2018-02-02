@@ -142,15 +142,33 @@ return [
                     'abrogate' => '6',
                 ],
             ],
+            'Stocktake' => [
+                'StocktakeSts' => [
+                    'working'  => '1',
+                    'complete' => '2',
+                ],
+                'StocktakeKbn' => [
+                    'match'      => '1',
+                    'incomplete' => '2',
+                    'complete'   => '3',
+                ],
+                'StUnmatchKbn' => [
+                    'match'   => '1',
+                    'nostock' => '2',
+                    'noitem'  => '3',
+                ],
+            ],
             'HistType' => [
                 'instock'   => '1',
                 'picking'   => '2',
                 'stocktake' => '3',
+                'entry'     => '4',
             ],
             'ReasonKbn' => [
                 'instock'   => '1',
                 'picking'   => '2',
                 'stocktake' => '3',
+                'entry'     => '4',
             ],
             'Dsts' => [
                 'invalid' => '0',

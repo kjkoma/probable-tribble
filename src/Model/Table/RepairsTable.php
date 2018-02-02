@@ -116,6 +116,12 @@ class RepairsTable extends AppTable
             'bindingKey' => 'nid',
             'conditions' => ['RepairsDatapickKbn.nkey' => 'DATAPICK_KBN']
         ]);
+
+        $this->_sorted = [
+            'Repairs.start_date'      => 'DESC',
+            'Repairs.repair_sts'      => 'ASC',
+            'Repairs.repair_asset_id' => 'ASC'
+        ];
     }
 
     /**

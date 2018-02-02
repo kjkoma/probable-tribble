@@ -134,7 +134,7 @@ class AppUserComponent extends AppComponent
     public function create($user)
     {
         $this->_user = $user;
-        $this->_ip   = $_SERVER['REMOTE_ADDR'];
+        $this->_ip   = $_SERVER['HTTP_X_FORWARDED_FOR'];
 
         // 利用可能ドメイン取得
         $this->_createDomains($this->_user['id']);

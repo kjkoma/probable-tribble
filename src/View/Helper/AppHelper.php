@@ -18,6 +18,7 @@ namespace App\View\Helper;
 use Cake\Core\Configure;
 use Cake\Log\Log;
 use Cake\View\Helper;
+use Cake\Routing\Router;
 
 /**
  * AppHelper
@@ -186,4 +187,24 @@ class AppHelper extends Helper
         return ($val === null) ? "" : $val;
     }
 
+    /**
+     * サイドメニューを出力する
+     *
+     * - - -
+     * @param string $path URL
+     * @param string $title タイトル名
+     * @param string $icon アイコン名
+     * @param string サイドメニュー要素（li要素)
+     */
+    public function menu($path, $title, $icon)
+    {
+        $requestPath = Router::url();
+        $active = ($path == $requestPath) ? 'active' : '';
+
+        $html = '<li class="' . $active . '"><a href="' . $path . '" title="' . $title . '">';
+        $html = $html . '<i class="fa fa-lg fa-fw ' . $icon . '"></i> <span class="menu-item-parent">' . $title . '</span>';
+        $html = $html . '</a></li>';
+
+        return $html;
+    }
 }

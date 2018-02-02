@@ -221,7 +221,7 @@ class AppComponent extends Component
         return [
             'result' => false,
             'data'   => $data,
-            'errors' => ['error_message' => $msg]
+            'errors' => ['error_message' => $msg, 'data' => $data]
         ];
     }
 
@@ -441,5 +441,15 @@ class AppComponent extends Component
      */
     public function today() {
         return Time::now()->i18nFormat('yyyy-MM-dd');
+    }
+
+    /**
+     * 現在日時を取得する
+     *  
+     * - - -
+     * @return string 現在日時(yyyy/mm/dd hh24:mi:ss)
+     */
+    public function now() {
+        return Time::now()->i18nFormat('yyyy-MM-dd HH:mm:ss');
     }
 }

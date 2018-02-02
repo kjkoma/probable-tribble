@@ -654,7 +654,15 @@ $this->Breadcrumbs->add('出庫予定一覧', ['controller' => 'PickingPlans', '
         <!-- Asset Info                         -->
         <!-- ********************************** -->
         <article class="col-sm-12 col-md-8 sortable-grid ui-sortable">
-            <?= $this->element('Asset/asset', ['conf' => ['asset' => 'view', 'attr' => 'input', 'repair' => 'view', 'hidden' => true]]) ?>
+            <?= $this->element('Asset/asset', [
+                'conf' => [
+                    'asset'  => 'view',
+                    'attr'   => 'edit',
+                    'repair' => true,
+                    'stock'  => true,
+                    'hidden' => true
+                ]
+            ]) ?>
         </article>
 
         <!-- End list widget grid row -->
@@ -677,7 +685,7 @@ $this->Breadcrumbs->add('出庫予定一覧', ['controller' => 'PickingPlans', '
 <!-- load script -->
 <?= $this->element('Common/load-datatable') ?>
 <?php $this->Html->script('wnote/libs/wnote.lib.form.js', ['block' => true]); ?>
-<?php $this->Html->script('wnote/wnote.asset.js', ['block' => true]); ?>
+<?= $this->element('Asset/load-asset') ?>
 <?php $this->Html->script('wnote/picking/picking_plans.list.js', ['block' => true]); ?>
 <?php $this->Html->script('wnote/picking/picking_plans.list.entry.js', ['block' => true]); ?>
 <?php $this->Html->script('wnote/picking/picking_plans.list.cancel.js', ['block' => true]); ?>

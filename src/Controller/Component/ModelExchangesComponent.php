@@ -42,6 +42,101 @@ class ModelExchangesComponent extends AppModelComponent
     }
 
     /**
+     * 交換情報を検索する
+     *  
+     * - - -
+     * @param array $cond 検索条件
+     * @param boolean $toArray true:配列で返す|false:ResultSetで返す（default）
+     * @return array 交換一覧（ResultSet or Array）
+     */
+    public function search($cond, $toArray = false)
+    {
+        $query = $this->modelTable->find('valid')
+            ->contain(['ExchangesInstockAssets' => function($q) {
+                return $q->select([
+                    'id', 'classification_id', 'serial_no', 'asset_no',
+                    'maker_id', 'product_id', 'product_model_id', 'kname', 'asset_sts', 'asset_sub_sts']);
+            }])
+            ->contain(['ExchangesInstockAssets.Products' => function($q) {
+                return $q->select([
+                    'id', 'kname']);
+            }])
+            ->contain(['ExchangesPickingAssets' => function($q) {
+                return $q->select([
+                    'id', 'classification_id', 'serial_no', 'asset_no',
+                    'maker_id', 'product_id', 'product_model_id', 'kname', 'asset_sts', 'asset_sub_sts']);
+            }])
+            ->contain(['ExchangesPickingAssets.Products' => function($q) {
+                return $q->select([
+                    'id', 'kname']);
+            }])
+            ->contain(['PickingPlans' => function($q) {
+                return $q->select([
+                    'id', 'req_date', 'req_user_id']);
+            }])
+            ->contain(['PickingPlans.PickingPlanReqUsers' => function($q) {
+                return $q->select([
+                    'id', 'fname', 'sname']);
+            }])
+            ->contain(['Instocks' => function($q) {
+                return $q->select([
+                    'id', 'instock_date']);
+            }])
+            ->contain(['Pickings' => function($q) {
+                return $q->select([
+                    'id', 'picking_date']);
+            }])
+            ->order([
+                'PickingPlans.req_date'             => 'DESC',
+                'ExchangesInstockAssets.product_id' => 'ASC',
+                'ExchangesPickingAssets.product_id' => 'ASC'
+            ]);
+
+        if (array_key_exists('req_date_from', $cond) && $cond['req_date_from'] !== '') {
+            $query->where(['PickingPlans.req_date >=' => $cond['req_date_from']]);
+        }
+        if (array_key_exists('req_date_to', $cond) && $cond['req_date_to'] !== '') {
+            $query->where(['PickingPlans.req_date <=' => $cond['req_date_to']]);
+        }
+        if (array_key_exists('req_user_id', $cond) && $cond['req_user_id'] !== '') {
+            $query->where(['PickingPlans.req_user_id' => $cond['req_user_id']]);
+        }
+        if (array_key_exists('instock_date_from', $cond) && $cond['instock_date_from'] !== '') {
+            $query->where(['Instocks.instock_date >=' => $cond['instock_date_from']]);
+        }
+        if (array_key_exists('instock_date_to', $cond) && $cond['instock_date_to'] !== '') {
+            $query->where(['Instocks.instock_date <=' => $cond['instock_date_to']]);
+        }
+        if (array_key_exists('already_instock', $cond) && $cond['already_instock'] !== '0') {
+            if ($cond['already_instock'] == '1') {
+                $query->where(['Exchanges.instock_id IS NOT' => null]);
+            } else {
+                $query->where(['Exchanges.instock_id IS' => null]);
+            }
+        }
+        if (array_key_exists('product_id', $cond) && $cond['product_id'] !== '') {
+            $query->where(['ExchangesInstockAssets.product_id' => $cond['product_id']]);
+        }
+        if (array_key_exists('serial_no', $cond) && $cond['serial_no'] !== '') {
+            $query->where(['ExchangesInstockAssets.serial_no' => $cond['serial_no']]);
+        }
+        if (array_key_exists('asset_no', $cond) && $cond['asset_no'] !== '') {
+            $query->where(['ExchangesInstockAssets.asset_no' => $cond['asset_no']]);
+        }
+        if (array_key_exists('picking_product_id', $cond) && $cond['picking_product_id'] !== '') {
+            $query->where(['ExchangesPickingAssets.product_id' => $cond['picking_product_id']]);
+        }
+        if (array_key_exists('picking_serial_no', $cond) && $cond['picking_serial_no'] !== '') {
+            $query->where(['ExchangesPickingAssets.serial_no' => $cond['picking_serial_no']]);
+        }
+        if (array_key_exists('picking_asset_no', $cond) && $cond['picking_asset_no'] !== '') {
+            $query->where(['ExchangesPickingAssets.asset_no' => $cond['picking_asset_no']]);
+        }
+
+        return ($toArray) ? $query->toArray() : $query->all();
+    }
+
+    /**
      * 出庫予定IDより該当する交換データを取得する
      * (入庫情報を含む)
      *  

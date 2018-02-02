@@ -340,7 +340,7 @@ $this->Breadcrumbs->add('在庫検索', ['controller' => 'Stocks', 'action' => '
         <!-- End list widget grid row -->
     </div>
 
-    <!-- detail widget grid row -->
+    <!-- back grid row -->
     <div class="row" id="grid-row-back" class="hidden">
         <div class="col col-sm-12 text-right">
             <button type="button" class="btn btn-default" data-app-action-key="back">検索を表示</button>
@@ -354,17 +354,17 @@ $this->Breadcrumbs->add('在庫検索', ['controller' => 'Stocks', 'action' => '
             <!-- Asset Widget -->
             <?= $this->element('Asset/asset', ['conf' => [
                 'asset' => 'view',
-                'attr'  => 'view',
+                'attr'  => 'edit',
                 'user'    => false,
-                'stock'   => false,
-                'repair'  => false,
+                'stock'   => true,
+                'repair'  => true,
                 'rental'  => false,
                 'hidden' => true]]) ?>
 
             <!-- End DETAILS asset widget -->
         </article>
 
-        <!-- End plan widget grid row -->
+        <!-- End asset widget grid row -->
     </div>
 
     <!-- End widget grid-->
@@ -377,6 +377,6 @@ $this->Breadcrumbs->add('在庫検索', ['controller' => 'Stocks', 'action' => '
 <!-- load script -->
 <?= $this->element('Common/load-datatable') ?>
 <?php $this->Html->script('wnote/libs/wnote.lib.form.js', ['block' => true]); ?>
-<?php $this->Html->script('wnote/wnote.asset.js', ['block' => true]); ?>
+<?= $this->element('Asset/load-asset') ?>
 <?php $this->Html->script('wnote/stock/stocks.search.js', ['block' => true]); ?>
 

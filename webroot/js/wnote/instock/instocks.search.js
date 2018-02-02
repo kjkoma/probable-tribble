@@ -16,8 +16,12 @@
  *  定数
  *  -------------------------------------------------------------------------*/
 const MYPAGE = {
-    FORM_KEY: 'form-condition',
-    FORM_DOWNLOAD: 'form-download'
+    FORM_KEY      : 'form-condition',
+    FORM_DOWNLOAD : 'form-download',
+    ROW : {
+        SEARCH: '#grid-row-search',
+        BACK  : '#grid-row-back'
+    }
 };
 
 /** ---------------------------------------------------------------------------
@@ -63,7 +67,7 @@ $(function() {
     });
 
     /** データテーブルイベント登録 */
-    $('#instock-datatable tbody').on('click', 'tr', MyPage.selectedInstockHandler);
+    $('#instock-datatable tbody').on('click', 'tr', MyPage.selectedAssetHandler);
 
     /** select2 登録 */
     WNote.Select2.sUser('#instock_suser_id'          , null                , true, '入庫担当者選択');
@@ -73,8 +77,9 @@ $(function() {
     WNote.Select2.model('#product_model_id'          , '#product_id'       , true, 'モデル選択');
 
     /** 各種操作イベント登録 */
-    WNote.registerEvent('click', 'search', MyPage.search);
+    WNote.registerEvent('click', 'search'  , MyPage.search);
     WNote.registerEvent('click', 'download', MyPage.download);
+    WNote.registerEvent('click', 'back'    , MyPage.showSearch);
 
 });
 
@@ -117,12 +122,6 @@ MyPage.showInstocks = function(data) {
 }
 
 /** ---------------------------------------------------------------------------
- *  イベント処理（入庫選択）
- *  -------------------------------------------------------------------------*/
-MyPage.selectedInstockHandler = function() {
-}
-
-/** ---------------------------------------------------------------------------
  *  イベント処理（編集画面表示）
  *  -------------------------------------------------------------------------*/
 /**
@@ -145,3 +144,30 @@ MyPage.download = function() {
     $('#' + MYPAGE.FORM_DOWNLOAD).submit();
 }
 
+/** ---------------------------------------------------------------------------
+ *  イベント処理（検索表示）
+ *  -------------------------------------------------------------------------*/
+/**
+ * 検索表示ボタンクリックイベントのハンドラの実装
+ */
+MyPage.showSearch = function() {
+    $(MYPAGE.ROW.SEARCH).removeClass('hidden');
+    WNote.Asset.hideWidget();
+    $(MYPAGE.ROW.BACK).addClass('hidden');
+}
+
+/** ---------------------------------------------------------------------------
+ *  イベント処理（資産選択）
+ *  -------------------------------------------------------------------------*/
+/**
+ * 資産選択イベントのハンドラの実装
+ */
+MyPage.selectedAssetHandler = function() {
+    var selected = MyPage.datatable.row( this ).data();
+    if (selected) {
+        WNote.Util.All.highlightDataTableRow($(this), MyPage.datatable);
+        $(MYPAGE.ROW.BACK).removeClass('hidden');
+        WNote.Asset.showWidget(selected.asset_id);
+        $(MYPAGE.ROW.SEARCH).addClass('hidden');
+    }
+}

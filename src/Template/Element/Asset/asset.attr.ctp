@@ -27,18 +27,18 @@
 <?= $this->Form->create(null, ['id' => 'form-elem-asset-attr', 'type' => 'post', 'class' => "smart-form"]) ?>
 
     <!-- input block -->
-    <div id="elem-asset-attr-input" class="<?= ($conf['attr'] && $conf['attr'] == 'input') ? '' : 'hidden' ?>">
+    <div id="elem-asset-attr-input" class="<?= ($conf['attr'] && $conf['attr'] != 'view') ? '' : 'hidden' ?>">
 
         <!-- ********************************** -->
         <!-- 操作アクション（モデル）           -->
         <!-- ********************************** -->
-        <div class="widget-actions" id="elemAssetAttr-actions">
-            <div class="widget-action" data-app-action-key="elemAssetAttr-view-detail-actions">
-                <a href="javascript:void(0);" class="btn btn-success" data-app-action-key="elemAssetAttr-edit-detail">編集</a>
+        <div class="widget-actions <?= ($conf['attr'] && $conf['attr'] == 'edit') ? '' : 'hidden' ?>" id="elemAssetAttr-actions">
+            <div class="widget-action" data-app-action-key="elemAssetAttr-view-actions">
+                <a href="javascript:void(0);" class="btn btn-success" data-app-action-key="elemAssetAttr-edit">編集</a>
             </div>
-            <div class="widget-action hidden" data-app-action-key="elemAssetAttr-edit-detail-actions">
-                <a href="javascript:void(0);" class="btn btn-default" data-app-action-key="elemAssetAttr-cancel-detail">キャンセル</a>
-                <a href="javascript:void(0);" class="btn btn-primary" data-app-action-key="elemAssetAttr-save-detail">保存</a>
+            <div class="widget-action hidden" data-app-action-key="elemAssetAttr-edit-actions">
+                <a href="javascript:void(0);" class="btn btn-default" data-app-action-key="elemAssetAttr-cancel">キャンセル</a>
+                <a href="javascript:void(0);" class="btn btn-primary" data-app-action-key="elemAssetAttr-save">保存</a>
             </div>
         </div>
 
@@ -46,7 +46,7 @@
         <div class="hidden" id="elem-asset-attr-edit-id">
 
             <header>
-                属性編集
+                属性入力
             </header>
 
             <fieldset>
@@ -103,7 +103,7 @@
                 <section>
                     <!-- MACアドレス（無線） -->
                     <label class="input">
-                        <input type="text" name="elem_asset_attr.mac_wifr" id="elemAssetAttr_mac_wifr" class="input-sm"
+                        <input type="text" name="elem_asset_attr.mac_wifi" id="elemAssetAttr_mac_wifi" class="input-sm"
                                data-app-form="form-elem-asset-attr"
                                maxlength=18
                                placeholder="MACアドレス(無線) - 最大18文字"
@@ -231,18 +231,22 @@
                 <section>
                     <!-- 購入日 -->
                     <label class="input">
-                        <input type="text" name="elem_asset_attr.purchase_date" id="elemAssetAttr_purchase_date" class="input-sm"
+                        <i class="icon-append fa fa-calendar"></i>
+                        <input type="text" name="elem_asset_attr.purchase_date" id="elemAssetAttr_purchase_date" class="input-sm datepicker"
                             data-app-form="form-elem-asset-attr"
-                               maxlength=10
+                            data-dateformat="yy/mm/dd"
+                            maxlength=10
                             placeholder="購入日 - yyyy/mm/dd形式"
                             disabled="disabled">
                     </label>
                 </section>
-                <section class="col-sm-4">
+                <section>
                     <!-- サポート期間（年） -->
                     <label class="input">
                         <input type="number" name="elem_asset_attr.support_term_year" id="elemAssetAttr_support_term_year" class="input-sm"
-                               data-app-form="form-elem-asset-attr" min=0 max=99
+                               data-app-form="form-elem-asset-attr"
+                               min="0"
+                               max="99"
                                placeholder="サポート期間(年)を入力してください">
                     </label>
                 </section>
@@ -363,101 +367,107 @@
         <!-- End input block -->
     </div>
 
-    <header>
-        属性情報
-    </header>
+    <!-- elem-asset-attr-view-id -->
+    <div id="elem-asset-attr-view-id">
 
-    <fieldset>
-        <section>
-            <dl class="dl-horizontal">
-                <dt>GWアドレス：</dt>
-                    <dd name="elem_assetview_attr.gw" id="elemAssetviewAttr_gw" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>IPアドレス：</dt>
-                    <dd name="elem_assetview_attr.ip" id="elemAssetviewAttr_ip" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>IPアドレス（v6）：</dt>
-                    <dd name="elem_assetview_attr.ip_v6" id="elemAssetviewAttr_ip_v6" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>IPアドレス（無線）：</dt>
-                    <dd name="elem_assetview_attr.ip_wifi" id="elemAssetviewAttr_ip_wifi" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>MACアドレス：</dt>
-                    <dd name="elem_assetview_attr.mac" id="elemAssetviewAttr_mac" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>MACアドレス（無線）：</dt>
-                    <dd name="elem_assetview_attr.mac_wifi" id="elemAssetviewAttr_mac_wifi" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>サブネット：</dt>
-                    <dd name="elem_assetview_attr.subnet" id="elemAssetviewAttr_subnet" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>DNS：</dt>
-                    <dd name="elem_assetview_attr.dns" id="elemAssetviewAttr_dns" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>DHCP：</dt>
-                    <dd name="elem_assetview_attr.dhcp" id="elemAssetviewAttr_dhcp" data-app-form="form-elem-assetview-attr"></dd>
-            </dl>
-        </section>
-        <section>
-            <dl class="dl-horizontal">
-                <dt>OS：</dt>
-                    <dd name="elem_assetview_attr.os" id="elemAssetviewAttr_os" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>OS（バージョン）：</dt>
-                    <dd name="elem_assetview_attr.os_version" id="elemAssetviewAttr_os_version" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>Office：</dt>
-                    <dd name="elem_assetview_attr.office" id="elemAssetviewAttr_office" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>Office（補足）：</dt>
-                    <dd name="elem_assetview_attr.office_remarks" id="elemAssetviewAttr_office_remarks" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>ソフトウェア：</dt>
-                    <dd name="elem_assetview_attr.software" id="elemAssetviewAttr_software" data-app-form="form-elem-assetview-attr"></dd>
-            </dl>
-        </section>
-        <section>
-            <dl class="dl-horizontal">
-                <dt>IMEI番号：</dt>
-                    <dd name="elem_assetview_attr.imei_no" id="elemAssetviewAttr_imei_no" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>証明書番号：</dt>
-                    <dd name="elem_assetview_attr.certificate_no" id="elemAssetviewAttr_certificate_no" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>購入申請番号：</dt>
-                    <dd name="elem_assetview_attr.apply_no" id="elemAssetviewAttr_apply_no" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>保管場所：</dt>
-                    <dd name="elem_assetview_attr.place" id="elemAssetviewAttr_place" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>購入日：</dt>
+        <header>
+            属性情報
+        </header>
+
+        <fieldset>
+            <section>
+                <dl class="dl-horizontal">
+                    <dt>GWアドレス：</dt>
+                        <dd name="elem_assetview_attr.gw" id="elemAssetviewAttr_gw" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>IPアドレス：</dt>
+                        <dd name="elem_assetview_attr.ip" id="elemAssetviewAttr_ip" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>IPアドレス（v6）：</dt>
+                        <dd name="elem_assetview_attr.ip_v6" id="elemAssetviewAttr_ip_v6" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>IPアドレス（無線）：</dt>
+                        <dd name="elem_assetview_attr.ip_wifi" id="elemAssetviewAttr_ip_wifi" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>MACアドレス：</dt>
+                        <dd name="elem_assetview_attr.mac" id="elemAssetviewAttr_mac" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>MACアドレス（無線）：</dt>
+                        <dd name="elem_assetview_attr.mac_wifi" id="elemAssetviewAttr_mac_wifi" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>サブネット：</dt>
+                        <dd name="elem_assetview_attr.subnet" id="elemAssetviewAttr_subnet" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>DNS：</dt>
+                        <dd name="elem_assetview_attr.dns" id="elemAssetviewAttr_dns" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>DHCP：</dt>
+                        <dd name="elem_assetview_attr.dhcp" id="elemAssetviewAttr_dhcp" data-app-form="form-elem-assetview-attr"></dd>
+                </dl>
+            </section>
+            <section>
+                <dl class="dl-horizontal">
+                    <dt>OS：</dt>
+                        <dd name="elem_assetview_attr.os" id="elemAssetviewAttr_os" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>OS（バージョン）：</dt>
+                        <dd name="elem_assetview_attr.os_version" id="elemAssetviewAttr_os_version" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>Office：</dt>
+                        <dd name="elem_assetview_attr.office" id="elemAssetviewAttr_office" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>Office（補足）：</dt>
+                        <dd name="elem_assetview_attr.office_remarks" id="elemAssetviewAttr_office_remarks" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>ソフトウェア：</dt>
+                        <dd name="elem_assetview_attr.software" id="elemAssetviewAttr_software" data-app-form="form-elem-assetview-attr"></dd>
+                </dl>
+            </section>
+            <section>
+                <dl class="dl-horizontal">
+                    <dt>IMEI番号：</dt>
+                        <dd name="elem_assetview_attr.imei_no" id="elemAssetviewAttr_imei_no" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>証明書番号：</dt>
+                        <dd name="elem_assetview_attr.certificate_no" id="elemAssetviewAttr_certificate_no" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>購入申請番号：</dt>
+                        <dd name="elem_assetview_attr.apply_no" id="elemAssetviewAttr_apply_no" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>保管場所：</dt>
+                        <dd name="elem_assetview_attr.place" id="elemAssetviewAttr_place" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>購入日：</dt>
                     <dd name="elem_assetview_attr.purchase_date" id="elemAssetviewAttr_purchase_date" data-app-form="form-elem-assetview-attr"></dd>
                 <dt>サポート期間（年）：</dt>
                     <dd name="elem_assetview_attr.support_term_year" id="elemAssetviewAttr_support_term_year" data-app-form="form-elem-assetview-attr"></dd>
-            </dl>
-        </section>
-        <section>
-            <dl class="dl-horizontal">
-                <dt>付属マウス：</dt>
-                    <dd name="elem_assetview_attr.at_mouse" id="elemAssetviewAttr_at_mouse" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>付属キーボード：</dt>
-                    <dd name="elem_assetview_attr.at_keyboard" id="elemAssetviewAttr_at_keyboard" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>付属AC：</dt>
-                    <dd name="elem_assetview_attr.at_ac" id="elemAssetviewAttr_at_ac" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>付属マニュアル類：</dt>
-                    <dd name="elem_assetview_attr.at_manual" id="elemAssetviewAttr_at_manual" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>付属その他：</dt>
-                    <dd name="elem_assetview_attr.at_other" id="elemAssetviewAttr_at_other" data-app-form="form-elem-assetview-attr"></dd>
-            </dl>
-        </section>
-        <section>
-            <dl class="dl-horizontal">
-                <dt>管理ユーザー(local)：</dt>
-                    <dd name="elem_assetview_attr.local_user" id="elemAssetviewAttr_local_user" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>管理パスワード(local)：</dt>
-                    <dd name="elem_assetview_attr.local_password" id="elemAssetviewAttr_local_password" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>UEFIパスワード(supervisor)：</dt>
-                    <dd name="elem_assetview_attr.uefi_password" id="elemAssetviewAttr_uefi_password" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>UEFIパスワード(user)：</dt>
-                    <dd name="elem_assetview_attr.uefi_user_password" id="elemAssetviewAttr_uefi_user_password" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>HDDパスワード(supervisor)：</dt>
-                    <dd name="elem_assetview_attr.hdd_password" id="elemAssetviewAttr_hdd_password" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>HDDパスワード(user)：</dt>
-                    <dd name="elem_assetview_attr.hdd_user_password" id="elemAssetviewAttr_hdd_user_password" data-app-form="form-elem-assetview-attr"></dd>
-            </dl>
-        </section>
-        <section>
-            <dl class="dl-horizontal">
-                <dt>登録日時：</dt><dd name="elem_assetview_attr.created_at" id="elemAssetviewAttr_created_at" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>更新日時：</dt><dd name="elem_assetview_attr.modified_at" id="elemAssetviewAttr_modified_at" data-app-form="form-elem-assetview-attr"></dd>
-                <dt>更新者：</dt><dd name="elem_assetview_attr.modified_user_name" id="elemAssetviewAttr_modified_user_name" data-app-form="form-elem-assetview-attr"></dd>
-            </dl>
-        </section>
-    </fieldset>
+                </dl>
+            </section>
+            <section>
+                <dl class="dl-horizontal">
+                    <dt>付属マウス：</dt>
+                        <dd name="elem_assetview_attr.at_mouse" id="elemAssetviewAttr_at_mouse" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>付属キーボード：</dt>
+                        <dd name="elem_assetview_attr.at_keyboard" id="elemAssetviewAttr_at_keyboard" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>付属AC：</dt>
+                        <dd name="elem_assetview_attr.at_ac" id="elemAssetviewAttr_at_ac" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>付属マニュアル類：</dt>
+                        <dd name="elem_assetview_attr.at_manual" id="elemAssetviewAttr_at_manual" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>付属その他：</dt>
+                        <dd name="elem_assetview_attr.at_other" id="elemAssetviewAttr_at_other" data-app-form="form-elem-assetview-attr"></dd>
+                </dl>
+            </section>
+            <section>
+                <dl class="dl-horizontal">
+                    <dt>管理ユーザー(local)：</dt>
+                        <dd name="elem_assetview_attr.local_user" id="elemAssetviewAttr_local_user" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>管理パスワード(local)：</dt>
+                        <dd name="elem_assetview_attr.local_password" id="elemAssetviewAttr_local_password" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>UEFIパスワード(supervisor)：</dt>
+                        <dd name="elem_assetview_attr.uefi_password" id="elemAssetviewAttr_uefi_password" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>UEFIパスワード(user)：</dt>
+                        <dd name="elem_assetview_attr.uefi_user_password" id="elemAssetviewAttr_uefi_user_password" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>HDDパスワード(supervisor)：</dt>
+                        <dd name="elem_assetview_attr.hdd_password" id="elemAssetviewAttr_hdd_password" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>HDDパスワード(user)：</dt>
+                        <dd name="elem_assetview_attr.hdd_user_password" id="elemAssetviewAttr_hdd_user_password" data-app-form="form-elem-assetview-attr"></dd>
+                </dl>
+            </section>
+            <section>
+                <dl class="dl-horizontal">
+                    <dt>登録日時：</dt><dd name="elem_assetview_attr.created_at" id="elemAssetviewAttr_created_at" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>更新日時：</dt><dd name="elem_assetview_attr.modified_at" id="elemAssetviewAttr_modified_at" data-app-form="form-elem-assetview-attr"></dd>
+                    <dt>更新者：</dt><dd name="elem_assetview_attr.modified_user_name" id="elemAssetviewAttr_modified_user_name" data-app-form="form-elem-assetview-attr"></dd>
+                </dl>
+            </section>
+        </fieldset>
+
+        <!-- End elem-asset-attr-view-id -->
+    </div>
 
 <!-- End form -->
 <?= $this->Form->end() ?>

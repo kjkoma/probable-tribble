@@ -124,6 +124,10 @@ class AssetsTable extends AppTable
             'bindingKey' => 'nid',
             'conditions' => ['AssetSubStsName.nkey' => 'ASSET_SUB_STS']
         ]);
+        $this->belongsTo('AssetAbrogateSuser', [
+            'className'  => 'Susers',
+            'foreignKey' => 'abrogate_suser_id'
+        ]);
         $this->belongsTo('AssetCreatedSuser', [
             'className'  => 'Susers',
             'foreignKey' => 'created_user'

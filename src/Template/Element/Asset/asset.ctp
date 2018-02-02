@@ -22,8 +22,8 @@
  * 設定デフォルト
  * <code>
  *   'conf' => [
- *       'asset'  => 'view', // 'input'指定可(資産番号/資産名称/ステータス/サブステータス/初回入庫日/計上日/保守期限日/廃棄日/補足のみ入力可)
- *       'attr'   => 'view', // 'input'指定可
+ *       'asset'  => 'view', // 'edit' or 'add'指定可(編集時は資産番号/資産名称/ステータス/サブステータス/初回入庫日/計上日/保守期限日/廃棄日/補足のみ入力可)
+ *       'attr'   => 'view', // 'edit'指定可
  *       'user'   => false,
  *       'stock'  => false,
  *       'repair' => false,
@@ -43,6 +43,7 @@ $default = [
 ];
 $conf = isset($conf) ? array_merge($default, $conf) : $default;
 ?>
+
 <!-- widget ID -->
 <div class="jarviswidget jarviswidget-color-blueDark <?= ($conf['hidden']) ? 'hidden' : '' ?>" id="wid-id-elem-asset"
      data-widget-deletebutton="false"
@@ -98,6 +99,12 @@ $conf = isset($conf) ? array_merge($default, $conf) : $default;
                 </a>
             </li>
         </ul>
+        <!-- 操作ボタン -->
+        <div id="elemAssetAdd-actions" class="<?= ($conf['asset'] == 'add') ? '' : 'hidden' ?>">
+            <div class="widget-toolbar" role="menu" data-app-action-key="elemAssetAdd-add-actions">
+                <a href="javascript:void(0);" class="btn btn-primary" data-app-action-key="elemAssetAdd-save">保存</a>
+            </div>
+        </div>
     </header>
 
     <!-- content -->

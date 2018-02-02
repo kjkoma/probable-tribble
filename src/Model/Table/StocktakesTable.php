@@ -56,11 +56,11 @@ class StocktakesTable extends AppTable
             'foreignKey' => 'domain_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('StocktakeSusers', [
+        $this->belongsTo('StocktakeSuserName', [
             'foreignKey' => 'stocktake_suser_id',
             'className'  => 'Susers',
         ]);
-        $this->belongsTo('ConfirmSusers', [
+        $this->belongsTo('StocktakeConfirmSuserName', [
             'foreignKey' => 'confirm_suser_id',
             'className'  => 'Susers',
         ]);
@@ -70,6 +70,16 @@ class StocktakesTable extends AppTable
         $this->hasMany('StocktakeDetails', [
             'foreignKey' => 'stocktake_id',
             'dependent'  => true
+        ]);
+        $this->hasMany('StocktakeTargets', [
+            'foreignKey' => 'stocktake_id',
+            'dependent'  => true
+        ]);
+        $this->belongsTo('StocktakeStsName', [
+            'className'  => 'Snames',
+            'foreignKey' => 'stocktake_sts',
+            'bindingKey' => 'nid',
+            'conditions' => ['StocktakeStsName.nkey' => 'STOCKTAKE_STS']
         ]);
 
         $this->_sorted = [
@@ -95,6 +105,11 @@ class StocktakesTable extends AppTable
             ->notEmpty('stocktake_date');
 
         $validator
+            ->scalar('stocktake_sts')
+            ->requirePresence('stocktake_sts', 'create')
+            ->notEmpty('stocktake_sts');
+
+        $validator
             ->date('start_date')
             ->allowEmpty('start_date');
 
@@ -104,16 +119,11 @@ class StocktakesTable extends AppTable
 
         $validator
             ->date('stock_deadline_date')
-            ->requirePresence('stock_deadline_date', 'create')
-            ->notEmpty('stock_deadline_date');
+            ->allowEmpty('stock_deadline_date');
 
         $validator
-            ->scalar('before_remarks')
-            ->allowEmpty('before_remarks');
-
-        $validator
-            ->scalar('after_remarks')
-            ->allowEmpty('after_remarks');
+            ->scalar('remarks')
+            ->allowEmpty('remarks');
 
         $validator
             ->requirePresence('dsts', 'create')
@@ -142,8 +152,8 @@ class StocktakesTable extends AppTable
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['domain_id'], 'Domains'));
-        $rules->add($rules->existsIn(['stocktake_suser_id'], 'Susers'));
-        $rules->add($rules->existsIn(['confirm_suser_id'], 'Susers'));
+        $rules->add($rules->existsIn(['stocktake_suser_id'], 'StocktakeSuserName'));
+        $rules->add($rules->existsIn(['confirm_suser_id'], 'StocktakeConfirmSuserName'));
 
         return $rules;
     }

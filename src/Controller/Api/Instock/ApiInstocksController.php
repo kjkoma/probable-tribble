@@ -81,6 +81,7 @@ class ApiInstocksController extends ApiController
         foreach($instocks as $instock) {
             $list[] = [
                 'instock_detail_id'   => $instock['id'],
+                'asset_id'            => $instock['asset_id'],
                 'instock_kbn'         => $instock['instock']['instocks_instock_kbn']['name'],
                 'classification_name' => $instock['asset']['classification']['kname'],
                 'maker_name'          => $instock['asset']['company']['kname'],

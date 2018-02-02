@@ -114,8 +114,8 @@ $this->Breadcrumbs->add('資産検索', ['controller' => 'Assets', 'action' => '
                                                    data-placeholder="製品分類"></select>
                                         </div>
                                     </section>
-                                    <section class="col col-4">
                                     <!-- 製品 -->
+                                    <section class="col col-4">
                                         <div class="form-group">
                                             <select name="cond.product_id" id="product_id" class="select2 form-control input-sm"
                                                    data-app-form="form-condition"
@@ -262,7 +262,7 @@ $this->Breadcrumbs->add('資産検索', ['controller' => 'Assets', 'action' => '
                                         <div class="form-group">
                                             <select name="cond.current_organization_id" id="current_organization_id" class="select2 form-control input-sm"
                                                    data-app-form="form-condition"
-                                                    maxlength="20"
+                                                   maxlength="20"
                                                    data-placeholder="利用者(組織)"></select>
                                         </div>
                                     </section>
@@ -271,7 +271,7 @@ $this->Breadcrumbs->add('資産検索', ['controller' => 'Assets', 'action' => '
                                         <div class="form-group">
                                             <select name="cond.current_user_id" id="current_user_id" class="select2 form-control input-sm"
                                                    data-app-form="form-condition"
-                                                    maxlength="20"
+                                                   maxlength="20"
                                                    data-placeholder="利用者(ユーザー)"></select>
                                         </div>
                                     </section>
@@ -361,7 +361,7 @@ $this->Breadcrumbs->add('資産検索', ['controller' => 'Assets', 'action' => '
     </div>
 
     <!-- detail widget grid row -->
-    <div class="row" id="grid-row-back" class="hidden">
+    <div class="row hidden" id="grid-row-back">
         <div class="col col-sm-12 text-right">
             <button type="button" class="btn btn-default" data-app-action-key="back">検索を表示</button>
         </div>
@@ -373,11 +373,11 @@ $this->Breadcrumbs->add('資産検索', ['controller' => 'Assets', 'action' => '
 
             <!-- Asset Widget -->
             <?= $this->element('Asset/asset', ['conf' => [
-                'asset' => 'input',
-                'attr'  => 'input',
+                'asset' => 'edit',
+                'attr'  => 'edit',
                 'user'    => false,
-                'stock'   => false,
-                'repair'  => false,
+                'stock'   => true,
+                'repair'  => true,
                 'rental'  => false,
                 'hidden' => true]]) ?>
 
@@ -397,6 +397,6 @@ $this->Breadcrumbs->add('資産検索', ['controller' => 'Assets', 'action' => '
 <!-- load script -->
 <?= $this->element('Common/load-datatable') ?>
 <?php $this->Html->script('wnote/libs/wnote.lib.form.js', ['block' => true]); ?>
-<?php $this->Html->script('wnote/wnote.asset.js', ['block' => true]); ?>
+<?= $this->element('Asset/load-asset') ?>
 <?php $this->Html->script('wnote/asset/assets.search.js', ['block' => true]); ?>
 

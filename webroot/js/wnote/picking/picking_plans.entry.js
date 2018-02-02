@@ -273,6 +273,8 @@ MyPage.cancel = function() {
         MyPage.setFormValues();
         WNote.Form.viewMode(MYPAGE.FORM_KEY);
     }
+
+    MyPage.changePickingKbn();
 }
 
 /** ---------------------------------------------------------------------------

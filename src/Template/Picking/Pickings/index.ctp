@@ -211,7 +211,7 @@ $this->Breadcrumbs->add('出庫', ['controller' => 'Pickings', 'action' => 'inde
 <!-- load script -->
 <?= $this->element('Common/load-datatable') ?>
 <?php $this->Html->script('wnote/libs/wnote.lib.form.js', ['block' => true]); ?>
-<?php $this->Html->script('wnote/wnote.asset.js', ['block' => true]); ?>
-<?php $this->Html->script('wnote/wnote.picking.plan.js', ['block' => true]); ?>
+<?= $this->element('Asset/load-asset') ?>
+<?php $this->Html->script('wnote/element/wnote.picking.plan.js', ['block' => true]); ?>
 <?php $this->Html->script('wnote/picking/pickings.index.js', ['block' => true]); ?>
 <?php $this->Html->script('wnote/picking/pickings.index.picking.js', ['block' => true]); ?>

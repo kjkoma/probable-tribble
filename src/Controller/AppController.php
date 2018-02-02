@@ -120,8 +120,8 @@ class AppController extends Controller
 
         // ログイン時とIPアドレスが異なる場合はエラーとする
         if ($this->Auth->user()) {
-            if ($this->AppUser->ip() != $_SERVER['REMOTE_ADDR']) {
-                //throw new \Cake\Network\Exception\UnauthorizedException(__('Your Request is unauthorized.'));
+            if ($this->AppUser->ip() != $_SERVER['HTTP_X_FORWARDED_FOR']) {
+                throw new \Cake\Network\Exception\UnauthorizedException(__('Your Request is unauthorized.'));
             }
         }
 

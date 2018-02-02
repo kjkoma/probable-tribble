@@ -55,9 +55,7 @@
         <!-- end search mobile button -->
 
         <!-- SEARCH FIELD -->
-        <form action="search.html" class="header-search pull-right">
-            <?= $this->element('Common/input-search') ?>
-        </form>
+        <?= $this->element('Common/input-search') ?>
         <!-- end input: search field -->
 
         <!-- HOME BUTTON -->

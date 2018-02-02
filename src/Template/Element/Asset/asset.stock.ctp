@@ -24,7 +24,7 @@
 <!-- 在庫情報                       -->
 <!-- ********************************** -->
 <!-- form -->
-<?= $this->Form->create(null, ['id' => 'form-elem-asset-stock', 'type' => 'post', 'class' => "smart-form"]) ?>
+<?= $this->Form->create(null, ['id' => 'form-elem-assetview-stock', 'type' => 'post', 'class' => "smart-form"]) ?>
 
     <header>
         在庫情報
@@ -33,9 +33,9 @@
     <fieldset>
         <section>
             <dl class="dl-horizontal">
-                <dt>登録日時：</dt><dd id="elem_assetview_stock.created_at" name="elemAssetviewStock_created_at"></dd>
-                <dt>更新日時：</dt><dd id="elem_assetview_stock.modified_at" name="elemAssetviewStock_modified_at"></dd>
-                <dt>更新者：</dt><dd id="elem_assetview_stock.modified_user_name" name="elemAssetviewStock_modified_user_name"></dd>
+                <dt>在庫数：</dt><dd name="elem_assetview_stock.stock_count" id="elemAssetviewStock_stock_count" data-app-form="form-elem-assetview-stock"></dd>
+                <dt>最終更新日時：</dt><dd name="elem_assetview_stock.modified_at" id="elemAssetviewStock_modified_at" data-app-form="form-elem-assetview-stock"></dd>
+                <dt>最終更新者：</dt><dd name="elem_assetview_stock.modified_user_name" id="elemAssetviewStock_modified_user_name" data-app-form="form-elem-assetview-stock"></dd>
             </dl>
         </section>
     </fieldset>
@@ -43,4 +43,21 @@
 <!-- End form -->
 <?= $this->Form->end() ?>
 
+<br>
 
+<table class="table table-striped table-bordered table-hover" id="elemAssetStock-datatable">
+    <thead>
+        <tr>
+            <th>履歴タイプ</th>
+            <th>入庫日</th>
+            <th>出庫日</th>
+            <th>棚卸日</th>
+            <th>変更日時</th>
+            <th>変更前数</th>
+            <th>変更後数</th>
+            <th>変更理由区分</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>

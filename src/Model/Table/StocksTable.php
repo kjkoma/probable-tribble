@@ -57,6 +57,10 @@ class StocksTable extends AppTable
             'foreignKey' => 'asset_id',
             'joinType' => 'INNER'
         ]);
+        $this->belongsTo('StocksModifiedSuserName', [
+            'className' => 'Susers',
+            'foreignKey' => 'modified_user'
+        ]);
 
         $this->_sorted = [
             'Stocks.asset_id' => 'ASC',

@@ -55,7 +55,7 @@ trait AppFormatTrait
         }
 
         $dt = Time::parse($datetime);
-        return $dt->i18nFormat('yyyy-MM-dd HH:mm:ss');
+        return $dt->i18nFormat('yyyy/MM/dd HH:mm:ss');
     }
 
     /**
@@ -261,8 +261,74 @@ trait AppFormatTrait
      * - - -
      * @return string フォーマット後の文字列
      */
-    public function _geAccountDate()
+    public function _getAccountDate()
     {
         return $this->__dateFormatProperty('account_date');
+    }
+
+    /**
+     * 棚卸日を取得する
+     *
+     * - - -
+     * @return string フォーマット後の文字列
+     */
+    public function _getStocktakeDate()
+    {
+        return $this->__dateFormatProperty('stocktake_date');
+    }
+
+    /**
+     * 在庫締日を取得する
+     *
+     * - - -
+     * @return string フォーマット後の文字列
+     */
+    public function _getStockDeadlineDate()
+    {
+        return $this->__dateFormatProperty('stock_deadline_date');
+    }
+
+    /**
+     * 作業日(実施日)を取得する
+     *
+     * - - -
+     * @return string フォーマット後の文字列
+     */
+    public function _getWorkDate()
+    {
+        return $this->__dateFormatProperty('work_date');
+    }
+
+    /**
+     * 購入日を取得する
+     *
+     * - - -
+     * @return string フォーマット後の文字列
+     */
+    public function _getPurchaseDate()
+    {
+        return $this->__dateFormatProperty('purchase_date');
+    }
+
+    /**
+     * 変更日を取得する
+     *  
+     * - - -
+     * @return string フォーマット後の文字列
+     */
+    public function _getChangeAt()
+    {
+        return $this->__datetimeFormatProperty('change_at');
+    }
+
+    /**
+     * 廃棄日を取得する
+     *  
+     * - - -
+     * @return string フォーマット後の文字列
+     */
+    public function _getAbrogateDate()
+    {
+        return $this->__dateFormatProperty('abrogate_date');
     }
 }

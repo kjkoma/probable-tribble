@@ -28,7 +28,7 @@ $this->Breadcrumbs->add('入庫検索', ['controller' => 'Instocks', 'action' =>
     <!-- ********************************** -->
 
     <!-- list widget grid row -->
-    <div class="row">
+    <div class="row" id="grid-row-search">
         <!-- DETAIL list widget -->
         <article class="col-sm-12 sortable-grid ui-sortable">
 
@@ -267,6 +267,33 @@ $this->Breadcrumbs->add('入庫検索', ['controller' => 'Instocks', 'action' =>
         <!-- End list widget grid row -->
     </div>
 
+    <!-- back grid row -->
+    <div class="row" id="grid-row-back" class="hidden">
+        <div class="col col-sm-12 text-right">
+            <button type="button" class="btn btn-default" data-app-action-key="back">検索を表示</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- DETAIL asset widget -->
+        <article class="col-sm-12 sortable-grid ui-sortable">
+
+            <!-- Asset Widget -->
+            <?= $this->element('Asset/asset', ['conf' => [
+                'asset' => 'view',
+                'attr'  => 'edit',
+                'user'    => false,
+                'stock'   => true,
+                'repair'  => true,
+                'rental'  => false,
+                'hidden' => true]]) ?>
+
+            <!-- End DETAILS asset widget -->
+        </article>
+
+        <!-- End asset widget grid row -->
+    </div>
+
     <!-- End widget grid-->
 </section>
 
@@ -277,5 +304,6 @@ $this->Breadcrumbs->add('入庫検索', ['controller' => 'Instocks', 'action' =>
 <!-- load script -->
 <?= $this->element('Common/load-datatable') ?>
 <?php $this->Html->script('wnote/libs/wnote.lib.form.js', ['block' => true]); ?>
+<?= $this->element('Asset/load-asset') ?>
 <?php $this->Html->script('wnote/instock/instocks.search.js', ['block' => true]); ?>
 

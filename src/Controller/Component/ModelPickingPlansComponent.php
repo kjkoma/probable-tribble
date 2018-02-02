@@ -218,7 +218,7 @@ class ModelPickingPlansComponent extends AppModelComponent
      * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
      */
     public function addNew($plan) {
-        $plan['plan_sts']    = Configure::read('WNote.DB.Picking.PickingSts.not');
+        $plan['plan_sts'] = Configure::read('WNote.DB.Picking.PickingSts.not');
 
         return parent::add($plan);
     }

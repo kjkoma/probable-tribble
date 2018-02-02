@@ -71,15 +71,60 @@ class ModelStocksComponent extends AppModelComponent
      * - - -
      * 
      * @param array $assetId 資産ID
+     * @param boolean $includeAssociation 関連有無（true: 関連を含む、false: 関連を含まない）
      * @return array 資産情報
      */
-    public function stock($assetId)
+    public function stock($assetId, $includeAssociation = false)
     {
-        return $this->modelTable->find('valid')
+        $query = $this->modelTable->find('valid')
             ->where([
                 'asset_id' => $assetId
+            ]);
+
+        if ($includeAssociation) {
+            $query
+                ->contain([
+                    'StocksModifiedSuserName' => function($q) {
+                        return $q->select(['id', 'kname']);
+                    }
+                ]);
+        }
+
+        return $query->first();
+    }
+
+    /**
+     * 現在在庫の棚卸登録用クエリを取得する
+     *  
+     * - - -
+     * @param string $stocktakeId 棚卸ID
+     * @return \Cake\ORM\Query クエリ
+     */
+    public function stocktakeTargetsQuery($stocktakeId)
+    {
+        $query = $this->modelTable->find('valid');
+        $query->select([
+                'domain_id'          => $this->current(),
+                'stocktake_id'       => $stocktakeId,
+                'Assets__id'         => 'Assets.id',
+                'Assets__asset_type' => 'Assets.asset_type',
+                'stock_count'        => 'Stocks.stock_count',
+                'dsts'               => 'Stocks.dsts',
+                'created_at'         => $query->func()->now(),
+                'created_user'       => $this->user(),
+                'modified_at'        => $query->func()->now(),
+                'modified_user'      => $this->user()
             ])
-            ->first();
+            ->where([
+                'stock_count >' => 0
+            ])
+            ->contain([
+                'Assets' => function($q) {
+                    return $q->select(['id', 'asset_type']);
+                }
+            ]);
+
+        return $query;
     }
 
     /**
@@ -146,7 +191,8 @@ class ModelStocksComponent extends AppModelComponent
                 'sum_stock_count'     => $query->func()->sum('stock_count')
             ])
             ->where([
-                'Stocks.dsts' => Configure::read('WNote.DB.Dsts.valid')
+                'Stocks.stock_count >' => 0,
+                'Stocks.dsts'          => Configure::read('WNote.DB.Dsts.valid')
             ])
             ->group([
                 'category_id',
@@ -209,6 +255,38 @@ class ModelStocksComponent extends AppModelComponent
 
         // 在庫更新
         return $this->updateInstock($assetId, $instock);
+    }
+
+    /**
+     * 画面による資産登録時の在庫を登録する
+     *  
+     * - - -
+     * 
+     * @param array $asset 資産情報
+     * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
+     */
+    public function addEntry($asset)
+    {
+        $stock = [];
+        $stock['domain_id'] = $this->current();
+        $stock['asset_id']  = $asset['id'];
+        $stock['stock_count'] = '1';
+        $result = parent::add($stock);
+        if (!$result['result']) {
+            return $result;
+        }
+
+        // 履歴登録の為に既存在庫数を付加する
+        $newStock = $result['data'];
+        $newStock['stock_count_org'] = '0';
+
+        // 在庫履歴（画面入力）を登録する
+        $resultHist = $this->ModelStockHistories->addEntry($newStock, $asset['id']);
+        if (!$resultHist['result']) {
+            return $resultHist;
+        }
+
+        return $result;
     }
 
     /**
@@ -335,7 +413,7 @@ class ModelStocksComponent extends AppModelComponent
             return $updateStock;
         }
 
-        // 在庫履歴（入庫）を登録する
+        // 在庫履歴（出庫）を登録する
         $newStock = $updateStock['data'];
         $newStock['stock_count_org'] = $stock_count;
         $updateHistory = $this->ModelStockHistories->addPicking($newStock, $picking, $asset);
@@ -346,4 +424,36 @@ class ModelStocksComponent extends AppModelComponent
         return $updateStock;
     }
 
+    /**
+     * 棚卸時の在庫更新を行う
+     *  
+     * - - -
+     * 
+     * @param array $stocktakeDetail 棚卸明細情報
+     * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
+     */
+    public function updateStocktake($stocktakeDetail)
+    {
+        $stock = $this->stock($stocktakeDetail['asset_id']);
+        if (!$stock || count($stock) == 0) {
+            return parent::_invalid(['message' => '棚卸差分更新対象の在庫情報がありません。', 'data' => ['method' => __METHOD__, 'detail' => $stocktakeDetail]]);
+        }
+
+        $stock_count = is_numeric($stock['stock_count']) ? intVal($stock['stock_count']) : 0;
+        $stock['stock_count'] = (is_numeric($stocktakeDetail['stocktake_count'])) ? $stocktakeDetail['stocktake_count'] : 0;
+        $updateStock = parent::save($stock->toArray());
+        if (!$updateStock['result']) {
+            return $updateStock;
+        }
+
+        // 在庫履歴（棚卸）を登録する
+        $newStock = $updateStock['data'];
+        $newStock['stock_count_org'] = $stock_count;
+        $updateHistory = $this->ModelStockHistories->addStocktake($newStock, $stocktakeDetail);
+        if (!$updateHistory['result']) {
+            return $updateHistory;
+        }
+
+        return $updateStock;
+    }
 }

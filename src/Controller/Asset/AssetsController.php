@@ -72,6 +72,23 @@ class AssetsController extends AppController
     }
 
     /**
+     * 資産登録画面を表示する
+     *
+     * @return \Cake\Http\Response|void
+     */
+    public function entry()
+    {
+        $makers      = $this->ModelCompanies->makers();
+        $categories  = $this->ModelCategories->valid();
+        $assetType   = $this->SysModelSnames->byKey('ASSET_TYPE');
+        $assetSts    = $this->SysModelSnames->byKey('ASSET_STS');
+        $assetSubSts = $this->SysModelSnames->byKey('ASSET_SUB_STS');
+
+        $this->set(compact('makers', 'categories', 'assetType', 'assetSts', 'assetSubSts'));
+        $this->render();
+    }
+
+    /**
      * 資産一覧データをエクスポートする
      *
      * @return \Cake\Http\Response|void

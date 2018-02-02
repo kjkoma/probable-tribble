@@ -33,9 +33,8 @@
     <!-- END USER INFO -->
 
     <!-- NAVIGATION : This navigation is also responsive-->
-    <nav>
+    <nav id="side-menu">
         <ul>
-
 
             <!-- イベント -->
             <?php if ($this->AppUser->allowSapp($this->App->conf('WNote.DB.Sapps.Kname.event'))) { ?>
@@ -58,22 +57,10 @@
                     <i class="fa fa-lg fa-fw fa-gear txt-color-blue"></i> <span class="menu-item-parent">入庫</span>
                 </a>
                 <ul>
-                    <li class=""><a href="/instock/instock-plans/list-new" title="入庫予定登録"><i
-                                    class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">入庫予定登録</span>
-                        </a>
-                    </li>
-                    <li class=""><a href="/instock/instock-plans/list" title="入庫予定一覧"><i
-                                    class="fa fa-lg fa-fw fa-list"></i> <span class="menu-item-parent">入庫予定一覧</span>
-                        </a>
-                    </li>
-                    <li class=""><a href="/instock/instocks/index" title="入庫"><i
-                                    class="fa fa-lg fa-fw fa-cubes"></i> <span class="menu-item-parent">入庫</span>
-                        </a>
-                    </li>
-                    <li class=""><a href="/instock/instocks/search" title="入庫検索"><i
-                                    class="fa fa-lg fa-fw fa-search"></i> <span class="menu-item-parent">入庫検索</span>
-                        </a>
-                    </li>
+                    <?= $this->app->menu('/instock/instock-plans/list-new', '入庫予定登録', 'fa-pencil-square-o') ?>
+                    <?= $this->app->menu('/instock/instock-plans/list'    , '入庫予定一覧', 'fa-list') ?>
+                    <?= $this->app->menu('/instock/instocks/index'        , '入庫'        , 'fa-cubes') ?>
+                    <?= $this->app->menu('/instock/instocks/search'       , '入庫検索'    , 'fa-search') ?>
                 </ul>
             </li>
             <?php } ?>
@@ -84,22 +71,10 @@
                 <a href="#"><i class="fa fa-lg fa-fw fa-truck txt-color-blue"></i> <span
                             class="menu-item-parent">出庫</span></a>
                 <ul>
-                    <li class=""><a href="/picking/picking-plans/entry" title="出庫依頼登録"><i
-                                    class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">出庫依頼登録</span>
-                        </a>
-                    </li>
-                    <li class=""><a href="/picking/picking-plans/list" title="出庫予定一覧"><i
-                                    class="fa fa-lg fa-fw fa-list"></i> <span class="menu-item-parent">出庫予定一覧</span>
-                        </a>
-                    </li>
-                    <li class=""><a href="/picking/pickings/index" title="出庫"><i
-                                    class="fa fa-lg fa-fw fa-cubes"></i> <span class="menu-item-parent">出庫</span>
-                        </a>
-                    </li>
-                    <li class=""><a href="/picking/pickings/search" title="出庫検索"><i
-                                    class="fa fa-lg fa-fw fa-search"></i> <span class="menu-item-parent">出庫検索</span>
-                        </a>
-                    </li>
+                    <?= $this->app->menu('/picking/picking-plans/entry', '出庫依頼登録', 'fa-pencil-square-o') ?>
+                    <?= $this->app->menu('/picking/picking-plans/list' , '出庫予定一覧', 'fa-list') ?>
+                    <?= $this->app->menu('/picking/pickings/index'     , '出庫'        , 'fa-cubes') ?>
+                    <?= $this->app->menu('/picking/pickings/search'    , '出庫検索'    , 'fa-search') ?>
                 </ul>
             </li>
             <?php } ?>
@@ -110,22 +85,10 @@
                 <a href="#"><i class="fa fa-lg fa-fw fa-briefcase txt-color-blue"></i> <span
                             class="menu-item-parent">在庫</span></a>
                 <ul>
-                    <li class=""><a href="/stock/stocks/search" title="在庫検索"><i
-                                    class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">在庫検索</span>
-                        </a>
-                    </li>
-                    <li class=""><a href="/stock/stocks/summary" title="在庫集計"><i
-                                    class="fa fa-lg fa-fw fa-list"></i> <span class="menu-item-parent">在庫集計</span>
-                        </a>
-                    </li>
-                    <li class=""><a href="/abrogate/abrogates/entry" title="廃棄登録"><i
-                                    class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">廃棄登録</span>
-                        </a>
-                    </li>
-                    <li class=""><a href="/abrogate/abrogates/search" title="廃棄検索"><i
-                                    class="fa fa-lg fa-fw fa-search"></i> <span class="menu-item-parent">廃棄検索</span>
-                        </a>
-                    </li>
+                    <?= $this->app->menu('/stock/stocks/search'      , '在庫検索', 'fa-search') ?>
+                    <?= $this->app->menu('/stock/stocks/summary'     , '在庫集計', 'fa-list') ?>
+                    <?= $this->app->menu('/abrogate/abrogates/list'  , '廃棄予定', 'fa-list') ?>
+                    <?= $this->app->menu('/abrogate/abrogates/search', '廃棄検索', 'fa-search') ?>
                 </ul>
             </li>
             <?php } ?>
@@ -136,14 +99,9 @@
                 <a href="#"><i class="fa fa-lg fa-fw fa-pencil txt-color-blue"></i> <span
                             class="menu-item-parent">棚卸</span></a>
                 <ul>
-                    <li class=""><a href="/stocktake/stocktakes/entry" title="棚卸登録"><i
-                                    class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">棚卸登録</span>
-                        </a>
-                    </li>
-                    <li class=""><a href="/stocktake/stocktakes/list" title="棚卸一覧"><i
-                                    class="fa fa-lg fa-fw fa-list"></i> <span class="menu-item-parent">棚卸一覧</span>
-                        </a>
-                    </li>
+                    <?= $this->app->menu('/stocktake/stocktakes/entry' , '棚卸登録', 'fa-pencil-square-o') ?>
+                    <?= $this->app->menu('/stocktake/stocktakes/work'  , '棚卸実施', 'fa-wrench') ?>
+                    <?= $this->app->menu('/stocktake/stocktakes/search', '棚卸検索', 'fa-search') ?>
                 </ul>
             </li>
             <?php } ?>
@@ -154,14 +112,9 @@
                 <a href="#"><i class="fa fa-lg fa-fw fa-suitcase txt-color-blue"></i> <span
                             class="menu-item-parent">資産</span></a>
                 <ul>
-                    <li class=""><a href="/asset/assets/search" title="資産検索"><i
-                                    class="fa fa-lg fa-fw fa-search"></i> <span class="menu-item-parent">資産検索</span>
-                        </a>
-                    </li>
-                    <li class=""><a href="/asset/assets/summary" title="資産集計"><i
-                                    class="fa fa-lg fa-fw fa-list"></i> <span class="menu-item-parent">資産集計</span>
-                        </a>
-                    </li>
+                    <?= $this->app->menu('/asset/assets/search' , '資産検索', 'fa-search') ?>
+                    <?= $this->app->menu('/asset/assets/summary', '資産集計', 'fa-list') ?>
+                    <?= $this->app->menu('/asset/assets/entry'  , '資産登録', 'fa-pencil-square-o') ?>
                 </ul>
             </li>
             <?php } ?>
@@ -172,14 +125,8 @@
                 <a href="#"><i class="fa fa-lg fa-fw fa-recycle txt-color-blue"></i> <span
                             class="menu-item-parent">修理・交換</span></a>
                 <ul>
-                    <li class=""><a href="/repair/repairs/list" title="修理一覧"><i
-                                    class="fa fa-lg fa-fw fa-list"></i> <span class="menu-item-parent">修理一覧</span>
-                        </a>
-                    </li>
-                    <li class=""><a href="/exchange/exchanges/list" title="交換一覧"><i
-                                    class="fa fa-lg fa-fw fa-list"></i> <span class="menu-item-parent">交換一覧</span>
-                        </a>
-                    </li>
+                    <?= $this->app->menu('/repair/repairs/list'    , '修理一覧', 'fa-list') ?>
+                    <?= $this->app->menu('/exchange/exchanges/list', '交換一覧', 'fa-list') ?>
                 </ul>
             </li>
             <?php } ?>
@@ -189,22 +136,10 @@
             <li class="">
                 <a href="#"><i class="fa fa-lg fa-fw fa-share-alt txt-color-blue"></i> <span class="menu-item-parent">貸出・返却</span></a>
                 <ul>
-                    <li class=""><a href="/rental/rentals/entry" title="貸出依頼登録"><i
-                                    class="fa fa-lg fa-fw fa-mail-forward"></i> <span class="menu-item-parent">貸出依頼登録</span>
-                        </a>
-                    </li>
-                    <li class=""><a href="/rental/rentals/search" title="貸出検索"><i
-                                    class="fa fa-lg fa-fw fa-search"></i> <span class="menu-item-parent">貸出検索</span>
-                        </a>
-                    </li>
-                    <li class=""><a href="/back/backs/entry" title="返却依頼登録"><i
-                                    class="fa fa-lg fa-fw fa-reply"></i> <span class="menu-item-parent">返却依頼登録</span>
-                        </a>
-                    </li>
-                    <li class=""><a href="/back/backs/search" title="返却検索"><i
-                                    class="fa fa-lg fa-fw fa-search"></i> <span class="menu-item-parent">返却検索</span>
-                        </a>
-                    </li>
+                    <?= $this->app->menu('/rental/rentals/entry' , '貸出依頼登録', 'fa-mail-forward') ?>
+                    <?= $this->app->menu('/rental/rentals/search', '貸出検索'    , 'fa-search') ?>
+                    <?= $this->app->menu('/back/backs/entry'     , '返却依頼登録', 'fa-reply') ?>
+                    <?= $this->app->menu('/back/backs/search'    , '返却検索'    , 'fa-search') ?>
                 </ul>
             </li>
             <?php } ?>
@@ -216,26 +151,10 @@
                     <i class="fa fa-lg fa-fw fa-gear txt-color-blue"></i> <span class="menu-item-parent">マスタ（一般）</span>
                 </a>
                 <ul>
-                    <li class="">
-                        <a href="/master/general/companies" title="企業">
-                            <i class="fa fa-lg fa-fw fa-building-o"></i> <span class="menu-item-parent">仕入先/メーカー</span>
-                        </a>
-                    </li>
-                    <li class="">
-                        <a href="/master/general/products" title="製品">
-                            <i class="fa fa-lg fa-fw fa-shopping-cart"></i> <span class="menu-item-parent">製品/モデル</span>
-                        </a>
-                    </li>
-                    <li class="">
-                        <a href="/master/general/cpus" title="CPU">
-                            <i class="fa fa-lg fa-fw fa-microchip"></i> <span class="menu-item-parent">CPU</span>
-                        </a>
-                    </li>
-                    <li class="">
-                        <a href="/master/general/deliveries" title="配送先">
-                            <i class="fa fa-lg fa-fw fa-truck"></i> <span class="menu-item-parent">配送先</span>
-                        </a>
-                    </li>
+                    <?= $this->app->menu('/master/general/companies' , '仕入先/メーカー', 'fa-building-o') ?>
+                    <?= $this->app->menu('/master/general/products'  , '製品/モデル'    , 'fa-shopping-cart') ?>
+                    <?= $this->app->menu('/master/general/cpus'      , 'CPU'            , 'fa-microchip') ?>
+                    <?= $this->app->menu('/master/general/deliveries', '配送先'         , 'fa-truck') ?>
                 </ul>
             </li>
             <?php } ?>
@@ -247,30 +166,11 @@
                     <i class="fa fa-lg fa-fw fa-gear txt-color-blue"></i> <span class="menu-item-parent">マスタ（管理）</span>
                 </a>
                 <ul>
-                    <li class=""><a href="/master/admin/categories" title="資産カテゴリ"><i
-                                    class="fa fa-lg fa-fw fa-book"></i> <span class="menu-item-parent">資産カテゴリ</span>
-                        </a>
-                    </li>
-                    <li class="">
-                        <a href="/master/admin/classifications" title="資産分類">
-                            <i class="fa fa-lg fa-fw fa-tag"></i> <span class="menu-item-parent">資産分類</span>
-                        </a>
-                    </li>
-                    <li class="">
-                        <a href="/master/admin/customers" title="資産管理会社">
-                            <i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">資産管理会社</span>
-                        </a>
-                    </li>
-                    <li class="">
-                        <a href="/master/admin/organizations" title="資産管理グループ">
-                            <i class="fa fa-lg fa-fw fa-sitemap"></i> <span class="menu-item-parent">資産管理グループ</span>
-                        </a>
-                    </li>
-                    <li class="">
-                        <a href="/master/admin/users" title="資産利用者">
-                            <i class="fa fa-lg fa-fw fa-users"></i><span class="menu-item-parent">資産利用者</span>
-                        </a>
-                    </li>
+                    <?= $this->app->menu('/master/admin/categories'     , '資産カテゴリ'    , 'fa-book') ?>
+                    <?= $this->app->menu('/master/admin/classifications', '資産分類'        , 'fa-tag') ?>
+                    <?= $this->app->menu('/master/admin/customers'      , '資産管理会社'    , 'fa-building') ?>
+                    <?= $this->app->menu('/master/admin/organizations'  , '資産管理グループ', 'fa-sitemap') ?>
+                    <?= $this->app->menu('/master/admin/users'          , '資産利用者'      , 'fa-users') ?>
                 </ul>
             </li>
             <?php } ?>
@@ -282,16 +182,8 @@
                     <i class="fa fa-lg fa-fw fa-gear txt-color-blue"></i> <span class="menu-item-parent">マスタ（システム）</span>
                 </a>
                 <ul>
-                    <li class="">
-                        <a href="/master/system/domains" title="ドメイン管理">
-                            <i class="fa fa-lg fa-fw fa-object-group"></i> <span class="menu-item-parent">ドメイン</span>
-                        </a>
-                    </li>
-                    <li class="">
-                        <a href="/master/system/susers" title="ユーザー管理">
-                            <i class="fa fa-lg fa-fw fa-users"></i> <span class="menu-item-parent">ユーザー</span>
-                        </a>
-                    </li>
+                    <?= $this->app->menu('/master/system/domains', 'ドメイン管理', 'fa-object-group') ?>
+                    <?= $this->app->menu('/master/system/susers' , 'ユーザー管理', 'fa-users') ?>
                 </ul>
             </li>
             <?php } ?>
@@ -318,3 +210,4 @@
     </ul>
 </div>
 <!-- END SHORTCUT AREA -->
+

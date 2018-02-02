@@ -142,7 +142,7 @@ MyPage.download = function() {
  *  イベント処理（検索表示）
  *  -------------------------------------------------------------------------*/
 /**
- * ダウンロードボタンクリックイベントのハンドラの実装
+ * 検索表示ボタンクリックイベントのハンドラの実装
  */
 MyPage.showSearch = function() {
     $(MYPAGE.ROW.SEARCH).removeClass('hidden');
@@ -161,8 +161,7 @@ MyPage.selectedAssetHandler = function() {
     if (selected) {
         WNote.Util.All.highlightDataTableRow($(this), MyPage.datatable);
         $(MYPAGE.ROW.BACK).removeClass('hidden');
-        WNote.Asset.getAsset(selected.asset_id, true, true, null);
-        WNote.Asset.showWidget();
+        WNote.Asset.showWidget(selected.asset_id);
         $(MYPAGE.ROW.SEARCH).addClass('hidden');
     }
 }

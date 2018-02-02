@@ -63,13 +63,28 @@ class StockHistoriesTable extends AppTable
         $this->belongsTo('Instocks', [
             'foreignKey' => 'instock_id'
         ]);
+        $this->belongsTo('Pickings', [
+            'foreignKey' => 'picking_id'
+        ]);
         $this->belongsTo('Stocktakes', [
             'foreignKey' => 'stocktake_id'
         ]);
+        $this->belongsTo('StockHistoriesHistTypeName', [
+            'className'  => 'Snames',
+            'foreignKey' => 'history_type',
+            'bindingKey' => 'nid',
+            'conditions' => ['StockHistoriesHistTypeName.nkey' => 'HIST_TYPE']
+        ]);
+        $this->belongsTo('StockHistoriesReasonKbnName', [
+            'className'  => 'Snames',
+            'foreignKey' => 'reason_kbn',
+            'bindingKey' => 'nid',
+            'conditions' => ['StockHistoriesReasonKbnName.nkey' => 'REASON_KBN']
+        ]);
 
         $this->_sorted = [
-            'StockHistories.asset_id' => 'ASC',
-            'StockHistories.id'       => 'DESC'
+            'StockHistories.change_at' => 'DESC',
+            'StockHistories.id'        => 'DESC'
         ];
     }
 
@@ -142,6 +157,7 @@ class StockHistoriesTable extends AppTable
         $rules->add($rules->existsIn(['domain_id'], 'Domains'));
         $rules->add($rules->existsIn(['asset_id'], 'Assets'));
         $rules->add($rules->existsIn(['instock_id'], 'Instocks'));
+        $rules->add($rules->existsIn(['picking_id'], 'Pickings'));
         $rules->add($rules->existsIn(['stocktake_id'], 'Stocktakes'));
 
         return $rules;

@@ -15,7 +15,7 @@
  */
 $this->assign('title', '修理一覧');
 $this->Breadcrumbs->add('Home', ['prefix' => false, 'controller' => 'Home', 'action' => 'home']);
-$this->Breadcrumbs->add('修理・交換', '#');
+$this->Breadcrumbs->add('修理', '#');
 $this->Breadcrumbs->add('修理一覧', ['controller' => 'Repairs', 'action' => 'list']);
 
 ?>
@@ -24,7 +24,7 @@ $this->Breadcrumbs->add('修理一覧', ['controller' => 'Repairs', 'action' => 
 <section id="widget-grid">
 
     <!-- ********************************** -->
-    <!-- Instock Plan List                  -->
+    <!-- Repair List                        -->
     <!-- ********************************** -->
 
     <!-- list widget grid row -->
@@ -59,12 +59,13 @@ $this->Breadcrumbs->add('修理一覧', ['controller' => 'Repairs', 'action' => 
                                     <!-- ステータス -->
                                     <section class="col col-4">
                                         <?= $this->element('Parts/select-snames', [
-                                            'snames'   => $repairSts,
-                                            'name'     => 'cond.repair_sts',
-                                            'id'       => 'repair_sts',
-                                            'form'     => 'form-condition',
-                                            'blank'    => true,
-                                            'disabled' => false,
+                                            'snames'      => $repairSts,
+                                            'name'        => 'cond.repair_sts',
+                                            'id'          => 'repair_sts',
+                                            'form'        => 'form-condition',
+                                            'blank'       => true,
+                                            'placeholder' => '-- 修理状況 --',
+                                            'disabled'    => false,
                                         ]) ?>
                                     </section>
                                     <!-- 修理依頼日(From) -->
@@ -92,34 +93,37 @@ $this->Breadcrumbs->add('修理一覧', ['controller' => 'Repairs', 'action' => 
                                     <!-- 故障区分 -->
                                     <section class="col col-4">
                                         <?= $this->element('Parts/select-snames', [
-                                            'snames'   => $troubleKbn,
-                                            'name'     => 'cond.trouble_kbn',
-                                            'id'       => 'trouble_kbn',
-                                            'form'     => 'form-condition',
-                                            'blank'    => true,
-                                            'disabled' => false,
+                                            'snames'      => $troubleKbn,
+                                            'name'        => 'cond.trouble_kbn',
+                                            'id'          => 'trouble_kbn',
+                                            'form'        => 'form-condition',
+                                            'blank'       => true,
+                                            'placeholder' => '-- 故障区分 --',
+                                            'disabled'    => false,
                                         ]) ?>
                                     </section>
                                     <!-- センドバック有無 -->
                                     <section class="col col-4">
                                         <?= $this->element('Parts/select-snames', [
-                                            'snames'   => $sendbackKbn,
-                                            'name'     => 'cond.sendback_kbn',
-                                            'id'       => 'sendback_kbn',
-                                            'form'     => 'form-condition',
-                                            'blank'    => true,
-                                            'disabled' => false,
+                                            'snames'      => $sendbackKbn,
+                                            'name'        => 'cond.sendback_kbn',
+                                            'id'          => 'sendback_kbn',
+                                            'form'        => 'form-condition',
+                                            'blank'       => true,
+                                            'placeholder' => '-- センドバック有無 --',
+                                            'disabled'    => false,
                                         ]) ?>
                                     </section>
                                     <!-- データ抽出有無 -->
                                     <section class="col col-4">
                                         <?= $this->element('Parts/select-snames', [
-                                            'snames'   => $datapickKbn,
-                                            'name'     => 'cond.datapick_kbn',
-                                            'id'       => 'datapick_kbn',
-                                            'form'     => 'form-condition',
-                                            'blank'    => true,
-                                            'disabled' => false,
+                                            'snames'      => $datapickKbn,
+                                            'name'        => 'cond.datapick_kbn',
+                                            'id'          => 'datapick_kbn',
+                                            'form'        => 'form-condition',
+                                            'blank'       => true,
+                                            'placeholder' => '-- データ抽出有無 --',
+                                            'disabled'    => false,
                                         ]) ?>
                                     </section>
                                 </div>
@@ -293,5 +297,5 @@ $this->Breadcrumbs->add('修理一覧', ['controller' => 'Repairs', 'action' => 
 <!-- load script -->
 <?= $this->element('Common/load-datatable') ?>
 <?php $this->Html->script('wnote/libs/wnote.lib.form.js', ['block' => true]); ?>
-<?php $this->Html->script('wnote/repair/repair.list.js', ['block' => true]); ?>
+<?php $this->Html->script('wnote/repair/repairs.list.js', ['block' => true]); ?>
 

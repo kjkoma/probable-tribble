@@ -215,7 +215,7 @@ $this->Breadcrumbs->add(
                                         <td><?= $pickingPlan['picking_plan_picking_kbn']['name'] ?></td>
                                         <td><?= $pickingPlan['picking_plan_st']['name'] ?></td>
                                         <td><?= $pickingPlan['name'] ?></td>
-                                        <td><?= ($pickingPlan['pickings'][0]['sum_picking_count'] == '') ? 0 : $pickingPlan['pickings'][0]['sum_instock_count'] ?></td>
+                                        <td><?= ($pickingPlan['pickings'][0]['sum_picking_count'] == '') ? 0 : $pickingPlan['pickings'][0]['sum_picking_count'] ?></td>
                                         <td><?= ($pickingPlan['picking_plan_details'][0]['sum_plan_count'] == '') ? 0 : $pickingPlan['picking_plan_details'][0]['sum_plan_count'] ?></td>
                                     </tr>
                                 <?php } ?>

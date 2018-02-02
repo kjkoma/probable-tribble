@@ -121,4 +121,41 @@ class HomeController extends AppController
         $this->redirect(['action' => 'home']);
     }
 
+    /**
+     * 検索画面を表示する
+     *
+     * @return \Cake\Http\Response|void
+     */
+    public function search()
+    {
+        $data = $this->validateParameter('criteria', ['post']);
+        $assets = [];
+        if ($data) {
+            $assets = $this->ModelAssets->searchCriteria($data['criteria']);
+        }
+
+        // 表示用に編集する
+        $list = [];
+        foreach($assets as $asset) {
+            $row = [];
+            $row['id']                  = $asset['id'];
+            $row['kname']               = $asset['kname'];
+            $row['serial_no']           = $asset['serial_no'];
+            $row['asset_no']            = $asset['asset_no'];
+            $row['asset_sts_name']      = $asset['asset_sts_name']['name'];
+            $row['asset_sub_sts_name']  = $asset['asset_sub_sts_name']['name'];
+            $row['category_name']       = $asset['classification']['category']['kname'];
+            $row['classification_name'] = $asset['classification']['kname'];
+            $row['maker_name']          = $asset['company']['kname'];
+            $row['product_name']        = $asset['product']['kname'];
+            $row['product_model_name']  = $asset['product_model']['kname'];
+            $row['user_name']           = ($asset['user']) ? $asset['user']['sname'] . ' ' . $asset['user']['fname'] : '';
+            $row['stock_count']         = $asset['stock']['stock_count'];
+            $list[] = $row;
+        }
+
+        $this->set('criteria', $data['criteria']);
+        $this->set('assets', $list);
+        $this->render();
+    }
 }

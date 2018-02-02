@@ -123,9 +123,6 @@
                                     パスワードを入力してください</b>
                             </label>
                             <?= $this->AppForm->errorInput('password', $errors) ?>
-                            <div class="note">
-                                <a href="forgotpassword.html">パスワードを忘れた場合はこちら</a>
-                            </div>
                         </section>
 
                         <section>
@@ -134,6 +131,8 @@
                                 <i></i>ログインしたままにする
                             </label>
                         </section>
+
+                        <br>
                     </fieldset>
 
                     <footer>

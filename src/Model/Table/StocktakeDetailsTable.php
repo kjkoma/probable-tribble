@@ -58,8 +58,53 @@ class StocktakeDetailsTable extends AppTable
             'foreignKey' => 'stocktake_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('Susers', [
-            'foreignKey' => 'read_suser_id'
+        $this->belongsTo('Assets', [
+            'foreignKey' => 'asset_id',
+            'joinType' => 'INNER'
+        ]);
+        $this->belongsTo('Stocks', [
+            'foreignKey' => 'asset_id',
+            'bindingKey' => 'asset_id',
+            'conditions' => ['Stocks.domain_id = StocktakeDetails.domain_id']
+        ]);
+        $this->belongsTo('Classifications', [
+            'foreignKey' => 'classification_id'
+        ]);
+        $this->belongsTo('Products', [
+            'foreignKey' => 'product_id'
+        ]);
+        $this->belongsTo('ProductModels', [
+            'foreignKey' => 'product_model_id'
+        ]);
+        $this->belongsTo('StocktakeTargets', [
+            'foreignKey' => 'asset_id',
+            'bindingKey' => 'asset_id',
+            'conditions' => [
+                'StocktakeTargets.stocktake_id = StocktakeDetails.stocktake_id',
+                'StocktakeTargets.domain_id = StocktakeDetails.domain_id'
+            ]
+        ]);
+        $this->belongsTo('StocktakeWorkSuserName', [
+            'foreignKey' => 'work_suser_id',
+            'className'  => 'Susers',
+        ]);
+        $this->belongsTo('StocktakeKbnName', [
+            'className'  => 'Snames',
+            'foreignKey' => 'stocktake_kbn',
+            'bindingKey' => 'nid',
+            'conditions' => ['StocktakeKbnName.nkey' => 'STOCKTAKE_KBN']
+        ]);
+        $this->belongsTo('StocktakeDetailAssetTypeName', [
+            'className'  => 'Snames',
+            'foreignKey' => 'asset_type',
+            'bindingKey' => 'nid',
+            'conditions' => ['StocktakeDetailAssetTypeName.nkey' => 'ASSET_TYPE']
+        ]);
+        $this->belongsTo('StocktakeUnmatchKbnName', [
+            'className'  => 'Snames',
+            'foreignKey' => 'unmatch_kbn',
+            'bindingKey' => 'nid',
+            'conditions' => ['StocktakeUnmatchKbnName.nkey' => 'ST_UNMATCH_KBN']
         ]);
 
         $this->_sorted = [
@@ -82,17 +127,17 @@ class StocktakeDetailsTable extends AppTable
             ->allowEmpty('id', 'create');
 
         $validator
+            ->scalar('asset_type')
+            ->requirePresence('asset_type', 'create')
+            ->notEmpty('asset_type');
+
+        $validator
             ->scalar('serial_no')
-            ->requirePresence('serial_no', 'create')
-            ->notEmpty('serial_no');
+            ->allowEmpty('serial_no');
 
         $validator
             ->scalar('asset_no')
             ->allowEmpty('asset_no');
-
-        $validator
-            ->date('read_date')
-            ->allowEmpty('read_date');
 
         $validator
             ->requirePresence('dsts', 'create')
@@ -122,7 +167,8 @@ class StocktakeDetailsTable extends AppTable
     {
         $rules->add($rules->existsIn(['domain_id'], 'Domains'));
         $rules->add($rules->existsIn(['stocktake_id'], 'Stocktakes'));
-        $rules->add($rules->existsIn(['read_suser_id'], 'Susers'));
+        $rules->add($rules->existsIn(['asset_id'], 'Assets'));
+        $rules->add($rules->existsIn(['work_suser_id'], 'StocktakeWorkSuserName'));
 
         return $rules;
     }

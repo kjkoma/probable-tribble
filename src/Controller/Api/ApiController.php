@@ -112,7 +112,7 @@ class ApiController extends Controller
         // JWT関連処理
         $jwt = $this->Auth->user();
         $this->AppUser->createByJWT($jwt);
-        if ($jwt['ip'] != $_SERVER['REMOTE_ADDR']) {
+        if ($jwt['ip'] != $_SERVER['HTTP_X_FORWARDED_FOR']) {
             throw new \Cake\Network\Exception\UnauthorizedException(__('Your Request is unauthorized.'));
         }
     }

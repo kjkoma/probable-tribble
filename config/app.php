@@ -370,5 +370,6 @@ return [
         'defaults' => 'database',
         'timeout'  => '720',
         'cookie'   => 'WNOTE',
+        'session.cookie_httponly' => false,
     ],
 ];

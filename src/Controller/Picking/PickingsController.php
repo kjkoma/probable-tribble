@@ -44,10 +44,11 @@ class PickingsController extends AppController
     public function index()
     {
         $delivers = $this->ModelCompanies->delivers();
+        $makers   = $this->ModelCompanies->makers();
         $assetSts    = $this->SysModelSnames->byKey('ASSET_STS');
         $assetSubSts = $this->SysModelSnames->byKey('ASSET_SUB_STS');
 
-        $this->set(compact('delivers', 'assetSts', 'assetSubSts'));
+        $this->set(compact('delivers', 'makers', 'assetSts', 'assetSubSts'));
         $this->render();
     }
 

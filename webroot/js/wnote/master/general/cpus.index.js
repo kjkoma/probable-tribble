@@ -37,7 +37,7 @@ $(function() {
     var dtable = $('#side-datatable-cpu').DataTable({
         "iDisplayLength": 15,
         "order": [],
-        "sDom": "<'dt-toolbar'<'col-xs-8 col-sm-8'>>"+
+        "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-12'>>"+
             "t"+
             "<'dt-toolbar-footer'<'col-xs-12 col-sm-4 hidden-xs'i><'col-xs-12 col-sm-8'p>>",
         "autoWidth" : true,

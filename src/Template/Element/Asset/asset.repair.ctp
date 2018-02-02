@@ -23,24 +23,21 @@
 <!-- ********************************** -->
 <!-- 修理情報                       -->
 <!-- ********************************** -->
-<!-- form -->
-<?= $this->Form->create(null, ['id' => 'form-elem-asset-repair', 'type' => 'post', 'class' => "smart-form"]) ?>
+<header>
+    修理履歴
+</header>
 
-    <header>
-        修理情報
-    </header>
-
-    <fieldset>
-        <section>
-            <dl class="dl-horizontal">
-                <dt>登録日時：</dt><dd id="elem_assetview_repair.created_at" name="elemAssetviewRepair_created_at"></dd>
-                <dt>更新日時：</dt><dd id="elem_assetview_repair.modified_at" name="elemAssetviewRepair_modified_at"></dd>
-                <dt>更新者：</dt><dd id="elem_assetview_repair.modified_user_name" name="elemAssetviewRepair_modified_user_name"></dd>
-            </dl>
-        </section>
-    </fieldset>
-
-<!-- End form -->
-<?= $this->Form->end() ?>
-
+<table class="table table-striped table-bordered table-hover" id="elemAssetRepair-datatable">
+    <thead>
+        <tr>
+            <th>修理状況</th>
+            <th>発生日</th>
+            <th>完了日</th>
+            <th>故障区分</th>
+            <th>故障原因</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
 

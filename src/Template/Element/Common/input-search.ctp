@@ -15,10 +15,10 @@
  */
 
 ?>
-<input id="search-fld" type="text" name="param" placeholder="PC名 / 資産ID / シリアル" data-autocomplete='[
-"J1NL1701A0",
-"J1NL1809A1"]'>
-<button type="submit">
-    <i class="fa fa-search"></i>
-</button>
-<a href="javascript:void(0);" id="cancel-search-js" title="Cancel Search"><i class="fa fa-times"></i></a>
+<?= $this->Form->create(null, ['url' => '/search', 'id' => 'form-home-search', 'type' => 'post', 'class' => 'header-search pull-right']) ?>
+    <input id="criteria" type="text" name="criteria" placeholder="PC名 / 資産ID / シリアル">
+    <button type="submit">
+        <i class="fa fa-search"></i>
+    </button>
+    <a href="javascript:void(0);" id="cancel-search-js" title="Cancel Search"><i class="fa fa-times"></i></a>
+<?= $this->Form->end() ?>

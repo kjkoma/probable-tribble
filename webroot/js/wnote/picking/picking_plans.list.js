@@ -255,8 +255,7 @@ MyPage.hidePlanWidgetRegister = function(handleName, handler) {
  */
 MyPage.showAssetWidget = function() {
     if (MyPage.selectData.selected.asset_id) {
-        WNote.Asset.showWidget();
-        WNote.Asset.getAsset(MyPage.selectData.selected.asset_id, false, true, null);
+        WNote.Asset.showWidget(MyPage.selectData.selected.asset_id);
         $.each(MyPage.showAssetWidgetEvents, function(key, fn) { fn(); });
     }
 }

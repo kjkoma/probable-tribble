@@ -41,5 +41,24 @@ class ModelAssetAttributesComponent extends AppModelComponent
         $config['modelName'] = 'AssetAttributes';
         parent::initialize($config);
     }
+
+    /**
+     * 画面入力より資産属性を登録する
+     *  
+     * - - -
+     * 
+     * @param array $asset 資産情報
+     * @param array $entry 画面入力情報
+     * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
+     */
+    public function addEntry($asset, $entry)
+    {
+        // 資産属性登録情報
+        $attr = $entry;
+        $attr['domain_id'] = $this->current();
+        $attr['asset_id']  = $asset['id'];
+
+        return parent::add($attr);
+    }
 }
 

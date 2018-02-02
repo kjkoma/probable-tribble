@@ -192,6 +192,33 @@ class ModelRepairsComponent extends AppModelComponent
     }
 
     /**
+     * 資産IDより該当する修理データを取得する
+     *  
+     * - - -
+     * @param string assetId 資産ID
+     * @param boolean $toArray true:配列で返す|false:ResultSetで返す（default）
+     * @return array 修理一覧（ResultSet or Array）
+     */
+    public function listByAssetId($assetId, $toArray = false)
+    {
+        $query = $this->modelTable->find('valid')
+            ->where([
+                'repair_asset_id' => $assetId
+            ])
+            ->contain(['RepairRepairKbn' => function($q) {
+                return $q->select(['nkey', 'nid', 'name']);
+            }])
+            ->contain(['RepairSts' => function($q) {
+                return $q->select(['nkey', 'nid', 'name']);
+            }])
+            ->contain(['RepairsTroubleKbn' => function($q) {
+                return $q->select(['nkey', 'nid', 'name']);
+            }]);
+
+        return ($toArray) ? $query->toArray() : $query->all();
+    }
+
+    /**
      * 出庫予定IDより該当する修理データを取得する
      * (入庫情報を含む)
      *  
@@ -277,6 +304,7 @@ class ModelRepairsComponent extends AppModelComponent
         $new['domain_id']              = $this->current();
         $new['repair_kbn']             = Configure::read('WNote.DB.Repair.RepairKbn.useage');
         $new['repair_sts']             = Configure::read('WNote.DB.Repair.RepairSts.instock_plan');
+        $new['start_date']             = $this->today();
         $new['repair_asset_id']        = $instockPlanDetail['data']['asset_id'];
         $new['instock_plan_id']        = $instockPlan['data']['id'];
         $new['instock_plan_detail_id'] = $instockPlanDetail['data']['id'];
@@ -368,6 +396,7 @@ class ModelRepairsComponent extends AppModelComponent
         }
 
         $repair['repair_sts']       = Configure::read('WNote.DB.Repair.RepairSts.picking');
+        $repair['end_date']         = $this->today();
         $repair['picking_id']       = $detail['picking_id'];
         $repair['picking_asset_id'] = $detail['asset_id'];
 

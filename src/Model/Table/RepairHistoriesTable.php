@@ -44,7 +44,7 @@ class RepairHistoriesTable extends AppTable
             'foreignKey' => 'repair_id'
         ]);
         $this->belongsTo('RepairHistorySusers', [
-            'className'  => 'Susers'
+            'className'  => 'Susers',
             'foreignKey' => 'history_suser_id'
         ]);
     }
