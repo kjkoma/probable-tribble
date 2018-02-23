@@ -32,7 +32,7 @@ $conf = isset($conf) ? array_merge($default, $conf) : $default;
      data-widget-editbutton="false"
      data-widget-colorbutton="false"
      data-widget-togglebutton="false"
-     data-widget-fullscreen="false"
+     data-widget-fullscreenbutton="false"
      data-widget-sortable="false">
 
     <!-- DETAILS widget header -->

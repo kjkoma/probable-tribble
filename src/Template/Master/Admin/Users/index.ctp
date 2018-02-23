@@ -97,7 +97,7 @@ $this->Breadcrumbs->add('資産利用者', ['controller' => 'Users', 'action' =>
                                     <label class="input">
                                         <input type="text" name="user.fname" id="fname" class="input-xs"
                                                data-app-form="form-user"
-                                               placeholder="姓　－　最大8文字／特殊文字は利用しないでください"
+                                               placeholder="名　－　最大8文字／特殊文字は利用しないでください"
                                                disabled="disabled">
                                     </label>
                                 </section>

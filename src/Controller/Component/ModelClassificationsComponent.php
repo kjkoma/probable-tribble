@@ -49,6 +49,7 @@ class ModelClassificationsComponent extends AppModelComponent
      */
     public function saveCategory($categoryId, $classifications)
     {
+        $result = $this->_result(true, []);
         foreach($classifications as $classification) {
             $classification['category_id'] = $categoryId;
             $data = is_array($classification) ? $classification : $classification->toArray();
@@ -76,10 +77,12 @@ class ModelClassificationsComponent extends AppModelComponent
             $ids[] = $item['descendant'];
         }
 
-        $query = $this->modelTable->find('sorted')
-            ->where([
-                'id IN' => $ids
-            ]);
+        $query = $this->modelTable->find('sorted');
+        if (count($ids) === 0) {
+            $query->where([ 'id' => null ]); // 何も取得しない
+        } else {
+            $query->where([ 'id IN' => $ids ]);
+        }
 
         return ($toArray) ? $query->toArray() : $query->all();
     }

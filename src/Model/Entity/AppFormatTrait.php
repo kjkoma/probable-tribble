@@ -331,4 +331,37 @@ trait AppFormatTrait
     {
         return $this->__dateFormatProperty('abrogate_date');
     }
+
+    /**
+     * 履歴日を取得する
+     *
+     * - - -
+     * @return string フォーマット後の文字列
+     */
+    public function _getHistoryDate()
+    {
+        return $this->__dateFormatProperty('history_date');
+    }
+
+    /**
+     * 貸出日を取得する
+     *
+     * - - -
+     * @return string フォーマット後の文字列
+     */
+    public function _getRentalDate()
+    {
+        return $this->__dateFormatProperty('rental_date');
+    }
+
+    /**
+     * 返却日を取得する
+     *
+     * - - -
+     * @return string フォーマット後の文字列
+     */
+    public function _getBackDate()
+    {
+        return $this->__dateFormatProperty('back_date');
+    }
 }

@@ -65,53 +65,41 @@ class RentalsTable extends AppTable
             'foreignKey' => 'asset_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('RentalReqOrganizations', [
-            'foreignKey' => 'req_organization_id',
-            'className'  => 'Organizations'
-        ]);
         $this->belongsTo('RentalReqUsers', [
             'foreignKey' => 'req_user_id',
             'className'  => 'Users'
         ]);
-        $this->belongsTo('RentalDlvOrganizations', [
-            'foreignKey' => 'dlv_organization_id',
-            'className'  => 'Organizations'
-        ]);
-        $this->belongsTo('RentalDlvUsers', [
-            'foreignKey' => 'dlv_user_id',
+        $this->belongsTo('RentalAdminUsers', [
+            'foreignKey' => 'admin_user_id',
             'className'  => 'Users'
         ]);
-        $this->belongsTo('RentalRcvSusers', [
-            'foreignKey' => 'rcv_suser_id',
+        $this->belongsTo('RentalUsers', [
+            'foreignKey' => 'user_id',
+            'className'  => 'Users'
+        ]);
+        $this->belongsTo('RentalSusers', [
+            'foreignKey' => 'rental_suser_id',
             'className'  => 'Susers'
         ]);
-        $this->belongsTo('RentalConfirmSusers', [
-            'foreignKey' => 'confirm_suser_id',
+        $this->belongsTo('RentalBackUsers', [
+            'foreignKey' => 'back_user_id',
+            'className'  => 'Users'
+        ]);
+        $this->belongsTo('RentalBackSusers', [
+            'foreignKey' => 'back_suser_id',
             'className'  => 'Susers'
         ]);
-        $this->hasMany('AssetUsers', [
-            'foreignKey' => 'rental_id'
-        ]);
-        $this->hasMany('RentalHistories', [
-            'foreignKey' => 'rental_id'
-        ]);
-        $this->belongsTo('RentalSts', [
+        $this->belongsTo('RentalStsName', [
             'className'  => 'Snames',
             'foreignKey' => 'rental_sts',
             'bindingKey' => 'nid',
-            'conditions' => ['RentalSts.nkey' => 'RENTAL_STS']
-        ]);
-        $this->belongsTo('RentalTimeKbn', [
-            'className'  => 'Snames',
-            'foreignKey' => 'time_kbn',
-            'bindingKey' => 'nid',
-            'conditions' => ['RentalTimeKbn.nkey' => 'TIME_KBN']
+            'conditions' => ['RentalStsName.nkey' => 'RENTAL_STS']
         ]);
 
         $this->_sorted = [
-            'Rentals.plan_date'   => 'DESC',
-            'Rentals.dlv_user_id' => 'ASC',
-            'Rentals.req_user_id' => 'ASC'
+            'Rentals.req_date'    => 'DESC',
+            'Rentals.rental_date' => 'DESC',
+            'Rentals.user_id'     => 'ASC'
         ];
 
     }
@@ -132,53 +120,33 @@ class RentalsTable extends AppTable
             ->allowEmpty('req_date');
 
         $validator
-            ->scalar('req_tel')
-            ->allowEmpty('req_tel');
+            ->scalar('rental_sts')
+            ->requirePresence('rental_sts', 'create')
+            ->notEmpty('rental_sts');
+
+        $validator
+            ->date('req_date')
+            ->allowEmpty('req_date');
 
         $validator
             ->date('plan_date')
-            ->requirePresence('plan_date', 'create')
-            ->notEmpty('plan_date');
+            ->allowEmpty('plan_date');
 
         $validator
-            ->scalar('dlv_name')
-            ->allowEmpty('dlv_name');
-
-        $validator
-            ->scalar('dlv_zip')
-            ->allowEmpty('dlv_zip');
-
-        $validator
-            ->scalar('dlv_address')
-            ->allowEmpty('dlv_address');
-
-        $validator
-            ->scalar('dlv_tel')
-            ->allowEmpty('dlv_tel');
-
-        $validator
-            ->date('arv_date')
-            ->allowEmpty('arv_date');
-
-        $validator
-            ->scalar('arv_time_kbn')
-            ->allowEmpty('arv_time_kbn');
-
-        $validator
-            ->scalar('arv_remarks')
-            ->allowEmpty('arv_remarks');
-
-        $validator
-            ->scalar('rental_sts')
-            ->allowEmpty('rental_sts');
-
-        $validator
-            ->date('rcv_date')
-            ->allowEmpty('rcv_date');
+            ->date('rental_date')
+            ->allowEmpty('rental_date');
 
         $validator
             ->date('back_plan_date')
             ->allowEmpty('back_plan_date');
+
+        $validator
+            ->date('back_date')
+            ->allowEmpty('back_date');
+
+        $validator
+            ->scalar('rental_remarks')
+            ->allowEmpty('rental_remarks');
 
         $validator
             ->scalar('remarks')
@@ -212,12 +180,12 @@ class RentalsTable extends AppTable
     {
         $rules->add($rules->existsIn(['domain_id'], 'Domains'));
         $rules->add($rules->existsIn(['asset_id'], 'Assets'));
-        $rules->add($rules->existsIn(['req_organization_id'], 'RentalReqOrganizations'));
         $rules->add($rules->existsIn(['req_user_id'], 'RentalReqUsers'));
-        $rules->add($rules->existsIn(['dlv_organization_id'], 'RentalDlvOrganizations'));
-        $rules->add($rules->existsIn(['dlv_user_id'], 'RentalDlvUsers'));
-        $rules->add($rules->existsIn(['rcv_suser_id'], 'RentalRcvSusers'));
-        $rules->add($rules->existsIn(['confirm_suser_id'], 'RentalConfirmSusers'));
+        $rules->add($rules->existsIn(['admin_user_id'], 'RentalAdminUsers'));
+        $rules->add($rules->existsIn(['user_id'], 'RentalUsers'));
+        $rules->add($rules->existsIn(['rental_suser_id'], 'RentalSusers'));
+        $rules->add($rules->existsIn(['back_user_id'], 'RentalBackUsers'));
+        $rules->add($rules->existsIn(['back_suser_id'], 'RentalBackSusers'));
 
         return $rules;
     }

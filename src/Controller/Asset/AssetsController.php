@@ -89,6 +89,33 @@ class AssetsController extends AppController
     }
 
     /**
+     * 廃棄予定一覧を検索する
+     *
+     * @return \Cake\Http\Response|void
+     */
+    public function abrogatePlans()
+    {
+        $this->render();
+    }
+
+    /**
+     * 廃棄済一覧を検索する
+     *
+     * @return \Cake\Http\Response|void
+     */
+    public function abrogates()
+    {
+        $makers      = $this->ModelCompanies->makers();
+        $categories  = $this->ModelCategories->valid();
+        $assetType   = $this->SysModelSnames->byKey('ASSET_TYPE');
+        $assetSts    = $this->SysModelSnames->byKey('ASSET_STS');
+        $assetSubSts = $this->SysModelSnames->byKey('ASSET_SUB_STS');
+
+        $this->set(compact('makers', 'categories', 'assetType', 'assetSts', 'assetSubSts'));
+        $this->render();
+    }
+
+    /**
      * 資産一覧データをエクスポートする
      *
      * @return \Cake\Http\Response|void
@@ -138,6 +165,88 @@ class AssetsController extends AppController
         $this->response->download(urlencode('資産ダウンロード.csv'));
         $this->viewBuilder()->className('CsvView.Csv');
         $this->set(compact('assets', '_serialize', '_extract', '_header', '_csvEncoding', '_newline', '_eol', '_bom'));
+    }
+
+    /**
+     * 廃棄予定一覧データをエクスポートする
+     *
+     * @return \Cake\Http\Response|void
+     */
+    public function downloadAbrogatePlans()
+    {
+        if (!$this->request->is('post')) {
+            throw new BadRequestException(__('指定されたページへのアクセスが不正です。'));
+        }
+
+        // 廃棄予定一覧を取得
+        $assets = $this->ModelAssets->abrogatePlans(true);
+        $exp    = $this->_makeDownloadAbrogateDatas($assets);
+
+        // ダウンロード
+        $_serialize   = ['assets'];
+        $_extract     = $exp['data'];
+        $_header      = $exp['header'];
+        $_csvEncoding = 'SJIS-win';
+        $_newline     = "\r\n";
+        $_eol         = "\r\n";
+
+        $this->response->download(urlencode('廃棄予定ダウンロード.csv'));
+        $this->viewBuilder()->className('CsvView.Csv');
+        $this->set(compact('assets', '_serialize', '_extract', '_header', '_csvEncoding', '_newline', '_eol', '_bom'));
+    }
+
+    /**
+     * 廃棄済一覧データをエクスポートする
+     *
+     * @return \Cake\Http\Response|void
+     */
+    public function downloadAbrogates()
+    {
+        $data = $this->validateParameter('cond', ['post']);
+        if (!$data) return;
+
+        // 廃棄済一覧を取得
+        $assets = $this->ModelAssets->abrogates($data['cond'], true);
+        $exp    = $this->_makeDownloadAbrogateDatas($assets);
+
+        // ダウンロード
+        $_serialize   = ['assets'];
+        $_extract     = $exp['data'];
+        $_header      = $exp['header'];
+        $_csvEncoding = 'SJIS-win';
+        $_newline     = "\r\n";
+        $_eol         = "\r\n";
+
+        $this->response->download(urlencode('廃棄済一覧ダウンロード.csv'));
+        $this->viewBuilder()->className('CsvView.Csv');
+        $this->set(compact('assets', '_serialize', '_extract', '_header', '_csvEncoding', '_newline', '_eol', '_bom'));
+    }
+
+    /**
+     * (プライベート)廃棄予定 or 廃棄済一覧のエクスポート用データ／ヘッダーを作成する
+     *
+     * @param array $assets 資産データ
+     * @return array エクスポート用データ／ヘッダー（[data => エクスポートデータ, header => ヘッダー]）
+     */
+    private function _makeDownloadAbrogateDatas($assets)
+    {
+        $exp = [];
+        $exp['data'] = [
+            function ($row) { return $row['classification']['kname']; },             // 分類名
+            function ($row) { return $row['company']['kname']; },                    // メーカー名
+            function ($row) { return $row['product']['kname']; },                    // 製品名
+            function ($row) { return $row['serial_no']; },                           // シリアル番号
+            function ($row) { return $row['asset_no']; },                            // 資産管理番号
+            function ($row) { return $row['repairs'][0]['repair_count']; },          // 修理回数
+            function ($row) { return $row['abrogate_date']; },                       // 廃棄日
+            function ($row) { return $row['asset_abrogate_suser']['kname']; },       // 廃棄者
+            function ($row) { return $row['abrogate_reason']; },                     // 廃棄理由
+        ];
+        $exp['header'] = [
+            '分類名', 'メーカー名', '製品名', 'シリアル番号', '資産管理番号', '修理回数', '廃棄日', '廃棄者', '廃棄理由'
+        ];
+
+        return $exp;
     }
 
 }

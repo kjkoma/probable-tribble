@@ -205,7 +205,7 @@ class ApiPickingPlanDetailsController extends ApiController
 
             // 保存結果取得
             $plans = $this->_getPlans(['id' => $updatePlanDetail['data']['id']]);
-            if (!plans || count($plans) == 0) {
+            if (!$plans || count($plans) == 0) {
                 // ロールバック
                 $this->ModelPickingPlanDetails->rollback();
                 $this->setError('保存時に予期せぬエラーが発生しました。管理者へお問い合わせください。', 'UNEXPECTED_SAVERESULT_EXCEPTION', $e);

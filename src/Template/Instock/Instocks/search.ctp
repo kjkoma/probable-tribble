@@ -193,7 +193,7 @@ $this->Breadcrumbs->add('入庫検索', ['controller' => 'Instocks', 'action' =>
                                 </section>
 
                                 <section>
-                                    <button type="button" class="btn btn-lg btn-block btn-info" data-app-action-key="search">検索</button>
+                                    <button type="button" class="btn btn-lg btn-block btn-info" data-app-action-key="search"><i class="fa fa-search"></i>　検索</button>
                                 </section>
                             </fieldset>
 
@@ -223,7 +223,7 @@ $this->Breadcrumbs->add('入庫検索', ['controller' => 'Instocks', 'action' =>
                     <span class="widget-icon"> <i class="fa fa-lg fa-th-list"></i> </span>
                     <h2>検索結果(※最大500件表示)</h2>
                     <div class="widget-toolbar" role="menu">
-                        <a href="javascript:void(0);" class="btn btn-info" data-app-action-key="download">ダウンロード</a>
+                        <a href="javascript:void(0);" class="btn btn-info disabled" data-app-action-key="download"><i class="fa fa-download"></i>　ダウンロード</a>
                     </div>
                 </header>
 
@@ -270,7 +270,7 @@ $this->Breadcrumbs->add('入庫検索', ['controller' => 'Instocks', 'action' =>
     <!-- back grid row -->
     <div class="row" id="grid-row-back" class="hidden">
         <div class="col col-sm-12 text-right">
-            <button type="button" class="btn btn-default" data-app-action-key="back">検索を表示</button>
+            <button type="button" class="btn btn-default hidden" data-app-action-key="back"><i class="fa fa-chevron-left"></i>　検索を表示</button>
         </div>
     </div>
 
@@ -282,10 +282,10 @@ $this->Breadcrumbs->add('入庫検索', ['controller' => 'Instocks', 'action' =>
             <?= $this->element('Asset/asset', ['conf' => [
                 'asset' => 'view',
                 'attr'  => 'edit',
-                'user'    => false,
+                'user'    => true,
                 'stock'   => true,
                 'repair'  => true,
-                'rental'  => false,
+                'rental'  => true,
                 'hidden' => true]]) ?>
 
             <!-- End DETAILS asset widget -->
@@ -298,7 +298,7 @@ $this->Breadcrumbs->add('入庫検索', ['controller' => 'Instocks', 'action' =>
 </section>
 
 <!-- download form -->
-<?= $this->Form->create(null, ['id' => 'form-download', 'type' => 'post', 'class' => "smart-form hidden", 'action' => '/download']) ?>
+<?= $this->Form->create(null, ['id' => 'form-download', 'type' => 'post', 'class' => "smart-form hidden", 'url' => ['controller' => 'instocks', 'action' => 'download']]) ?>
 <?= $this->Form->end() ?>
 
 <!-- load script -->

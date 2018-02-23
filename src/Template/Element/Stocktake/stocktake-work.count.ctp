@@ -60,7 +60,7 @@
         </div>
 
         <section>
-            <button type="button" class="btn btn-lg btn-block btn-info" data-app-action-key="stocktake-work-count-search">検索</button>
+            <button type="button" class="btn btn-lg btn-block btn-info" data-app-action-key="stocktake-work-count-search"><i class="fa fa-search"></i>　検索</button>
         </section>
 
     </fieldset>
@@ -95,7 +95,7 @@
                    maxlength="4"
                    placeholder="棚卸数量">
         </label>
-        <button type="button" class="btn btn-primary" data-app-action-key="stocktake-work-count-save"> 選択資産の棚卸数量を保存する </button>
+        <button type="button" class="btn btn-primary" data-app-action-key="stocktake-work-count-save"> <i class="fa fa-save"></i>　選択資産の棚卸数量を保存する </button>
     </footer>
 
 <!-- End form -->

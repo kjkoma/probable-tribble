@@ -201,7 +201,7 @@ $this->Breadcrumbs->add('交換一覧', ['controller' => 'Exchanges', 'action' =
                     <span class="widget-icon"> <i class="fa fa-lg fa-th-list"></i> </span>
                     <h2>交換一覧(※最大500件表示)</h2>
                     <div class="widget-toolbar" role="menu">
-                        <a href="javascript:void(0);" class="btn btn-info" data-app-action-key="download">ダウンロード</a>
+                        <a href="javascript:void(0);" class="btn btn-info disabled" data-app-action-key="download">ダウンロード</a>
                     </div>
                 </header>
 
@@ -248,7 +248,7 @@ $this->Breadcrumbs->add('交換一覧', ['controller' => 'Exchanges', 'action' =
 </section>
 
 <!-- download form -->
-<?= $this->Form->create(null, ['id' => 'form-download', 'type' => 'post', 'class' => "smart-form hidden", 'action' => '/download-list']) ?>
+<?= $this->Form->create(null, ['id' => 'form-download', 'type' => 'post', 'class' => "smart-form hidden", 'url' => ['controller' => 'exchanges', 'action' => 'download-list']]) ?>
 <?= $this->Form->end() ?>
 
 <!-- load script -->

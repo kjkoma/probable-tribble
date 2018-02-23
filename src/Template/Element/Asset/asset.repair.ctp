@@ -23,21 +23,30 @@
 <!-- ********************************** -->
 <!-- 修理情報                       -->
 <!-- ********************************** -->
-<header>
-    修理履歴
-</header>
+<!-- form -->
+<?= $this->Form->create(null, ['id' => 'form-elem-asset-repair', 'type' => 'post', 'class' => "smart-form"]) ?>
 
-<table class="table table-striped table-bordered table-hover" id="elemAssetRepair-datatable">
-    <thead>
-        <tr>
-            <th>修理状況</th>
-            <th>発生日</th>
-            <th>完了日</th>
-            <th>故障区分</th>
-            <th>故障原因</th>
-        </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
+    <header>
+        修理履歴
+    </header>
 
+    <fieldset>
+
+        <table class="table table-striped table-bordered table-hover" id="elemAssetRepair-datatable">
+            <thead>
+                <tr>
+                    <th>修理状況</th>
+                    <th>発生日</th>
+                    <th>完了日</th>
+                    <th>故障区分</th>
+                    <th>故障原因</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+    </fieldset>
+
+<!-- End form -->
+<?= $this->Form->end() ?>

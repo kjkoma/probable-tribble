@@ -32,15 +32,17 @@
         <!-- ********************************** -->
         <!-- 操作アクション（モデル）           -->
         <!-- ********************************** -->
-        <div class="widget-actions <?= ($conf['attr'] && $conf['attr'] == 'edit') ? '' : 'hidden' ?>" id="elemAssetAttr-actions">
-            <div class="widget-action" data-app-action-key="elemAssetAttr-view-actions">
-                <a href="javascript:void(0);" class="btn btn-success" data-app-action-key="elemAssetAttr-edit">編集</a>
+        <?php if ($this->AppUser->hasDomainGeneral()) { ?>
+            <div class="widget-actions <?= ($conf['attr'] && $conf['attr'] == 'edit') ? '' : 'hidden' ?>" id="elemAssetAttr-actions">
+                <div class="widget-action" data-app-action-key="elemAssetAttr-view-actions">
+                    <a href="javascript:void(0);" class="btn btn-success" data-app-action-key="elemAssetAttr-edit"><i class="fa fa-edit"></i>　編集</a>
+                </div>
+                <div class="widget-action hidden" data-app-action-key="elemAssetAttr-edit-actions">
+                    <a href="javascript:void(0);" class="btn btn-default" data-app-action-key="elemAssetAttr-cancel"><i class="fa fa-times"></i>　キャンセル</a>
+                    <a href="javascript:void(0);" class="btn btn-primary" data-app-action-key="elemAssetAttr-save"><i class="fa fa-save"></i>　保存</a>
+                </div>
             </div>
-            <div class="widget-action hidden" data-app-action-key="elemAssetAttr-edit-actions">
-                <a href="javascript:void(0);" class="btn btn-default" data-app-action-key="elemAssetAttr-cancel">キャンセル</a>
-                <a href="javascript:void(0);" class="btn btn-primary" data-app-action-key="elemAssetAttr-save">保存</a>
-            </div>
-        </div>
+        <?php } ?>
 
         <!-- elem-asset-attr-edit-id -->
         <div class="hidden" id="elem-asset-attr-edit-id">

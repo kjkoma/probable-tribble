@@ -24,23 +24,30 @@
 <!-- 貸出／返却情報                     -->
 <!-- ********************************** -->
 <!-- form -->
-<?= $this->Form->create(null, ['id' => 'form-elem-asset-repair', 'type' => 'post', 'class' => "smart-form"]) ?>
+<?= $this->Form->create(null, ['id' => 'form-elem-asset-rental', 'type' => 'post', 'class' => "smart-form"]) ?>
 
     <header>
-        貸出／返却情報
+        貸出・返却履歴
     </header>
 
     <fieldset>
-        <section>
-            <dl class="dl-horizontal">
-                <dt>登録日時：</dt><dd id="elem_assetview_rental.created_at" name="elemAssetviewRental_created_at"></dd>
-                <dt>更新日時：</dt><dd id="elem_assetview_rental.modified_at" name="elemAssetviewRental_modified_at"></dd>
-                <dt>更新者：</dt><dd id="elem_assetview_rental.modified_user_name" name="elemAssetviewRental_modified_user_name"></dd>
-            </dl>
-        </section>
+        <table class="table table-striped table-bordered table-hover" id="elemAssetRental-datatable">
+            <thead>
+                <tr>
+                    <th>貸出状況</th>
+                    <th>利用者</th>
+                    <th>管理者</th>
+                    <th>貸出日</th>
+                    <th>貸出者</th>
+                    <th>返却日</th>
+                    <th>返却者</th>
+                    <th>受領者</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
     </fieldset>
 
 <!-- End form -->
 <?= $this->Form->end() ?>
-
-

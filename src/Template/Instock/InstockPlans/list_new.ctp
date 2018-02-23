@@ -98,17 +98,17 @@ $this->Breadcrumbs->add('入庫予定登録', ['controller' => 'InstockPlans', '
                     <span class="widget-icon"> <i class="fa fa-lg fa-file"></i> </span>
                     <h2>入庫予定内容</h2>
                     <div class="widget-toolbar hidden" role="menu" data-app-action-key="view-actions">
-                        <a href="javascript:void(0);" class="btn btn-success" data-app-action-key="edit">編集</a>
+                        <a href="javascript:void(0);" class="btn btn-success" data-app-action-key="edit"><i class="fa fa-edit"></i>　編集</a>
                     </div>
                     <div class="widget-toolbar" role="menu" data-app-action-key="add-actions">
-                        <a href="javascript:void(0);" class="btn btn-success" data-app-action-key="add">追加</a>
+                        <a href="javascript:void(0);" class="btn btn-success" data-app-action-key="add"><i class="fa fa-plus"></i>　追加</a>
                     </div>
                     <div class="widget-toolbar hidden" role="menu" data-app-action-key="edit-actions">
-                        <a href="javascript:void(0);" class="btn btn-default" data-app-action-key="cancel">キャンセル</a>
-                        <a href="javascript:void(0);" class="btn btn-primary" data-app-action-key="save">保存</a>
+                        <a href="javascript:void(0);" class="btn btn-default" data-app-action-key="cancel"><i class="fa fa-times"></i>　キャンセル</a>
+                        <a href="javascript:void(0);" class="btn btn-primary" data-app-action-key="save"><i class="fa fa-save"></i>　保存</a>
                     </div>
                     <div class="widget-toolbar hidden" role="menu" data-app-action-key="delete-actions">
-                        <a href="javascript:void(0);" class="btn btn-danger" data-app-action-key="delete">削除</a>
+                        <a href="javascript:void(0);" class="btn btn-danger" data-app-action-key="delete"><i class="fa fa-trash"></i>　削除</a>
                     </div>
                 </header>
 
@@ -213,17 +213,17 @@ $this->Breadcrumbs->add('入庫予定登録', ['controller' => 'InstockPlans', '
                                 <!-- ********************************** -->
                                 <div class="widget-actions" id="detail-actions">
                                     <div class="widget-action hidden" data-app-action-key="view-detail-actions">
-                                        <a href="javascript:void(0);" class="btn btn-success" data-app-action-key="edit-detail">編集</a>
+                                        <a href="javascript:void(0);" class="btn btn-success" data-app-action-key="edit-detail"><i class="fa fa-edit"></i>　編集</a>
                                     </div>
                                     <div class="widget-action" data-app-action-key="add-detail-actions">
-                                        <a href="javascript:void(0);" class="btn btn-success" data-app-action-key="add-detail">追加</a>
+                                        <a href="javascript:void(0);" class="btn btn-success" data-app-action-key="add-detail"><i class="fa fa-plus"></i>　追加</a>
                                     </div>
                                     <div class="widget-action hidden" data-app-action-key="edit-detail-actions">
-                                        <a href="javascript:void(0);" class="btn btn-default" data-app-action-key="cancel-detail">キャンセル</a>
-                                        <a href="javascript:void(0);" class="btn btn-primary" data-app-action-key="save-detail">保存</a>
+                                        <a href="javascript:void(0);" class="btn btn-default" data-app-action-key="cancel-detail"><i class="fa fa-times"></i>　キャンセル</a>
+                                        <a href="javascript:void(0);" class="btn btn-primary" data-app-action-key="save-detail"><i class="fa fa-save"></i>　保存</a>
                                     </div>
                                     <div class="widget-action hidden" data-app-action-key="delete-detail-actions">
-                                        <a href="javascript:void(0);" class="btn btn-danger" data-app-action-key="delete-detail">削除</a>
+                                        <a href="javascript:void(0);" class="btn btn-danger" data-app-action-key="delete-detail"><i class="fa fa-trash"></i>　削除</a>
                                     </div>
                                 </div>
 

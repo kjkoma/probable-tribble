@@ -131,6 +131,7 @@ MyPage.search = function() {
     var data = WNote.Form.createAjaxData(MYPAGE.FORM_KEY);
     MyPage.selectInstock.cond = data.cond;
     WNote.Util.createFormElements(MYPAGE.FORM_DOWNLOAD, 'cond', data.cond); // ダウンロード用条件の保存
+    WNote.Util.removeClassByDataAttr('download', 'disabled');
     MyPage.showInstocks(data);
 }
 

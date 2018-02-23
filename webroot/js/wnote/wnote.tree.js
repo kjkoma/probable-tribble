@@ -145,6 +145,10 @@ WNote.Tree.active = function()
 WNote.Tree.parent = function()
 {
     var active = WNote.Tree.active();
+    if (active.data && active.data.type == WNOTE.TREE.TYPES.ROOT) {
+        return active;
+    }
+
     return active.getParent();
 }
 

@@ -194,7 +194,10 @@ MyPage.Models.setFormValues = function() {
  *  -------------------------------------------------------------------------*/
 MyPage.Models.selectedModelHandler = function() {
     var selected = MyPage.Models.datatable.row( this ).data();
-    MyPage.Models.getModel(selected.id);
+    if (selected) {
+        WNote.Util.All.highlightDataTableRow($(this), MyPage.Models.datatable);
+        MyPage.Models.getModel(selected.id);
+    }
 }
 
 /** ---------------------------------------------------------------------------

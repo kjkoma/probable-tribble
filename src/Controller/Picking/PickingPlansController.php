@@ -118,7 +118,7 @@ class PickingPlansController extends AppController
             function($row) { return $row['picking_plan']['arv_remarks']; },
             function($row) { return $row['picking_plan']['rcv_date']; },
             function($row) { return $row['picking_plan']['picking_plan_rcv_suser']['kname']; },
-            function($row) { return $row['picking_reason']; },
+            function($row) { return $row['picking_plan']['picking_reason']; },
             function($row) { return $row['apply_no']; },
             function($row) { return $row['category']['kname']; },
             function($row) { return $row['picking_plan_detail_reuse_kbn']['name']; },

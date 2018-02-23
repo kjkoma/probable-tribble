@@ -57,10 +57,10 @@
                     <i class="fa fa-lg fa-fw fa-gear txt-color-blue"></i> <span class="menu-item-parent">入庫</span>
                 </a>
                 <ul>
-                    <?= $this->app->menu('/instock/instock-plans/list-new', '入庫予定登録', 'fa-pencil-square-o') ?>
-                    <?= $this->app->menu('/instock/instock-plans/list'    , '入庫予定一覧', 'fa-list') ?>
-                    <?= $this->app->menu('/instock/instocks/index'        , '入庫'        , 'fa-cubes') ?>
-                    <?= $this->app->menu('/instock/instocks/search'       , '入庫検索'    , 'fa-search') ?>
+                    <?= $this->appUser->menuGeneral('/instock/instock-plans/list-new', '入庫予定登録', 'fa-pencil-square-o') ?>
+                    <?= $this->appUser->menuGeneral('/instock/instock-plans/list'    , '入庫予定一覧', 'fa-list') ?>
+                    <?= $this->appUser->menuGeneral('/instock/instocks/index'        , '入庫'        , 'fa-cubes') ?>
+                    <?= $this->app->menu('/instock/instocks/search'                  , '入庫検索'    , 'fa-search') ?>
                 </ul>
             </li>
             <?php } ?>
@@ -71,10 +71,10 @@
                 <a href="#"><i class="fa fa-lg fa-fw fa-truck txt-color-blue"></i> <span
                             class="menu-item-parent">出庫</span></a>
                 <ul>
-                    <?= $this->app->menu('/picking/picking-plans/entry', '出庫依頼登録', 'fa-pencil-square-o') ?>
-                    <?= $this->app->menu('/picking/picking-plans/list' , '出庫予定一覧', 'fa-list') ?>
-                    <?= $this->app->menu('/picking/pickings/index'     , '出庫'        , 'fa-cubes') ?>
-                    <?= $this->app->menu('/picking/pickings/search'    , '出庫検索'    , 'fa-search') ?>
+                    <?= $this->appUser->menuGeneral('/picking/picking-plans/entry', '出庫依頼登録', 'fa-pencil-square-o') ?>
+                    <?= $this->appUser->menuGeneral('/picking/picking-plans/list' , '出庫予定一覧', 'fa-list') ?>
+                    <?= $this->appUser->menuGeneral('/picking/pickings/index'     , '出庫'        , 'fa-cubes') ?>
+                    <?= $this->app->menu('/picking/pickings/search'               , '出庫検索'    , 'fa-search') ?>
                 </ul>
             </li>
             <?php } ?>
@@ -85,10 +85,8 @@
                 <a href="#"><i class="fa fa-lg fa-fw fa-briefcase txt-color-blue"></i> <span
                             class="menu-item-parent">在庫</span></a>
                 <ul>
-                    <?= $this->app->menu('/stock/stocks/search'      , '在庫検索', 'fa-search') ?>
-                    <?= $this->app->menu('/stock/stocks/summary'     , '在庫集計', 'fa-list') ?>
-                    <?= $this->app->menu('/abrogate/abrogates/list'  , '廃棄予定', 'fa-list') ?>
-                    <?= $this->app->menu('/abrogate/abrogates/search', '廃棄検索', 'fa-search') ?>
+                    <?= $this->app->menu('/stock/stocks/search' , '在庫検索', 'fa-search') ?>
+                    <?= $this->app->menu('/stock/stocks/summary', '在庫集計', 'fa-list') ?>
                 </ul>
             </li>
             <?php } ?>
@@ -99,9 +97,9 @@
                 <a href="#"><i class="fa fa-lg fa-fw fa-pencil txt-color-blue"></i> <span
                             class="menu-item-parent">棚卸</span></a>
                 <ul>
-                    <?= $this->app->menu('/stocktake/stocktakes/entry' , '棚卸登録', 'fa-pencil-square-o') ?>
-                    <?= $this->app->menu('/stocktake/stocktakes/work'  , '棚卸実施', 'fa-wrench') ?>
-                    <?= $this->app->menu('/stocktake/stocktakes/search', '棚卸検索', 'fa-search') ?>
+                    <?= $this->appUser->menuGeneral('/stocktake/stocktakes/entry' , '棚卸登録', 'fa-pencil-square-o') ?>
+                    <?= $this->appUser->menuGeneral('/stocktake/stocktakes/work'  , '棚卸実施', 'fa-wrench') ?>
+                    <?= $this->app->menu('/stocktake/stocktakes/search'           , '棚卸検索', 'fa-search') ?>
                 </ul>
             </li>
             <?php } ?>
@@ -112,9 +110,11 @@
                 <a href="#"><i class="fa fa-lg fa-fw fa-suitcase txt-color-blue"></i> <span
                             class="menu-item-parent">資産</span></a>
                 <ul>
-                    <?= $this->app->menu('/asset/assets/search' , '資産検索', 'fa-search') ?>
-                    <?= $this->app->menu('/asset/assets/summary', '資産集計', 'fa-list') ?>
-                    <?= $this->app->menu('/asset/assets/entry'  , '資産登録', 'fa-pencil-square-o') ?>
+                    <?= $this->app->menu('/asset/assets/search'                   , '資産検索', 'fa-search') ?>
+                    <?= $this->app->menu('/asset/assets/summary'                  , '資産集計', 'fa-list') ?>
+                    <?= $this->appUser->menuGeneral('/asset/assets/entry'         , '資産登録', 'fa-pencil-square-o') ?>
+                    <?= $this->appUser->menuGeneral('/asset/assets/abrogate_plans', '廃棄予定', 'fa-list') ?>
+                    <?= $this->app->menu('/asset/assets/abrogates'                , '廃棄検索', 'fa-search') ?>
                 </ul>
             </li>
             <?php } ?>
@@ -125,8 +125,9 @@
                 <a href="#"><i class="fa fa-lg fa-fw fa-recycle txt-color-blue"></i> <span
                             class="menu-item-parent">修理・交換</span></a>
                 <ul>
-                    <?= $this->app->menu('/repair/repairs/list'    , '修理一覧', 'fa-list') ?>
-                    <?= $this->app->menu('/exchange/exchanges/list', '交換一覧', 'fa-list') ?>
+                    <?= $this->appUser->menuGeneral('/repair/repairs/entry' , '修理登録', 'fa-pencil-square-o') ?>
+                    <?= $this->app->menu('/repair/repairs/list'             , '修理一覧', 'fa-list') ?>
+                    <?= $this->app->menu('/exchange/exchanges/list'         , '交換一覧', 'fa-list') ?>
                 </ul>
             </li>
             <?php } ?>
@@ -136,10 +137,9 @@
             <li class="">
                 <a href="#"><i class="fa fa-lg fa-fw fa-share-alt txt-color-blue"></i> <span class="menu-item-parent">貸出・返却</span></a>
                 <ul>
-                    <?= $this->app->menu('/rental/rentals/entry' , '貸出依頼登録', 'fa-mail-forward') ?>
-                    <?= $this->app->menu('/rental/rentals/search', '貸出検索'    , 'fa-search') ?>
-                    <?= $this->app->menu('/back/backs/entry'     , '返却依頼登録', 'fa-reply') ?>
-                    <?= $this->app->menu('/back/backs/search'    , '返却検索'    , 'fa-search') ?>
+                    <?= $this->appUser->menuGeneral('/rental/rentals/rental', '貸出', 'fa-book') ?>
+                    <?= $this->appUser->menuGeneral('/rental/rentals/back'  , '返却', 'fa-reply') ?>
+                    <?= $this->app->menu('/rental/rentals/search'           , '検索', 'fa-search') ?>
                 </ul>
             </li>
             <?php } ?>

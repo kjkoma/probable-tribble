@@ -55,45 +55,34 @@ class ExchangesController extends AppController
         if (!$data) return;
 
         // 交換一覧を取得
-        $repairs = $this->ModelRepairs->search($data['cond'], true);
+        $exchanges = $this->ModelExchanges->search($data['cond'], true);
 
         // ダウンロード
-        $_serialize     = ['repairs'];
+        $_serialize = ['exchanges'];
         $_extract   = [
-            function($row) { return $row['repair_st']['name']; },
             function($row) { return $row['picking_plan']['req_date']; },
             function($row) { return $row['picking_plan']['picking_plan_req_user']['sname'] . ' ' . $row['picking_plan']['picking_plan_req_user']['fname']; },
-            function($row) { return $row['repair_asset']['classification']['category_id']; },
-            function($row) { return $row['repair_asset']['classification']['category']['kname']; },
-            function($row) { return $row['repair_asset']['classification_id']; },
-            function($row) { return $row['repair_asset']['classification']['kname']; },
-            function($row) { return $row['repair_asset']['maker_id']; },
-            function($row) { return $row['repair_asset']['company']['kname']; },
-            function($row) { return $row['repair_asset']['product_id']; },
-            function($row) { return $row['repair_asset']['product']['kname']; },
-            function($row) { return $row['repair_asset']['product_model_id']; },
-            function($row) { return $row['repair_asset']['product_model']['kname']; },
-            function($row) { return $row['repair_asset']['asset_no']; },
-            function($row) { return $row['repair_asset']['serial_no']; },
-            function($row) { return $row['repairs_picking_asset']['asset_no']; },
-            function($row) { return $row['repairs_picking_asset']['serial_no']; },
-            function($row) { return $row['repairs_sendback_kbn']['name']; },
-            function($row) { return $row['repairs_datapick_kbn']['name']; },
-            function($row) { return $row['repairs_trouble_kbn']['name']; },
-            function($row) { return $row['trouble_reason']; },
+            function($row) { return ($row['instock_id'] == '') ? '未入庫' : '入庫済'; },
+            function($row) { return $row['exchanges_instock_asset']['product_id']; },
+            function($row) { return $row['exchanges_instock_asset']['product']['kname']; },
+            function($row) { return $row['exchanges_instock_asset']['asset_no']; },
+            function($row) { return $row['exchanges_instock_asset']['serial_no']; },
+            function($row) { return $row['exchanges_picking_asset']['product_id']; },
+            function($row) { return $row['exchanges_picking_asset']['product']['kname']; },
+            function($row) { return $row['exchanges_picking_asset']['asset_no']; },
+            function($row) { return $row['exchanges_picking_asset']['serial_no']; },
         ];
         $_header    = [
-            '修理状況', '依頼日', '依頼者', 'カテゴリID', 'カテゴリ名', '分類ID', '分類名', 'メーカーID', 'メーカー名',
-            '製品ID', '製品名', 'モデル(型)ID', 'モデル(型)名', '資産管理番号(入庫)', 'シリアル番号(入庫)', '資産管理番号(出庫)', 'シリアル番号(出庫)',
-            'センドバック', 'データ抽出', '故障区分', '故障原因'
+            '依頼日', '依頼者', '入庫有無', '製品ID(入庫)', '製品名(入庫)', '資産管理番号(入庫)', 'シリアル番号(入庫)',
+            '製品ID(出庫)', '製品名(出庫)', '資産管理番号(出庫)', 'シリアル番号(出庫)'
         ];
         $_csvEncoding = 'SJIS-win';
         $_newline     = "\r\n";
         $_eol         = "\r\n";
 
-        $this->response->download(urlencode('修理一覧ダウンロード.csv'));
+        $this->response->download(urlencode('交換一覧ダウンロード.csv'));
         $this->viewBuilder()->className('CsvView.Csv');
-        $this->set(compact('repairs', '_serialize', '_extract', '_header', '_csvEncoding', '_newline', '_eol', '_bom'));
+        $this->set(compact('exchanges', '_serialize', '_extract', '_header', '_csvEncoding', '_newline', '_eol', '_bom'));
     }
 
 }

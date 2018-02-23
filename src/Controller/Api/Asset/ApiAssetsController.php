@@ -107,6 +107,73 @@ class ApiAssetsController extends ApiController
     }
 
     /**
+     * 廃棄予定の資産情報を検索する
+     *
+     */
+    public function abrogatePlans()
+    {
+        if (!$this->request->is('post')) {
+            $this->setError('指定されたHTTPメソッドには対応していません。', 'UNSUPPORTED_HTTP_METHOD', $data);
+            return;
+        }
+
+        // 廃棄予定一覧を取得
+        $assets = $this->ModelAssets->abrogatePlans();
+
+        // 一覧表示用に編集する
+        $list = $this->_createAbrogateListData($assets);
+
+        // レスポンスメッセージの作成
+        $this->setResponse(true, 'your request is success', ['assets' => $list]);
+    }
+
+    /**
+     * 廃棄済の資産情報を検索する
+     *
+     */
+    public function searchAbrogates()
+    {
+        $data = $this->validateParameter('cond', ['post']);
+        if (!$data) return;
+
+        // 廃棄済一覧を取得
+        $assets = $this->ModelAssets->abrogates($data['cond']);
+
+        // 一覧表示用に編集する
+        $list = $this->_createAbrogateListData($assets);
+
+        // レスポンスメッセージの作成
+        $this->setResponse(true, 'your request is success', ['assets' => $list]);
+    }
+
+    /**
+     * (プライベート)廃棄予定・廃棄済一覧用データの編集を行う
+     *
+     * @param array $assets 廃棄予定 or 廃棄済データ
+     * @return array 廃棄予定 or 廃棄済の一覧用データ
+     */
+    private function _createAbrogateListData($assets)
+    {
+        $list = [];
+        foreach($assets as $asset) {
+            $list[] = [
+                'id'                  => $asset['id'],
+                'classification_name' => $asset['classification']['kname'],
+                'maker_name'          => $asset['company']['kname'],
+                'product_name'        => $asset['product']['kname'],
+                'serial_no'           => $asset['serial_no'],
+                'asset_no'            => $asset['asset_no'],
+                'repair_count'        => $asset['repairs'][0]['repair_count'],
+                'abrogate_date'       => $asset['abrogate_date'],
+                'abrogate_suser_name' => $asset['asset_abrogate_suser']['kname'],
+                'abrogate_reason'     => $asset['abrogate_reason']
+            ];
+        }
+
+        return $list;
+    }
+
+    /**
      * 送信された資産データを追加する(資産属性含む)
      *
      */
@@ -186,6 +253,61 @@ class ApiAssetsController extends ApiController
         // レスポンスメッセージの作成
         $this->setResponse(true, 'your request is success', ['asset' => $updateAsset['data']]);
     }
+
+    /**
+     * 送信された廃棄予定データを廃棄する
+     *
+     */
+    public function abrogate()
+    {
+        $data = $this->validateParameter('assets', ['post']);
+        if (!$data) return;
+
+        $assets = $data['assets'];
+
+        // トランザクション開始
+        $this->ModelAssets->begin();
+
+        try {
+            foreach($assets as $asset) {
+
+                // 資産を廃棄済に更新
+                $updateAsset = $this->ModelAssets->abrogate($asset['id']);
+                $this->AppError->result($updateAsset);
+
+                // 在庫を0に更新
+                if (!$this->AppError->has()) {
+                    $updateStock = $this->ModelStocks->abrogate($asset['id']);
+                    $this->AppError->result($updateStock);
+                }
+
+                if ($this->AppError->has()) {
+                    break;
+                }
+            }
+
+            // エラー判定
+            if ($this->AppError->has()) {
+                // ロールバック
+                $this->ModelAssets->rollback();
+                $this->setResponseError('your request is failure.', $this->AppError->errors());
+                return;
+            }
+
+            // コミット
+            $this->ModelAssets->commit();
+
+        } catch(Exception $e) {
+            // ロールバック
+            $this->ModelAssets->rollback();
+            $this->setError('保存時に予期せぬエラーが発生しました。管理者へお問い合わせください。', 'UNEXPECTED_EXCEPTION', $e);
+            return;
+        }
+
+        // レスポンスメッセージの作成
+        $this->setResponse(true, 'your request is success', ['asset' => $data['assets']]);
+    }
+
 
     /**************************************************************************/
     /** 検証用メソッド                                                        */

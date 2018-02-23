@@ -68,11 +68,27 @@ class AssetUsersTable extends AppTable
             'foreignKey' => 'user_id',
             'joinType' => 'INNER'
         ]);
+        $this->belongsTo('AssetAdminUsers', [
+            'className'  => 'Users',
+            'foreignKey' => 'admin_user_id'
+        ]);
         $this->belongsTo('Pickings', [
             'foreignKey' => 'picking_id'
         ]);
         $this->belongsTo('Instocks', [
             'foreignKey' => 'instock_id'
+        ]);
+        $this->belongsTo('AssetUsersUseageTypeName', [
+            'className'  => 'Snames',
+            'foreignKey' => 'useage_type',
+            'bindingKey' => 'nid',
+            'conditions' => ['AssetUsersUseageTypeName.nkey' => 'USEAGE_TYPE']
+        ]);
+        $this->belongsTo('AssetUsersUseageStsName', [
+            'className'  => 'Snames',
+            'foreignKey' => 'useage_sts',
+            'bindingKey' => 'nid',
+            'conditions' => ['AssetUsersUseageStsName.nkey' => 'USEAGE_STS']
         ]);
 
         $this->_sorted = [
@@ -137,6 +153,7 @@ class AssetUsersTable extends AppTable
         $rules->add($rules->existsIn(['domain_id'], 'Domains'));
         $rules->add($rules->existsIn(['asset_id'], 'Assets'));
         $rules->add($rules->existsIn(['user_id'], 'Users'));
+        $rules->add($rules->existsIn(['admin_user_id'], 'AssetAdminUsers'));
         $rules->add($rules->existsIn(['picking_id'], 'Pickings'));
         $rules->add($rules->existsIn(['instock_id'], 'Instocks'));
 

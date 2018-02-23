@@ -41,6 +41,8 @@ class HomeController extends AppController
         $this->_loadComponent('ModelAssets');
         $this->_loadComponent('ModelStocks');
         $this->_loadComponent('ModelRepairs');
+        $this->_loadComponent('ModelCompanies');
+        $this->_loadComponent('SysModelSnames');
     }
 
     /**
@@ -156,6 +158,13 @@ class HomeController extends AppController
 
         $this->set('criteria', $data['criteria']);
         $this->set('assets', $list);
+
+        // 資産詳細表示用
+        $assetSts    = $this->SysModelSnames->byKey('ASSET_STS');
+        $assetSubSts = $this->SysModelSnames->byKey('ASSET_SUB_STS');
+        $rentalSts   = $this->SysModelSnames->byKey('RENTAL_STS');
+        $this->set(compact('makers', 'assetSts', 'assetSubSts', 'rentalSts'));
+
         $this->render();
     }
 }

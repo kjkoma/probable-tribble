@@ -216,7 +216,7 @@ $this->Breadcrumbs->add('出庫予定一覧', ['controller' => 'PickingPlans', '
                                 </div>
 
                                 <section>
-                                    <button type="button" class="btn btn-lg btn-block btn-info" data-app-action-key="search">検索</button>
+                                    <button type="button" class="btn btn-lg btn-block btn-info" data-app-action-key="search"><i class="fa fa-search"></i>　検索</button>
                                 </section>
                             </fieldset>
 
@@ -244,7 +244,7 @@ $this->Breadcrumbs->add('出庫予定一覧', ['controller' => 'PickingPlans', '
                     <span class="widget-icon"> <i class="fa fa-lg fa-th-list"></i> </span>
                     <h2>出庫依頼一覧</h2>
                     <div class="widget-toolbar" role="menu">
-                        <a href="javascript:void(0);" class="btn btn-info" data-app-action-key="download">ダウンロード</a>
+                        <a href="javascript:void(0);" class="btn btn-info disabled" data-app-action-key="download"><i class="fa fa-download"></i>　ダウンロード</a>
                     </div>
                 </header>
 
@@ -658,8 +658,10 @@ $this->Breadcrumbs->add('出庫予定一覧', ['controller' => 'PickingPlans', '
                 'conf' => [
                     'asset'  => 'view',
                     'attr'   => 'edit',
+                    'user'   => true,
                     'repair' => true,
                     'stock'  => true,
+                    'rental' => true,
                     'hidden' => true
                 ]
             ]) ?>
@@ -672,7 +674,7 @@ $this->Breadcrumbs->add('出庫予定一覧', ['controller' => 'PickingPlans', '
 </section>
 
 <!-- download form -->
-<?= $this->Form->create(null, ['id' => 'form-download', 'type' => 'post', 'class' => "smart-form hidden", 'action' => '/download-plan']) ?>
+<?= $this->Form->create(null, ['id' => 'form-download', 'type' => 'post', 'class' => "smart-form hidden", 'url' => ['controller' => 'picking-plans', 'action' => 'download-plan']]) ?>
 <?= $this->Form->end() ?>
 
 <input type="hidden" id="plan_sts_not"       value="<?= $this->App->conf('WNote.DB.Picking.PickingSts.not') ?>">

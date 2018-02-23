@@ -25,7 +25,7 @@
 <!-- ********************************** -->
 
 <header class="text-right <?= (!$conf['edit']) ? 'hidden' : '' ?>">
-    <button type="button" class="btn btn-primary" data-app-action-key="elem-stocktake-unmatch-save">選択在庫を棚卸数で更新する</button>
+    <button type="button" class="btn btn-primary" data-app-action-key="elem-stocktake-unmatch-save"><i class="fa fa-save"></i>　選択在庫を棚卸数で更新する</button>
 </header>
 
 <br class="<?= (!$conf['edit']) ? 'hidden' : '' ?>">

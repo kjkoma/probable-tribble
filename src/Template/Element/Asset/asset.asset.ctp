@@ -30,15 +30,17 @@
         <!-- ********************************** -->
         <!-- 操作アクション（モデル）           -->
         <!-- ********************************** -->
-        <div class="widget-actions <?= ($conf['asset'] && $conf['asset'] == 'edit') ? '' : 'hidden' ?>" id="elemAsset-actions">
-            <div class="widget-action" data-app-action-key="elemAsset-view-actions">
-                <a href="javascript:void(0);" class="btn btn-success" data-app-action-key="elemAsset-edit">編集</a>
+        <?php if ($this->AppUser->hasDomainGeneral()) { ?>
+            <div class="widget-actions <?= ($conf['asset'] && $conf['asset'] == 'edit') ? '' : 'hidden' ?>" id="elemAsset-actions">
+                <div class="widget-action" data-app-action-key="elemAsset-view-actions">
+                    <a href="javascript:void(0);" class="btn btn-success" data-app-action-key="elemAsset-edit"><i class="fa fa-edit"></i>　編集</a>
+                </div>
+                <div class="widget-action hidden" data-app-action-key="elemAsset-edit-actions">
+                    <a href="javascript:void(0);" class="btn btn-default" data-app-action-key="elemAsset-cancel"><i class="fa fa-times"></i>　キャンセル</a>
+                    <a href="javascript:void(0);" class="btn btn-primary" data-app-action-key="elemAsset-save"><i class="fa fa-save"></i>　保存</a>
+                </div>
             </div>
-            <div class="widget-action hidden" data-app-action-key="elemAsset-edit-actions">
-                <a href="javascript:void(0);" class="btn btn-default" data-app-action-key="elemAsset-cancel">キャンセル</a>
-                <a href="javascript:void(0);" class="btn btn-primary" data-app-action-key="elemAsset-save">保存</a>
-            </div>
-        </div>
+        <?php } ?>
 
         <!-- elem-asset-edit-id -->
         <div class="hidden" id="elem-asset-edit-id">
@@ -113,7 +115,7 @@
                 </section>
                 <section>
                     <!-- 資産状況 -->
-                    <?= $this->element('Parts/select-snames', [
+                    <?= $this->element('Parts/select-asset-sts-edit', [
                         'snames'      => $assetSts,
                         'name'        => 'elem_asset.asset_sts',
                         'id'          => 'elemAsset_asset_sts',

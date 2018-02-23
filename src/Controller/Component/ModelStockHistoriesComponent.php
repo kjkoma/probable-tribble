@@ -177,4 +177,70 @@ class ModelStockHistoriesComponent extends AppModelComponent
 
         return parent::add($history);
     }
+
+    /**
+     * 廃棄による在庫履歴を登録する
+     *  
+     * - - -
+     * 
+     * @param array $stock     在庫情報
+     * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
+     */
+    public function addAbrogate($stock)
+    {
+        $history = [];
+        $history['domain_id']       = $stock['domain_id'];
+        $history['asset_id']        = $stock['asset_id'];
+        $history['history_type']    = Configure::read('WNote.DB.HistType.abrogate');
+        $history['change_at']       = $stock['modified_at'];
+        $history['stock_count_org'] = $stock['stock_count_org'];
+        $history['stock_count']     = $stock['stock_count'];
+        $history['reason_kbn']      = Configure::read('WNote.DB.ReasonKbn.abrogate');
+
+        return parent::add($history);
+    }
+
+    /**
+     * 貸出による在庫履歴を登録する
+     *  
+     * - - -
+     * 
+     * @param array $stock     在庫情報
+     * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
+     */
+    public function addRental($stock)
+    {
+        $history = [];
+        $history['domain_id']       = $stock['domain_id'];
+        $history['asset_id']        = $stock['asset_id'];
+        $history['history_type']    = Configure::read('WNote.DB.HistType.rental');
+        $history['change_at']       = $stock['modified_at'];
+        $history['stock_count_org'] = $stock['stock_count_org'];
+        $history['stock_count']     = $stock['stock_count'];
+        $history['reason_kbn']      = Configure::read('WNote.DB.ReasonKbn.rental');
+
+        return parent::add($history);
+    }
+
+    /**
+     * 返却による在庫履歴を登録する
+     *  
+     * - - -
+     * 
+     * @param array $stock     在庫情報
+     * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
+     */
+    public function addBack($stock)
+    {
+        $history = [];
+        $history['domain_id']       = $stock['domain_id'];
+        $history['asset_id']        = $stock['asset_id'];
+        $history['history_type']    = Configure::read('WNote.DB.HistType.back');
+        $history['change_at']       = $stock['modified_at'];
+        $history['stock_count_org'] = $stock['stock_count_org'];
+        $history['stock_count']     = $stock['stock_count'];
+        $history['reason_kbn']      = Configure::read('WNote.DB.ReasonKbn.back');
+
+        return parent::add($history);
+    }
 }

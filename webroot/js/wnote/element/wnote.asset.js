@@ -36,7 +36,8 @@ const WNOTE_ASSET = {
         RENTAL  : 'elem-asset-rental-contents'
     },
     ACTION : {
-        SAVE  : 'elemAssetAdd-save'
+        SAVE  : 'elemAssetAdd-save',
+        RENTAL: 'elemAssetRental-rental'
     }
 };
 
@@ -65,7 +66,8 @@ $(function() {
     WNote.registerEvent('click', WNOTE_ASSET.TAB_KEY.REPAIR, WNote.Asset.selectRepair);
     WNote.registerEvent('click', WNOTE_ASSET.TAB_KEY.RENTAL, WNote.Asset.selectRental);
 
-    WNote.registerEvent('click', WNOTE_ASSET.ACTION.SAVE, WNote.Asset.save);
+    WNote.registerEvent('click', WNOTE_ASSET.ACTION.SAVE  , WNote.Asset.save);
+    WNote.registerEvent('click', WNOTE_ASSET.ACTION.RENTAL, WNote.Asset.rental);
 
 });
 
@@ -215,8 +217,6 @@ WNote.Asset.save = function() {
     }
 
     // データ保存
-WNote.Asset.saveSuccess();
-/*
     WNote.ajaxFailureMessage = '入力された内容の保存に失敗しました。再度保存してもエラーとなる場合、管理者にお問い合わせください。';
     WNote.ajaxSendBasic('/api/asset/api-assets/add_with_attr', 'POST',
         {
@@ -226,7 +226,6 @@ WNote.Asset.saveSuccess();
         true,
         WNote.Asset.saveSuccess
     );
-*/
 }
 
 /**
@@ -244,3 +243,50 @@ WNote.Asset.addAttrValidate  = function() {}
 WNote.Asset.addAssetSuccess  = function() {}
 WNote.Asset.addAttrSuccess   = function() {}
 
+/** ---------------------------------------------------------------------------
+ *  イベント処理（貸出 - 貸出予定追加）
+ *  -------------------------------------------------------------------------*/
+/**
+ * 貸出予定追加ボタンクリック時処理
+ */
+WNote.Asset.rental = function() {
+    if (!WNote.Asset.rentalValidate()) {
+        WNote.ajaxValidateWarning({}, WNote.Form.validateResultSet('指定された資産が他社により変更された可能性があります。再度、在庫を確認してください。'));
+        return;
+    }
+
+    // データ更新
+    WNote.ajaxFailureMessage = '該当資産の貸出予定追加に失敗しました。再度追加してもエラーとなる場合、管理者にお問い合わせください。';
+    WNote.ajaxSendBasic('/api/rental/api-rentals/add', 'POST',
+        {
+            'asset_id' : WNote.Asset.selectData.id
+        },
+        true,
+        WNote.Asset.rentalSuccess
+    );
+}
+
+/**
+ * 貸出予定追加成功時処理
+ */
+WNote.Asset.rentalSuccess = function() {
+    WNote.ajaxSuccessHandler({}, '該当資産を貸出予定に追加しました。');
+}
+
+/**
+ * 貸出予定追加時の検証を行う
+ *
+ * @param {object} data 送信データ
+ * @result {boolean} true: 追加可能 / false: 追加不可
+ */
+WNote.Asset.rentalValidate = function(data) {
+    result = WNote.ajaxValidateSend(
+        '/api/stock/api-stocks/validate_asset_id',
+        'POST',
+        {
+            'asset_id': WNote.Asset.selectData.id
+        }
+    );
+
+    return (result && result.validate);
+}

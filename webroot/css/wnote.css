@@ -144,6 +144,10 @@ div.widget-actions .widget-action > .btn {
     border-color: rgb(169, 3, 41) !important;
 }
 
+.smart-form .btn.btn-form-sm {
+    padding: 5px 18px !important;
+}
+
 /* datatable additional style */
 table.dataTable tr.selected {
     color: #ffffff;

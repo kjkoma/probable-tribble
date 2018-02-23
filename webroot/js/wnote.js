@@ -136,7 +136,9 @@ WNote.ajaXSendBeforeSendHandler = function(XMLHttpRequest) {}
  * @param {object} handler イベントハンドラー
  */
 WNote.registerEvent = function(event, key, handler) {
-    $(document).on(event, '[' + WNOTE.DATA_ATTR.KEY + '="' + key + '"]' , handler);
+    if ($('[' + WNOTE.DATA_ATTR.KEY + '="' + key + '"]').length > 0) {
+        $(document).on(event, '[' + WNOTE.DATA_ATTR.KEY + '="' + key + '"]' , handler);
+    }
 }
 
 /**
@@ -1043,7 +1045,6 @@ WNote.Util.createFormElements = function(selector, objName, obj) {
     $(selector + ' input').empty();
 
     // 指定されたオブジェクト名のinput要素を作成する
-    var form = $(selector);
     Object.keys(obj).forEach(function(key) {
         $('<input>').attr({
             type  : 'hidden',

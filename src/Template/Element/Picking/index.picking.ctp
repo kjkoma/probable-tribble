@@ -56,7 +56,7 @@
                 </fieldset>
 
                 <footer>
-                    <button type="button" class="btn btn-primary" data-app-action-key="fix-picking">出庫する</button>
+                    <button type="button" class="btn btn-primary" data-app-action-key="fix-picking"><i class="fa fa-check"></i>　出庫する</button>
                 </footer>
 
             <!-- End form -->

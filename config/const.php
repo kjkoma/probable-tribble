@@ -74,8 +74,9 @@ return [
                     'use'      => 3,
                     'rental'   => 4,
                     'repair'   => 5,
-                    'abrogate' => 6,
-                    'lost'     => 7,
+                    'abrogate_plan' => '6',
+                    'abrogate' => 7,
+                    'lost'     => 8,
                 ],
                 'AssetSubSts' => [
                     'other'    => 99,
@@ -142,6 +143,14 @@ return [
                     'abrogate' => '6',
                 ],
             ],
+            'Rental' => [
+                'RentalSts' => [
+                    'plan'    => '1',
+                    'rental'  => '2',
+                    'back'    => '3',
+                    'cancel'  => '9'
+                ],
+            ],
             'Stocktake' => [
                 'StocktakeSts' => [
                     'working'  => '1',
@@ -163,12 +172,19 @@ return [
                 'picking'   => '2',
                 'stocktake' => '3',
                 'entry'     => '4',
+                'abrogate'  => '5',
+                'rental'    => '6',
+                'back'      => '7',
             ],
             'ReasonKbn' => [
                 'instock'   => '1',
                 'picking'   => '2',
                 'stocktake' => '3',
                 'entry'     => '4',
+                'abrogate'  => '5',
+                'rental'    => '6',
+                'back'      => '7',
+                'other'     => '99',
             ],
             'Dsts' => [
                 'invalid' => '0',

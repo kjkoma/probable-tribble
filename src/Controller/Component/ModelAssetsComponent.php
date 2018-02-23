@@ -95,6 +95,9 @@ class ModelAssetsComponent extends AppModelComponent
     public function search($cond, $toArray = false)
     {
         $query = $this->_makeSearchQuery($cond);
+        $query = $query->andwhere(['Assets.asset_sts <>' => 
+            Configure::read('WNote.DB.Assets.AssetSts.abrogate')
+        ]);
 
         return ($toArray) ? $query->toArray() : $query->all();
     }
@@ -114,7 +117,8 @@ class ModelAssetsComponent extends AppModelComponent
         $query = $query->andwhere(['Assets.asset_sts IN' => [
             Configure::read('WNote.DB.Assets.AssetSts.new'),
             Configure::read('WNote.DB.Assets.AssetSts.stock'),
-            Configure::read('WNote.DB.Assets.AssetSts.repair')
+            Configure::read('WNote.DB.Assets.AssetSts.repair'),
+            Configure::read('WNote.DB.Assets.AssetSts.abrogate_plan')
         ]]);
         $query = $query->andwhere(['Stocks.stock_count > ' => 0]);
 
@@ -135,8 +139,8 @@ class ModelAssetsComponent extends AppModelComponent
         $query = $this->_makeSearchQuery([], true);
         $query->andWhere([
             'OR' => [
-                ['Assets.serial_no'  => $criteria],
-                ['Assets.asset_no'   => $criteria],
+                ['Assets.serial_no LIKE'  => '%' . $criteria . '%'],
+                ['Assets.asset_no LIKE'   => '%' . $criteria . '%'],
                 ['Assets.kname LIKE' => '%' . $criteria . '%'],
             ]
         ])
@@ -334,6 +338,112 @@ class ModelAssetsComponent extends AppModelComponent
                 return $q
                     ->select(['id', 'kname']);
             }]);
+    }
+
+    /**
+     * 廃棄予定の資産一覧を取得する
+     *  
+     * - - -
+     * 
+     * @param boolean $toArray true:配列で返す|false:ResultSetで返す（default）
+     * @return array 廃棄予定の資産一覧（ResultSet or Array）
+     */
+    public function abrogatePlans($toArray = false)
+    {
+        $query = $this->_makeAbrogateQuery();
+        $query
+            ->where([
+                'Assets.asset_sts'  => Configure::read('WNote.DB.Assets.AssetSts.abrogate_plan')
+            ]);
+
+        return ($toArray) ? $query->toArray() : $query->all();
+    }
+
+    /**
+     * 廃棄済の資産一覧を取得する
+     *  
+     * - - -
+     * 
+     * @param array $cond 検索条件
+     * @param boolean $toArray true:配列で返す|false:ResultSetで返す（default）
+     * @return array 廃棄予定の資産一覧（ResultSet or Array）
+     */
+    public function abrogates($cond, $toArray = false)
+    {
+        $query = $this->_makeAbrogateQuery();
+        $query
+            ->where([
+                'Assets.asset_sts'  => Configure::read('WNote.DB.Assets.AssetSts.abrogate')
+            ]);
+
+        $hasCondition = false;
+        if ($this->hasSearchParams('abrogate_date_from', $cond)) {
+            $query->andWhere(['Assets.abrogate_date >=' => $cond['abrogate_date_from']]);
+            $hasCondition = true;
+        }
+        if ($this->hasSearchParams('abrogate_date_to', $cond)) {
+            $query->andWhere(['Assets.abrogate_date <=' => $cond['abrogate_date_to']]);
+            $hasCondition = true;
+        }
+
+        if (!$hasCondition) {
+            $query->andWhere(['1=0']); // 検索結果を取得しない
+        }
+
+        return ($toArray) ? $query->toArray() : $query->all();
+    }
+
+    /**
+     * (Private)廃棄予定 or 廃棄済の資産情報を検索するクエリを作成する
+     *  
+     * - - -
+     * 
+     * @return \Cake\ORM\Query クエリビルダ
+     */
+    private function _makeAbrogateQuery()
+    {
+        $query = $this->modelTable->find('validAll');
+        $query
+            ->contain(['Classifications' => function($q) {
+                return $q
+                    ->select(['id', 'category_id', 'kname']);
+            }])
+            ->contain(['Products' => function($q) {
+                return $q
+                    ->select(['id', 'kname']);
+            }])
+            ->contain(['Companies' => function($q) {
+                return $q
+                    ->select(['id', 'kname']);
+            }])
+            ->contain(['Products' => function($q) {
+                return $q
+                    ->select(['id', 'kname']);
+            }])
+            ->contain(['Repairs' => function($q) {
+                return $q
+                    ->select([
+                        'repair_asset_id',
+                        'repair_count' => $q->func()->count('id')
+                    ])
+                    ->group(['repair_asset_id']);
+            }])
+            ->contain(['AssetAbrogateSuser' => function($q) {
+                return $q
+                    ->select(['id', 'kname']);
+            }])
+            ->where([
+                'Assets.asset_type' => Configure::read('WNote.DB.Assets.AssetType.asset')
+            ])
+            ->order([
+                'Classifications.kname'  => 'ASC',
+                'Assets.maker_id'        => 'ASC',
+                'Assets.product_id'      => 'ASC',
+                'asset_no'               => 'ASC',
+                'serial_no'              => 'ASC'
+            ]);
+
+        return $query;
     }
 
     /**
@@ -689,6 +799,159 @@ class ModelAssetsComponent extends AppModelComponent
 
         // 使用者を追加
         $addAssetUser = $this->ModelAssetUsers->addUser($updateAsset['data'], $picking, $pickingPlan);
+        if (!$addAssetUser['result']) {
+            return $addAssetUser;
+        }
+
+        return $updateAsset;
+    }
+
+    /**
+     * 資産を修理中に更新する
+     *  
+     * - - -
+     * 
+     * @param string $assetId 資産ID
+     * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
+     */
+    public function repair($assetId)
+    {
+        $asset = parent::get($assetId);
+        if (!$asset || count($asset) == 0) {
+            return $this->_invalid('資産管理情報が存在しない為、資産情報を修理中に更新することができませんでした。', ['method' => __METHOD__, 'asset_id' => $assetId]);
+        }
+
+        // 資産状況を修理中に更新
+        $asset['asset_sts'] = Configure::read('WNote.DB.Assets.AssetSts.repair');
+
+        return parent::save($asset->toArray());
+    }
+
+    /**
+     * 資産を修理中より在庫に更新する
+     *  
+     * - - -
+     * 
+     * @param string $assetId 資産ID
+     * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
+     */
+    public function repairComplete($assetId)
+    {
+        $asset = parent::get($assetId);
+        if (!$asset || count($asset) == 0) {
+            return $this->_invalid('資産管理情報が存在しない為、資産情報を在庫に更新することができませんでした。', ['method' => __METHOD__, 'asset_id' => $assetId]);
+        }
+
+        // 資産状況を修理中に更新
+        $asset['asset_sts'] = Configure::read('WNote.DB.Assets.AssetSts.stock');
+
+        return parent::save($asset->toArray());
+    }
+
+    /**
+     * 資産を修理中より廃棄予定に更新する
+     *  
+     * - - -
+     * 
+     * @param string $assetId 資産ID
+     * @param string $abrogateReason 廃棄理由
+     * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
+     */
+    public function repairAbrogate($assetId, $abrogateReason)
+    {
+        $asset = parent::get($assetId);
+        if (!$asset || count($asset) == 0) {
+            return $this->_invalid('資産管理情報が存在しない為、資産情報を在庫に更新することができませんでした。', ['method' => __METHOD__, 'asset_id' => $assetId]);
+        }
+
+        // 資産状況を廃棄予定に更新
+        $asset['asset_sts']         = Configure::read('WNote.DB.Assets.AssetSts.abrogate_plan');
+        $asset['abrogate_suser_id'] = $this->user();
+        $asset['abrogate_reason']   = $abrogateReason;
+
+        return parent::save($asset->toArray());
+    }
+
+    /**
+     * 資産を廃棄済みに更新する
+     *  
+     * - - -
+     * 
+     * @param string $assetId 資産ID
+     * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
+     */
+    public function abrogate($assetId)
+    {
+        $asset = parent::get($assetId);
+        if (!$asset || count($asset) == 0) {
+            return $this->_invalid('資産管理情報が存在しない為、資産情報を廃棄することができませんでした。', ['method' => __METHOD__, 'asset_id' => $assetId]);
+        }
+
+        // 資産状況を廃棄に更新
+        $asset['asset_sts'] = Configure::read('WNote.DB.Assets.AssetSts.abrogate');
+
+        return parent::save($asset->toArray());
+    }
+
+    /**
+     * 資産を貸し出す
+     *  
+     * - - -
+     * 
+     * @param string $rental 貸出情報
+     * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
+     */
+    public function rental($rental)
+    {
+        $asset = parent::get($rental['asset_id']);
+        if (!$asset || count($asset) == 0) {
+            return $this->_invalid('資産管理情報が存在しない為、資産貸出することができませんでした。', ['method' => __METHOD__, 'asset_id' => $assetId]);
+        }
+
+        $asset['asset_sts']       = Configure::read('WNote.DB.Assets.AssetSts.rental');
+        $asset['current_user_id'] = $rental['user_id'];
+
+        // 資産状況を貸出に更新
+        $updateAsset = parent::save($asset->toArray());
+        if (!$updateAsset['result']) {
+            return $updateAsset;
+        }
+
+        // 使用者を追加
+        $addAssetUser = $this->ModelAssetUsers->addUserAtRental($updateAsset['data'], $rental);
+        if (!$addAssetUser['result']) {
+            return $addAssetUser;
+        }
+
+        return $updateAsset;
+    }
+
+    /**
+     * 資産を返却する
+     *  
+     * - - -
+     * 
+     * @param string $rental 貸出・返却情報
+     * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
+     */
+    public function back($rental)
+    {
+        $asset = parent::get($rental['asset_id']);
+        if (!$asset || count($asset) == 0) {
+            return $this->_invalid('資産管理情報が存在しない為、資産貸出することができませんでした。', ['method' => __METHOD__, 'asset_id' => $assetId]);
+        }
+
+        $asset['asset_sts']       = Configure::read('WNote.DB.Assets.AssetSts.stock');
+        $asset['current_user_id'] = null;
+
+        // 資産状況を在庫に更新
+        $updateAsset = parent::save($asset->toArray());
+        if (!$updateAsset['result']) {
+            return $updateAsset;
+        }
+
+        // 使用を利用終了に更新
+        $addAssetUser = $this->ModelAssetUsers->updateBack($updateAsset['data']['id'], $rental);
         if (!$addAssetUser['result']) {
             return $addAssetUser;
         }

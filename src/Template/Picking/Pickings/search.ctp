@@ -221,7 +221,7 @@ $this->Breadcrumbs->add('出庫検索', ['controller' => 'Pickings', 'action' =>
                                 </section>
 
                                 <section>
-                                    <button type="button" class="btn btn-lg btn-block btn-info" data-app-action-key="search">検索</button>
+                                    <button type="button" class="btn btn-lg btn-block btn-info" data-app-action-key="search"><i class="fa fa-search"></i>　検索</button>
                                 </section>
                             </fieldset>
 
@@ -251,7 +251,7 @@ $this->Breadcrumbs->add('出庫検索', ['controller' => 'Pickings', 'action' =>
                     <span class="widget-icon"> <i class="fa fa-lg fa-th-list"></i> </span>
                     <h2>検索結果(※最大500件表示)</h2>
                     <div class="widget-toolbar" role="menu">
-                        <a href="javascript:void(0);" class="btn btn-info" data-app-action-key="download">ダウンロード</a>
+                        <a href="javascript:void(0);" class="btn btn-info disabled" data-app-action-key="download"><i class="fa fa-download"></i>　ダウンロード</a>
                     </div>
                 </header>
 
@@ -301,7 +301,7 @@ $this->Breadcrumbs->add('出庫検索', ['controller' => 'Pickings', 'action' =>
 </section>
 
 <!-- download form -->
-<?= $this->Form->create(null, ['id' => 'form-download', 'type' => 'post', 'class' => "smart-form hidden", 'action' => '/download']) ?>
+<?= $this->Form->create(null, ['id' => 'form-download', 'type' => 'post', 'class' => "smart-form hidden", 'url' => ['controller' => 'pickings', 'action' => 'download']]) ?>
 <?= $this->Form->end() ?>
 
 <!-- load script -->

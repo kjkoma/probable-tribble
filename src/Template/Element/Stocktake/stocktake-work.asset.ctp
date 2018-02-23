@@ -55,9 +55,9 @@
         <div class="widget-action">
             <span>入力件数： <strong id="elemStocktakeWorkAsset_stocktake_stock_count">0</strong> 件　</span>
             <span>未在庫件数： <strong id="elemStocktakeWorkAsset_stocktake_nostock_count">0</strong> 件　</span>
-            <a href="javascript:void(0);" class="btn btn-warning" data-app-action-key="stocktake-work-asset-delete-all">全ての棚卸入力を削除</a>
-            <a href="javascript:void(0);" class="btn btn-warning" data-app-action-key="stocktake-work-asset-delete">選択行を削除</a>
-            <a href="javascript:void(0);" class="btn btn-info" data-app-action-key="stocktake-work-asset-clear">選択状態を全てクリア</a>
+            <a href="javascript:void(0);" class="btn btn-warning" data-app-action-key="stocktake-work-asset-delete-all"><i class="fa fa-trash"></i>　全ての棚卸入力を削除</a>
+            <a href="javascript:void(0);" class="btn btn-warning" data-app-action-key="stocktake-work-asset-delete"><i class="fa fa-minus"></i>　選択行を削除</a>
+            <a href="javascript:void(0);" class="btn btn-info" data-app-action-key="stocktake-work-asset-clear"><i class="fa fa-sticky-note"></i>　選択状態を全てクリア</a>
         </div>
     </div>
 
@@ -83,7 +83,7 @@
     </fieldset>
 
     <footer>
-        <button type="button" class="btn btn-primary" data-app-action-key="stocktake-work-asset-save"> 棚卸結果を保存する </button>
+        <button type="button" class="btn btn-primary" data-app-action-key="stocktake-work-asset-save"> <i class="fa fa-save"></i>　棚卸結果を保存する </button>
     </footer>
 
 <!-- End form -->

@@ -27,17 +27,26 @@
 <?= $this->Form->create(null, ['id' => 'form-elem-asset-user', 'type' => 'post', 'class' => "smart-form"]) ?>
 
     <header>
-        ユーザー情報
+        利用者履歴
     </header>
 
     <fieldset>
-        <section>
-            <dl class="dl-horizontal">
-                <dt>登録日時：</dt><dd id="elem_assetview_user.created_at" name="elemAssetviewUser_created_at"></dd>
-                <dt>更新日時：</dt><dd id="elem_assetview_user.modified_at" name="elemAssetviewUser_modified_at"></dd>
-                <dt>更新者：</dt><dd id="elem_assetview_user.modified_user_name" name="elemAssetviewUser_modified_user_name"></dd>
-            </dl>
-        </section>
+
+        <table class="table table-striped table-bordered table-hover" id="elemAssetUser-datatable">
+            <thead>
+                <tr>
+                    <th>利用状況</th>
+                    <th>利用者</th>
+                    <th>管理者</th>
+                    <th>利用区分</th>
+                    <th>開始日</th>
+                    <th>終了日</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
     </fieldset>
 
 <!-- End form -->

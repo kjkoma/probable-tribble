@@ -407,7 +407,7 @@ class ModelStocksComponent extends AppModelComponent
         }
 
         // 在庫数を更新
-        $stock['stock_count'] = $stock_count - 1;
+        $stock['stock_count'] = ($stock_count == 0) ? 0 : $stock_count - 1;
         $updateStock = parent::save($stock->toArray());
         if (!$updateStock['result']) {
             return $updateStock;
@@ -456,4 +456,112 @@ class ModelStocksComponent extends AppModelComponent
 
         return $updateStock;
     }
+
+    /**
+     * 在庫を廃棄する（在庫を0にする）
+     *  
+     * - - -
+     * 
+     * @param string $assetId 資産ID
+     * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
+     */
+    public function abrogate($assetId)
+    {
+        $stock = $this->stock($assetId);
+        if (!$stock || count($stock) == 0) {
+            return parent::_invalid(['message' => '廃棄対象の在庫情報がありません。', 'data' => ['method' => __METHOD__, 'asset_id' => $assetId]]);
+        }
+
+        $stock_count = $stock['stock_count'];
+        $stock['stock_count'] = 0;
+        $updateStock = parent::save($stock->toArray());
+        if (!$updateStock['result']) {
+            return $updateStock;
+        }
+
+        // 在庫履歴（棚卸）を登録する
+        $newStock = $updateStock['data'];
+        $newStock['stock_count_org'] = $stock_count;
+        $updateHistory = $this->ModelStockHistories->addAbrogate($newStock);
+        if (!$updateHistory['result']) {
+            return $updateHistory;
+        }
+
+        return $updateStock;
+    }
+
+    /**
+     * 貸出時の在庫更新を行う
+     *  
+     * - - -
+     * 
+     * @param array $asset 資産情報
+     * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
+     */
+    public function updateRental($asset)
+    {
+        $assetType = $asset['asset_type'];
+        $stock     = $this->stock($asset['id']);
+        if (!$stock || count($stock) == 0) {
+            return parent::_invalid(['message' => '貸出対象の在庫情報がありません。', 'data' => ['method' => __METHOD__, 'asset' => $asset]]);
+        }
+
+        $stock_count = is_numeric($stock['stock_count']) ? intVal($stock['stock_count']) : 0;
+        if ($stock_count < 1) {
+            return parent::_invalid(['message' => '貸出対象の在庫がありません。', 'data' => ['method' => __METHOD__, 'stock' => $stock]]);
+        }
+
+        // 在庫数を更新
+        $stock['stock_count'] = ($stock_count == 0) ? 0 : $stock_count - 1;
+        $updateStock = parent::save($stock->toArray());
+        if (!$updateStock['result']) {
+            return $updateStock;
+        }
+
+        // 在庫履歴（貸出）を登録する
+        $newStock = $updateStock['data'];
+        $newStock['stock_count_org'] = $stock_count;
+        $updateHistory = $this->ModelStockHistories->addRental($newStock);
+        if (!$updateHistory['result']) {
+            return $updateHistory;
+        }
+
+        return $updateStock;
+    }
+
+    /**
+     * 返却時の在庫更新を行う
+     *  
+     * - - -
+     * 
+     * @param array $asset 資産情報
+     * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
+     */
+    public function updateBack($asset)
+    {
+        $assetType = $asset['asset_type'];
+        $stock     = $this->stock($asset['id']);
+        if (!$stock || count($stock) == 0) {
+            return parent::_invalid(['message' => '返却対象の在庫情報がありません。', 'data' => ['method' => __METHOD__, 'asset' => $asset]]);
+        }
+
+        // 在庫数を更新
+        $stock_count = is_numeric($stock['stock_count']) ? intVal($stock['stock_count']) : 0;
+        $stock['stock_count'] = $stock_count + 1;
+        $updateStock = parent::save($stock->toArray());
+        if (!$updateStock['result']) {
+            return $updateStock;
+        }
+
+        // 在庫履歴（返却）を登録する
+        $newStock = $updateStock['data'];
+        $newStock['stock_count_org'] = $stock_count;
+        $updateHistory = $this->ModelStockHistories->addBack($newStock);
+        if (!$updateHistory['result']) {
+            return $updateHistory;
+        }
+
+        return $updateStock;
+    }
+
 }

@@ -207,7 +207,6 @@ MyPage.save = function() {
         true,
         successHandler
     );
-
 }
 /**
  * 保存ボタンクリック成功時のハンドラの実装（追加時）

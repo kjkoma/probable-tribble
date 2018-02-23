@@ -51,6 +51,40 @@ class ApiStocksController extends ApiController
         $stocks = $this->ModelAssets->searchStock($data['cond']);
 
         // 一覧表示用に編集する
+        $list = $this->_makeSearchData($stocks, true);
+
+        // レスポンスメッセージの作成
+        $this->setResponse(true, 'your request is success', ['stocks' => $list]);
+    }
+
+    /**
+     * 在庫情報を検索する（全て）
+     *
+     */
+    public function searchAll()
+    {
+        $data = $this->validateParameter('cond', ['post']);
+        if (!$data) return;
+
+        // 在庫一覧を取得(※資産ベースで取得する)
+        $stocks = $this->ModelAssets->searchStock($data['cond']);
+
+        // 一覧表示用に編集する
+        $list = $this->_makeSearchData($stocks, false);
+
+        // レスポンスメッセージの作成
+        $this->setResponse(true, 'your request is success', ['stocks' => $list]);
+    }
+
+    /**
+     * 在庫情報を検索する（全て）
+     *
+     * @param array $stocks 在庫(資産)データ
+     * @param boolean $limitControl true:件数制限する/false:件数制限しない
+     * @param array 検索結果データ（一覧表示用）
+     */
+    private function _makeSearchData($stocks, $limitControl) {
+        // 一覧表示用に編集する
         $list = []; $counter = 0; $limit = intVal(Configure::read('WNote.ListLimit.maxcount'));
         foreach($stocks as $stock) {
             $list[] = [
@@ -63,16 +97,16 @@ class ApiStocksController extends ApiController
                 'classification_name' => $stock['classification']['kname'],
                 'maker_name'          => $stock['company']['kname'],
                 'product_name'        => $stock['product']['kname'],
+                'product_model_name'  => $stock['product_model']['kname'],
                 'serial_no'           => $stock['serial_no'],
                 'asset_no'            => $stock['asset_no'],
                 'stock_count'         => $stock['stock']['stock_count']
             ];
             $counter++;
-            if ($counter > $limit) break;  // 最大500件に制限する
+            if ($limitControl && $counter > $limit) break;  // 最大500件に制限する
         }
 
-        // レスポンスメッセージの作成
-        $this->setResponse(true, 'your request is success', ['stocks' => $list]);
+        return $list;
     }
 
     /**
@@ -165,6 +199,35 @@ class ApiStocksController extends ApiController
 
         // 資産
         $asset = $this->ModelAssets->byAssetNo($data['asset_no']);
+        if (!$asset || count($asset) == 0) {
+            $validate = false;
+        }
+
+        // 在庫
+        if ($validate) {
+            $stock = $this->ModelStocks->stock($asset['id']);
+            if (!$stock || count($stock) == 0 || intVal($stock['stock_count']) < 1) {
+                $validate = false;
+            }
+        }
+
+        // レスポンスメッセージの作成
+        $this->setResponse(true, 'your request is succeed', ['validate' => $validate]);
+    }
+
+    /**
+     * 指定された資産IDの在庫有無（資産自体の存在含む）を検証する
+     *
+     */
+    public function validateAssetId()
+    {
+        $data = $this->validateParameter('asset_id', ['post']);
+        if (!$data) return;
+
+        $validate = true;
+
+        // 資産
+        $asset = $this->ModelAssets->get($data['asset_id']);
         if (!$asset || count($asset) == 0) {
             $validate = false;
         }

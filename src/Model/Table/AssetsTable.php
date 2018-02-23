@@ -93,6 +93,9 @@ class AssetsTable extends AppTable
         $this->hasMany('StockHistories', [
             'foreignKey' => 'asset_id'
         ]);
+        $this->hasMany('Repairs', [
+            'foreignKey' => 'repair_asset_id'
+        ]);
         $this->hasOne('Stocks', [
             'foreignKey' => 'asset_id',
             'joinType' => 'INNER'

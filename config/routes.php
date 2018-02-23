@@ -105,9 +105,6 @@ Router::scope('/', function (RouteBuilder $routes) {
         $routes->prefix('rental', function (RouteBuilder $routes) {
                 $routes->fallbacks(DashedRoute::class);
         });
-        $routes->prefix('back', function (RouteBuilder $routes) {
-            $routes->fallbacks(DashedRoute::class);
-        });
 
         $routes->prefix('master', function (RouteBuilder $routes) {
             $routes->prefix('system', function (RouteBuilder $routes) {
@@ -152,10 +149,6 @@ Router::scope('/', function (RouteBuilder $routes) {
     });
     /* Rental Routes */
     Router::prefix('rental', function (RouteBuilder $routes) {
-        $routes->fallbacks(DashedRoute::class);
-    });
-    /* Back Routes */
-    Router::prefix('back', function (RouteBuilder $routes) {
         $routes->fallbacks(DashedRoute::class);
     });
 

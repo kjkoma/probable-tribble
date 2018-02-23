@@ -62,14 +62,65 @@ class ModelRepairsComponent extends AppModelComponent
     }
 
     /**
+     * 修理情報を取得する
+     *  
+     * - - -
+     * @param string $repairId 修理ID
+     * @return \App\Model\Entity\Repair 修理情報
+     */
+    public function repair($repairId)
+    {
+        $query = $this->modelTable->find('validAll')
+            ->where(['Repairs.id' => $repairId])
+            ->contain([
+                'RepairAssets' => function($q) {
+                    return $q->select(['id', 'serial_no', 'asset_no', 'kname']);
+                }
+            ])
+            ->contain([
+                'Instocks' => function($q) {
+                    return $q->select(['id', 'instock_date']);
+                }
+            ])
+            ->contain([
+                'Pickings' => function($q) {
+                    return $q->select(['id', 'picking_date']);
+                }
+            ])
+            ->contain([
+                'RepairSts' => function($q) {
+                    return $q->select(['nkey', 'nid', 'name']);
+                }
+            ])
+            ->contain([
+                'RepairsTroubleKbn' => function($q) {
+                    return $q->select(['nkey', 'nid', 'name']);
+                }
+            ])
+            ->contain([
+                'RepairsSendbackKbn' => function($q) {
+                    return $q->select(['nkey', 'nid', 'name']);
+                }
+            ])
+            ->contain([
+                'RepairsDatapickKbn' => function($q) {
+                    return $q->select(['nkey', 'nid', 'name']);
+                }
+            ]);
+
+        return $query->first();
+    }
+
+    /**
      * 修理情報を検索する
      *  
      * - - -
      * @param array $cond 検索条件
+     * @param array $enableLimit 制限有無（true: 制限あり／false: 制限なし）
      * @param boolean $toArray true:配列で返す|false:ResultSetで返す（default）
      * @return array 修理一覧（ResultSet or Array）
      */
-    public function search($cond, $toArray = false)
+    public function search($cond, $enableLimit = false, $toArray = false)
     {
         $query = $this->modelTable->find('valid')
             ->contain(['RepairRepairKbn' => function($q) {
@@ -142,50 +193,75 @@ class ModelRepairsComponent extends AppModelComponent
                 'RepairAssets.product_id' => 'ASC'
             ]);
 
+        $hasCondition = false;
         if (array_key_exists('repair_sts', $cond) && $cond['repair_sts'] !== '') {
             $query->where(['repair_sts' => $cond['repair_sts']]);
+            $hasCondition = true;
         }
         if (array_key_exists('req_date_from', $cond) && $cond['req_date_from'] !== '') {
             $query->where(['PickingPlans.req_date >=' => $cond['req_date_from']]);
+            $hasCondition = true;
         }
         if (array_key_exists('req_date_to', $cond) && $cond['req_date_to'] !== '') {
             $query->where(['PickingPlans.req_date <=' => $cond['req_date_to']]);
+            $hasCondition = true;
         }
         if (array_key_exists('trouble_kbn', $cond) && $cond['trouble_kbn'] !== '') {
             $query->where(['trouble_kbn' => $cond['trouble_kbn']]);
+            $hasCondition = true;
         }
         if (array_key_exists('sendback_kbn', $cond) && $cond['sendback_kbn'] !== '') {
             $query->where(['sendback_kbn' => $cond['sendback_kbn']]);
+            $hasCondition = true;
         }
         if (array_key_exists('datapick_kbn', $cond) && $cond['datapick_kbn'] !== '') {
             $query->where(['datapick_kbn' => $cond['datapick_kbn']]);
+            $hasCondition = true;
         }
         if (array_key_exists('req_user_id', $cond) && $cond['req_user_id'] !== '') {
             $query->where(['PickingPlans.req_user_id' => $cond['req_user_id']]);
+            $hasCondition = true;
         }
         if (array_key_exists('instock_date_from', $cond) && $cond['instock_date_from'] !== '') {
             $query->where(['Instocks.instock_date >=' => $cond['instock_date_from']]);
+            $hasCondition = true;
         }
         if (array_key_exists('instock_date_to', $cond) && $cond['instock_date_to'] !== '') {
             $query->where(['Instocks.instock_date <=' => $cond['instock_date_to']]);
+            $hasCondition = true;
         }
         if (array_key_exists('classification_id', $cond) && $cond['classification_id'] !== '') {
             $query->where(['RepairAssets.classification_id' => $cond['classification_id']]);
+            $hasCondition = true;
         }
         if (array_key_exists('maker_id', $cond) && $cond['maker_id'] !== '') {
             $query->where(['RepairAssets.maker_id' => $cond['maker_id']]);
+            $hasCondition = true;
         }
         if (array_key_exists('product_id', $cond) && $cond['product_id'] !== '') {
             $query->where(['RepairAssets.product_id' => $cond['product_id']]);
+            $hasCondition = true;
         }
         if (array_key_exists('product_model_id', $cond) && $cond['product_model_id'] !== '') {
             $query->where(['RepairAssets.product_model_id' => $cond['product_model_id']]);
+            $hasCondition = true;
         }
         if (array_key_exists('serial_no', $cond) && $cond['serial_no'] !== '') {
             $query->where(['RepairAssets.serial_no' => $cond['serial_no']]);
+            $hasCondition = true;
         }
         if (array_key_exists('asset_no', $cond) && $cond['asset_no'] !== '') {
             $query->where(['RepairAssets.asset_no' => $cond['asset_no']]);
+            $hasCondition = true;
+        }
+
+        if ($enableLimit && !$hasCondition) {
+            $query->andWhere([
+                'OR' => [
+                    ['Repairs.repair_sts' => Configure::read('WNote.DB.Repair.RepairSts.instock')],
+                    ['Repairs.repair_sts' => Configure::read('WNote.DB.Repair.RepairSts.repair')]
+                ]
+            ]);
         }
 
         return ($toArray) ? $query->toArray() : $query->all();
@@ -277,13 +353,82 @@ class ModelRepairsComponent extends AppModelComponent
     }
 
     /**
+     * 修理情報を新規に作成する（画面入力時）
+     *  
+     * - - -
+     * @param array $repair 修理情報
+     * @param array $assetId 資産ID
+     * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
+     */
+    public function entry($repair, $assetId)
+    {
+        // 修理情報を登録
+        $new = [];
+        $new['domain_id']       = $this->current();
+        $new['repair_kbn']      = Configure::read('WNote.DB.Repair.RepairKbn.stock');
+        $new['repair_sts']      = Configure::read('WNote.DB.Repair.RepairSts.repair');
+        $new['start_date']      = $repair['start_date'];
+        $new['repair_asset_id'] = $assetId;
+        $new['trouble_kbn']     = $repair['trouble_kbn'];
+        $new['trouble_reason']  = $repair['trouble_reason'];
+        $new['sendback_kbn']    = $repair['sendback_kbn'];
+        $new['datapick_kbn']    = $repair['datapick_kbn'];
+        $new['remarks']         = $repair['remarks'];
+        return parent::add($new);
+    }
+
+    /**
+     * 修理情報を完了に更新する（画面入力による完了時）
+     *  
+     * - - -
+     * @param array $repairId 修理ID
+     * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
+     */
+    public function entryComplete($repairId)
+    {
+        // 修理情報を取得
+        $repair = parent::get($repairId);
+        if (!$repair || count($repair) == 0) {
+            return $this->_invalid('修理情報が存在しないため、更新できませんでした。');
+        }
+
+        $repair['repair_sts'] = Configure::read('WNote.DB.Repair.RepairSts.stock');
+        $repair['end_date']   = $this->today();
+
+        // 修理情報を更新
+        return parent::save($repair->toArray());
+    }
+
+    /**
+     * 修理情報を廃棄に更新する（画面入力による廃棄時）
+     *  
+     * - - -
+     * @param array $repairId 修理ID
+     * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
+     */
+    public function entryAbrogate($repairId)
+    {
+        // 修理情報を取得
+        $repair = parent::get($repairId);
+        if (!$repair || count($repair) == 0) {
+            return $this->_invalid('修理情報が存在しないため、更新できませんでした。');
+        }
+
+        $repair['repair_sts'] = Configure::read('WNote.DB.Repair.RepairSts.abrogate');
+        $repair['end_date']   = $this->today();
+
+        // 修理情報を更新
+        return parent::save($repair->toArray());
+    }
+
+    /**
      * 修理情報を新規に作成する（出庫予定登録時）
      *  
      * - - -
      * @param array $repair 修理情報
      * @param array $asset 資産情報
      * @param array $pickingPlanId 出庫予定情報ID
-     * @return \App\Model\Entity\Exchange 交換データ
+     * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
      */
     public function addNew($repair, $asset, $pickingPlanId)
     {
@@ -404,4 +549,28 @@ class ModelRepairsComponent extends AppModelComponent
         return parent::save($repair->toArray());
     }
 
+    /**
+     * 修理情報が入庫済の場合に状況を修理中に更新する
+     *  
+     * - - -
+     * @param array $repairId 修理ID
+     * @return array {result: true/false, data: 結果データ, errors: エラーデータ}
+     */
+    public function startRepair($repairId)
+    {
+        // 修理情報を取得
+        $repair = parent::get($repairId);
+        if (!$repair || count($repair) == 0) {
+            return $this->_invalid('修理情報が存在しないため、更新できませんでした。');
+        }
+
+        if ($repair['repair_sts'] == Configure::read('WNote.DB.Repair.RepairSts.instock')) {
+            $repair['repair_sts'] = Configure::read('WNote.DB.Repair.RepairSts.repair');
+            // 修理情報を更新
+            return parent::save($repair->toArray());
+        }
+
+        // 修理情報を更新
+        return parent::_result(true, ['repair_id' => repairId]);
+    }
 }

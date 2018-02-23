@@ -22,24 +22,26 @@
  * 設定デフォルト
  * <code>
  *   'conf' => [
- *       'asset'  => 'view', // 'edit' or 'add'指定可(編集時は資産番号/資産名称/ステータス/サブステータス/初回入庫日/計上日/保守期限日/廃棄日/補足のみ入力可)
- *       'attr'   => 'view', // 'edit'指定可
- *       'user'   => false,
- *       'stock'  => false,
- *       'repair' => false,
- *       'rental' => false,
- *       'hidden' => false   // true: 初期非表示/false: 初期表示
+ *       'asset'        => 'view', // 'edit' or 'add'指定可(編集時は資産番号/資産名称/ステータス/サブステータス/初回入庫日/計上日/保守期限日/廃棄日/補足のみ入力可)
+ *       'attr'         => 'view', // 'edit'指定可
+ *       'user'         => false,
+ *       'stock'        => false,
+ *       'repair'       => false,
+ *       'rental'       => false,
+ *       'hidden'       => false,   // true: 初期非表示/false: 初期表示
+ *       'actionRental' => false
  *   ]
  * </code>
  */
 $default = [
-    'asset'   => 'view',
-    'attr'    => 'view',
-    'user'    => false,
-    'stock'   => false,
-    'repair'  => false,
-    'rental'  => false,
-    'hidden'  => false
+    'asset'        => 'view',
+    'attr'         => 'view',
+    'user'         => false,
+    'stock'        => false,
+    'repair'       => false,
+    'rental'       => false,
+    'hidden'       => false,
+    'actionRental' => false
 ];
 $conf = isset($conf) ? array_merge($default, $conf) : $default;
 ?>
@@ -50,7 +52,7 @@ $conf = isset($conf) ? array_merge($default, $conf) : $default;
      data-widget-editbutton="false"
      data-widget-colorbutton="false"
      data-widget-togglebutton="false"
-     data-widget-fullscreen="false"
+     data-widget-fullscreenbutton="false"
      data-widget-sortable="false">
 
     <!-- DETAILS widget header -->
@@ -100,11 +102,18 @@ $conf = isset($conf) ? array_merge($default, $conf) : $default;
             </li>
         </ul>
         <!-- 操作ボタン -->
-        <div id="elemAssetAdd-actions" class="<?= ($conf['asset'] == 'add') ? '' : 'hidden' ?>">
-            <div class="widget-toolbar" role="menu" data-app-action-key="elemAssetAdd-add-actions">
-                <a href="javascript:void(0);" class="btn btn-primary" data-app-action-key="elemAssetAdd-save">保存</a>
+        <?php if ($this->AppUser->hasDomainGeneral()) { ?>
+            <div id="elemAssetRental-actions" class="<?= ($conf['actionRental']) ? '' : 'hidden' ?>">
+                <div class="widget-toolbar" role="menu" data-app-action-key="elemAssetRental-rental-actions">
+                    <a href="javascript:void(0);" class="btn btn-primary" data-app-action-key="elemAssetRental-rental"><i class="fa fa-book"></i>　貸出予定追加</a>
+                </div>
             </div>
-        </div>
+            <div id="elemAssetAdd-actions" class="<?= ($conf['asset'] == 'add') ? '' : 'hidden' ?>">
+                <div class="widget-toolbar" role="menu" data-app-action-key="elemAssetAdd-add-actions">
+                    <a href="javascript:void(0);" class="btn btn-primary" data-app-action-key="elemAssetAdd-save"><i class="fa fa-save"></i>　保存</a>
+                </div>
+            </div>
+        <?php } ?>
     </header>
 
     <!-- content -->

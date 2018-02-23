@@ -39,7 +39,7 @@
             <?= $this->Form->end() ?>
         </div>
         <div class="col-sm-2 text-right">
-            <button type="button" class="btn btn-primary" data-app-action-key="elem-stocktake-nostock-save">対応済に更新する</button>
+            <button type="button" class="btn btn-primary" data-app-action-key="elem-stocktake-nostock-save"><i class="fa fa-save"></i>　対応済に更新する</button>
         </div>
     </div>
 </header>

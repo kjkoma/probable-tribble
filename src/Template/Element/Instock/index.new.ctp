@@ -142,8 +142,8 @@
                                 <div class="widget-actions">
                                     <div class="widget-action">
                                         <span>入力件数： <strong id="new_input_count">0</strong> 件　</span>
-                                        <a href="javascript:void(0);" class="btn btn-warning" data-app-action-key="serial-delete">選択シリアル削除</a>
-                                        <a href="javascript:void(0);" class="btn btn-warning" data-app-action-key="serial-delete-all">全てのシリアル削除</a>
+                                        <a href="javascript:void(0);" class="btn btn-warning" data-app-action-key="serial-delete"><i class="fa fa-minus"></i>　選択シリアル削除</a>
+                                        <a href="javascript:void(0);" class="btn btn-warning" data-app-action-key="serial-delete-all"><i class="fa fa-trash"></i>　全てのシリアル削除</a>
                                     </div>
                                 </div>
 
@@ -238,13 +238,13 @@
                         <div class="form-actions">
                             <ul class="pager wizard no-margin">
                                 <li class="previous disabled">
-                                    <a href="javascript:void(0);" class="btn btn-lg btn-default"> 前へ戻る </a>
+                                    <a href="javascript:void(0);" class="btn btn-lg btn-default"> <i class="fa fa-step-backward"></i>　前へ戻る </a>
                                 </li>
                                 <li class="next">
-                                    <a href="javascript:void(0);" class="btn btn-lg txt-color-darken"> 次へ進む </a>
+                                    <a href="javascript:void(0);" class="btn btn-lg txt-color-darken"> <i class="fa fa-step-forward"></i>　次へ進む </a>
                                 </li>
                                 <li class="finish hidden">
-                                    <button type="button" class="btn btn-lg btn-primary"> 入庫を確定する </button>
+                                    <button type="button" class="btn btn-lg btn-primary"> <i class="fa fa-save"></i>　入庫を確定する </button>
                                 </li>
                             </ul>
                             <!-- End form-actions -->

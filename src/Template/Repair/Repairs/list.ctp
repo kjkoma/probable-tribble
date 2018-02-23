@@ -28,8 +28,8 @@ $this->Breadcrumbs->add('修理一覧', ['controller' => 'Repairs', 'action' => 
     <!-- ********************************** -->
 
     <!-- list widget grid row -->
-    <div class="row">
-        <!-- DETAIL list widget -->
+    <div class="row" id="grid-row-list">
+        <!-- list widget -->
         <article class="col-sm-12 sortable-grid ui-sortable">
 
             <!-- widget ID -->
@@ -39,7 +39,7 @@ $this->Breadcrumbs->add('修理一覧', ['controller' => 'Repairs', 'action' => 
                  data-widget-colorbutton="false"
                  data-widget-sortable="false">
 
-                <!-- DETAILS widget header -->
+                <!-- widget header -->
                 <header role="heading">
                     <span class="widget-icon"> <i class="fa fa-lg fa-th-list"></i> </span>
                     <h2>修理一覧</h2>
@@ -48,7 +48,7 @@ $this->Breadcrumbs->add('修理一覧', ['controller' => 'Repairs', 'action' => 
                 <!-- content -->
                 <div role="content">
 
-                    <!-- DETAILS widget body -->
+                    <!-- widget body -->
                     <div class="widget-body">
 
                         <!-- form -->
@@ -214,7 +214,7 @@ $this->Breadcrumbs->add('修理一覧', ['controller' => 'Repairs', 'action' => 
                                 </div>
 
                                 <section>
-                                    <button type="button" class="btn btn-lg btn-block btn-info" data-app-action-key="search">検索</button>
+                                    <button type="button" class="btn btn-lg btn-block btn-info" data-app-action-key="search"><i class="fa fa-search"></i>　検索</button>
                                 </section>
                             </fieldset>
 
@@ -241,9 +241,9 @@ $this->Breadcrumbs->add('修理一覧', ['controller' => 'Repairs', 'action' => 
                 <!-- DETAILS widget header -->
                 <header role="heading">
                     <span class="widget-icon"> <i class="fa fa-lg fa-th-list"></i> </span>
-                    <h2>修理一覧(※最大500件表示)</h2>
+                    <h2>修理一覧(※条件未指定時：入庫済、修理中のみ表示)</h2>
                     <div class="widget-toolbar" role="menu">
-                        <a href="javascript:void(0);" class="btn btn-info" data-app-action-key="download">ダウンロード</a>
+                        <a href="javascript:void(0);" class="btn btn-info disabled" data-app-action-key="download"><i class="fa fa-download"></i>　ダウンロード</a>
                     </div>
                 </header>
 
@@ -281,21 +281,42 @@ $this->Breadcrumbs->add('修理一覧', ['controller' => 'Repairs', 'action' => 
                 <!-- End widget ID -->
             </div>
 
-            <!-- End DETAILS list widget -->
+            <!-- End list widget -->
         </article>
 
         <!-- End list widget grid row -->
+    </div>
+
+    <!-- back grid row -->
+    <div class="row hidden" id="grid-row-back">
+        <div class="col col-sm-12 text-right">
+            <button type="button" class="btn btn-default" data-app-action-key="back"><i class="fa fa-chevron-left"></i>　一覧に戻る</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- histories widget -->
+        <article class="col-sm-12 sortable-grid ui-sortable">
+
+            <!-- Histories Widget -->
+            <?= $this->element('Repair/repair_histories', ['conf' => [
+                'hidden' => true]]) ?>
+
+            <!-- End histories widget -->
+        </article>
+
+        <!-- End asset widget grid row -->
     </div>
 
     <!-- End widget grid-->
 </section>
 
 <!-- download form -->
-<?= $this->Form->create(null, ['id' => 'form-download', 'type' => 'post', 'class' => "smart-form hidden", 'action' => '/download-list']) ?>
+<?= $this->Form->create(null, ['id' => 'form-download', 'type' => 'post', 'class' => "smart-form hidden", 'url' => ['controller' => 'repairs', 'action' => 'download-list']]) ?>
 <?= $this->Form->end() ?>
 
 <!-- load script -->
 <?= $this->element('Common/load-datatable') ?>
 <?php $this->Html->script('wnote/libs/wnote.lib.form.js', ['block' => true]); ?>
+<?php $this->Html->script('wnote/element/wnote.repair_histories.js', ['block' => true]); ?>
 <?php $this->Html->script('wnote/repair/repairs.list.js', ['block' => true]); ?>
-

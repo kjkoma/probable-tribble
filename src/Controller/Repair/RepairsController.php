@@ -37,6 +37,21 @@ class RepairsController extends AppController
     }
 
     /**
+     * 修理登録画面を表示する
+     *
+     * @return \Cake\Http\Response|void
+     */
+    public function entry()
+    {
+        $troubleKbn  = $this->SysModelSnames->byKey('TROUBLE_KBN');
+        $sendbackKbn = $this->SysModelSnames->byKey('SENDBACK_KBN');
+        $datapickKbn = $this->SysModelSnames->byKey('DATAPICK_KBN');
+
+        $this->set(compact('troubleKbn', 'sendbackKbn', 'datapickKbn'));
+        $this->render();
+    }
+
+    /**
      * 修理一覧を表示する
      *
      * @return \Cake\Http\Response|void

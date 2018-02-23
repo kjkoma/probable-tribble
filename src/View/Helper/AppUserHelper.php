@@ -301,4 +301,60 @@ class AppUserHelper extends AppHelper
         return false;
     }
 
+    /**
+     * サイドメニューを出力する(一般ドメインユーザーのみ)
+     *
+     * - - -
+     * @param string $path URL
+     * @param string $title タイトル名
+     * @param string $icon アイコン名
+     * @param string サイドメニュー要素（li要素)
+     * @param 
+     */
+    public function menuGeneral($path, $title, $icon)
+    {
+        if (!$this->hasDomainGeneral()) {
+            return '';
+        }
+
+        return parent::menu($path, $title, $icon);
+    }
+
+    /**
+     * サイドメニューを出力する(一般ドメインユーザーのみ)
+     *
+     * - - -
+     * @param string $path URL
+     * @param string $title タイトル名
+     * @param string $icon アイコン名
+     * @param string サイドメニュー要素（li要素)
+     * @param 
+     */
+    public function menuDomainAdmin($path, $title, $icon)
+    {
+        if (!$this->hasDomainAdmin()) {
+            return '';
+        }
+
+        return parent::menu($path, $title, $icon);
+    }
+
+    /**
+     * サイドメニューを出力する(一般ドメインユーザーのみ)
+     *
+     * - - -
+     * @param string $path URL
+     * @param string $title タイトル名
+     * @param string $icon アイコン名
+     * @param string サイドメニュー要素（li要素)
+     * @param 
+     */
+    public function menuAdmin($path, $title, $icon)
+    {
+        if (!$this->hasAdmin()) {
+            return '';
+        }
+
+        return parent::menu($path, $title, $icon);
+    }
 }

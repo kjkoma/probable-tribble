@@ -33,6 +33,7 @@ class InstocksController extends AppController
         parent::initialize();
         $this->_loadComponent('ModelInstockDetails');
         $this->_loadComponent('ModelCompanies');
+        $this->_loadComponent('SysModelSnames');
     }
 
     /**
@@ -56,8 +57,10 @@ class InstocksController extends AppController
     public function search()
     {
         $makers = $this->ModelCompanies->makers();
+        $assetSts    = $this->SysModelSnames->byKey('ASSET_STS');
+        $assetSubSts = $this->SysModelSnames->byKey('ASSET_SUB_STS');
 
-        $this->set(compact('makers'));
+        $this->set(compact('makers', 'assetSts', 'assetSubSts'));
         $this->render();
     }
 
@@ -73,7 +76,7 @@ class InstocksController extends AppController
 
         // 入庫予定一覧を取得
         $instocks = $this->ModelInstockDetails->search($data['cond'], true);
-$this->log($instocks);
+
         // ダウンロード
         $_serialize     = ['instocks'];
         $_extract   = [

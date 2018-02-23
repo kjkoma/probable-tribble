@@ -17,7 +17,11 @@
  *  -------------------------------------------------------------------------*/
 const MYPAGE = {
     FORM_KEY     : 'form-condition',
-    FORM_DOWNLOAD: 'form-download'
+    FORM_DOWNLOAD: 'form-download',
+    ROW : {
+        LIST : '#grid-row-list',
+        BACK : '#grid-row-back'
+    }
 };
 
 /** ---------------------------------------------------------------------------
@@ -60,7 +64,7 @@ $(function() {
     });
 
     /** データテーブルイベント登録 */
-    // $('#stock-datatable tbody').on('click', 'tr', MyPage.selectedStockHandler);
+    $('#repair-datatable tbody').on('click', 'tr', MyPage.selectedRowHandler);
 
     /** select2 登録 */
     WNote.Select2.user('#req_user_id'                , null                , true, '依頼者選択');
@@ -69,8 +73,12 @@ $(function() {
     WNote.Select2.model('#product_model_id'          , '#product_model_id' , true, 'モデル選択');
 
     /** 各種操作イベント登録 */
-    WNote.registerEvent('click', 'search', MyPage.search);
+    WNote.registerEvent('click', 'search'  , MyPage.search);
     WNote.registerEvent('click', 'download', MyPage.download);
+    WNote.registerEvent('click', 'back'    , MyPage.showList);
+
+    /** 修理の完了・廃棄イベント登録 */
+    WNote.RepairsHistories.afterCompleteOrAbrogateRegister('repair', MyPage.refreshList);
 
     // 初回画面表示
     MyPage.search();
@@ -88,7 +96,7 @@ $(function() {
 MyPage.getList = function(data) {
     // 修理一覧の取得
     var result = WNote.ajaxValidateSend('/api/repair/api-repairs/search', 'POST',　{
-        'cond': data.cond
+        'cond': data
     });
 
     if (!result) {
@@ -105,7 +113,7 @@ MyPage.getList = function(data) {
  *
  * @param {object} data 検索条件
  */
-MyPage.showList = function(data) {
+MyPage.showTable = function(data) {
     var result = MyPage.getList(data);
     if (result) {
         MyPage.datatable
@@ -125,7 +133,8 @@ MyPage.search = function() {
     var data = WNote.Form.createAjaxData(MYPAGE.FORM_KEY);
     MyPage.selectData.cond = data.cond;
     WNote.Util.createFormElements(MYPAGE.FORM_DOWNLOAD, 'cond', data.cond); // ダウンロード用条件の保存
-    MyPage.showList(data);
+    WNote.Util.removeClassByDataAttr('download', 'disabled');
+    MyPage.showTable(data.cond);
 }
 
 /** ---------------------------------------------------------------------------
@@ -137,3 +146,40 @@ MyPage.search = function() {
 MyPage.download = function() {
     $('#' + MYPAGE.FORM_DOWNLOAD).submit();
 }
+
+/** ---------------------------------------------------------------------------
+ *  イベント処理（一覧表示）
+ *  -------------------------------------------------------------------------*/
+/**
+ * 一覧へ戻るボタンクリックイベントのハンドラの実装
+ */
+MyPage.showList = function() {
+    $(MYPAGE.ROW.LIST).removeClass('hidden');
+    WNote.RepairsHistories.hideWidget();
+    $(MYPAGE.ROW.BACK).addClass('hidden');
+}
+
+/**
+ * 修理完了 or 廃棄時の再表示処理
+ */
+MyPage.refreshList = function() {
+    MyPage.showTable(MyPage.selectData.cond);
+    MyPage.showList();
+}
+
+/** ---------------------------------------------------------------------------
+ *  イベント処理（修理選択）
+ *  -------------------------------------------------------------------------*/
+/**
+ * 修理選択イベントのハンドラの実装
+ */
+MyPage.selectedRowHandler = function() {
+    var selected = MyPage.datatable.row( this ).data();
+    if (selected) {
+        WNote.Util.All.highlightDataTableRow($(this), MyPage.datatable);
+        $(MYPAGE.ROW.BACK).removeClass('hidden');
+        WNote.RepairsHistories.showWidget(selected.id, selected.repair_sts);
+        $(MYPAGE.ROW.LIST).addClass('hidden');
+    }
+}
+

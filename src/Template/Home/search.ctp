@@ -20,7 +20,7 @@ $this->Breadcrumbs->add('検索結果', '#');
 ?>
 
 <!-- row -->
-<div class="row">
+<div class="row" id="home-search-result">
 
     <!-- col -->
     <div class="col-sm-12">
@@ -57,7 +57,7 @@ $this->Breadcrumbs->add('検索結果', '#');
                 <?php } else { ?>
                     <?php foreach($assets as $asset) { ?>
                         <div class="search-results clearfix smart-form">
-                            <h4><a href="javascript:void(0);" class="text-primary"><?= h($asset['kname']) ?></a></h4>
+                            <h4><a href="javascript:void(0);" class="text-primary" onclick="MyPage.selectedRowHandler(<?= $asset['id'] ?>);"><?= h($asset['kname']) ?></a></h4>
                             <p class="description">
                                 【シリアル番号】<?= h($asset['serial_no']) ?>　
                                 【資産管理番号】<?= h($asset['asset_no']) ?>　
@@ -91,3 +91,40 @@ $this->Breadcrumbs->add('検索結果', '#');
 <!-- End row -->
 </div>
 
+<!-- widget grid -->
+<section id="widget-grid">
+
+    <!-- detail widget grid row -->
+    <div class="row hidden" id="grid-row-back">
+        <div class="col col-sm-12 text-right">
+            <button type="button" class="btn btn-default" data-app-action-key="back"><i class="fa fa-chevron-left"></i>　検索を表示</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- DETAIL asset widget -->
+        <article class="col-sm-12 sortable-grid ui-sortable">
+
+            <!-- Asset Widget -->
+            <?= $this->element('Asset/asset', ['conf' => [
+                'asset'  => 'edit',
+                'attr'   => 'edit',
+                'user'   => true,
+                'stock'  => true,
+                'repair' => true,
+                'rental' => true,
+                'hidden' => true]]) ?>
+
+            <!-- End DETAILS asset widget -->
+        </article>
+
+        <!-- End plan widget grid row -->
+    </div>
+
+    <!-- End widget grid-->
+</section>
+<!-- load script -->
+<?= $this->element('Common/load-datatable') ?>
+<?php $this->Html->script('wnote/libs/wnote.lib.form.js', ['block' => true]); ?>
+<?= $this->element('Asset/load-asset') ?>
+<?php $this->Html->script('wnote/home/home.search.js', ['block' => true]); ?>
